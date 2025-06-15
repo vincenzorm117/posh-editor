@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Rich Text Editor - Selection/Range Version (with Headings)</title>
+  <title>Rich Text Editor - Selection/Range Version (with Headings & Clear)</title>
   <style>
     body { font-family: sans-serif; padding: 20px; }
     #toolbar { margin-bottom: 5px; }
@@ -16,7 +16,7 @@
 </head>
 <body>
 
-<h2>Rich Text Editor (Selection & Range version with Headings)</h2>
+<h2>Rich Text Editor (Selection & Range version with Headings & Clear)</h2>
 <div id="toolbar">
   <button id="boldBtn"><strong>B</strong></button>
   <button id="italicBtn"><em>I</em></button>
@@ -30,13 +30,26 @@
   <button id="h4Btn">H4</button>
   <button id="h5Btn">H5</button>
   <button id="h6Btn">H6</button>
+  <!-- Clear formatting button -->
+  <button id="clearBtn">Clear</button>
 </div>
-<div id="editor" contenteditable="true"></div>
+<div id="editor" contenteditable="true">
+  <h1>Rich Text Editor Demo</h1>
+  <p>This is a <strong>rich text editor</strong> built with vanilla JavaScript.</p>
+  <p>You can create:</p>
+  <ul>
+    <li>Bold, <em>italic</em>, and <u>underlined</u> text</li>
+    <li><s>Strikethrough</s> content</li>
+    <li>Various <a href="https://developer.mozilla.org/en-US/docs/Web/API/Selection">heading levels</a></li>
+  </ul>
+  <p>Try selecting text and using the toolbar buttons above to format it!</p>
+  <p>You can also paste URLs on selected text to automatically create links.</p>
+</div>
 
 <script>
 (function() {
   const editor = document.getElementById('editor');
-  
+
   // Utility: find nearest ancestor of node with given tag name within the editor
   function findAncestor(node, tagName) {
     tagName = tagName.toUpperCase();
@@ -46,25 +59,25 @@
     }
     return null;
   }
-  
-  // Wrap the current selection in a given tag (e.g., STRONG, EM, U, S, H1...H6)
+
+  // Wrap the current selection in a given tag
   function wrapSelection(tagName) {
     const sel = document.getSelection();
     if (!sel || sel.rangeCount === 0) return;
     const range = sel.getRangeAt(0);
-    if (range.collapsed) return;  // nothing selected
+    if (range.collapsed) return;
     const wrapper = document.createElement(tagName);
     wrapper.appendChild(range.extractContents());
     range.insertNode(wrapper);
-    
+   
     // Reselect the newly inserted content
     sel.removeAllRanges();
     const newRange = document.createRange();
     newRange.selectNodeContents(wrapper);
     sel.addRange(newRange);
   }
-  
-  // Remove a formatting/block tag (if the selection is entirely inside one)
+
+  // Remove a formatting or block tag
   function unwrapSelection(tagName) {
     const sel = document.getSelection();
     if (!sel || sel.rangeCount === 0) return;
@@ -81,7 +94,7 @@
       parent.removeChild(elem);
     }
   }
-  
+
   // Toggle formatting or block tag
   function toggleFormat(tagName) {
     const sel = document.getSelection();
@@ -97,7 +110,25 @@
     }
     editor.focus();
   }
-  
+
+  // Clear all formatting from selection
+  function clearFormatting() {
+    const sel = document.getSelection();
+    if (!sel || sel.rangeCount === 0) return;
+    const range = sel.getRangeAt(0);
+    if (range.collapsed) return;
+    const text = range.toString();
+    range.deleteContents();
+    const textNode = document.createTextNode(text);
+    range.insertNode(textNode);
+    // Move cursor after inserted text
+    range.setStartAfter(textNode);
+    range.setEndAfter(textNode);
+    sel.removeAllRanges();
+    sel.addRange(range);
+    editor.focus();
+  }
+
   // Insert or edit hyperlink
   function insertLink() {
     const sel = document.getSelection();
@@ -118,8 +149,8 @@
     }
     editor.focus();
   }
-  
-  // Insert plain text at the cursor (used for plain-text paste)
+
+  // Insert plain text at cursor (for plain-text paste)
   function insertTextAtCursor(text) {
     const sel = document.getSelection();
     if (!sel || sel.rangeCount === 0) return;
@@ -132,13 +163,13 @@
     sel.removeAllRanges();
     sel.addRange(range);
   }
-  
+
   // Simple URL detector
   function isUrl(text) {
     return /^https?:\/\//.test(text);
   }
-  
-  // Toolbar button handlers
+
+  // Toolbar handlers
   document.getElementById('boldBtn').addEventListener('click', () => toggleFormat('strong'));
   document.getElementById('italicBtn').addEventListener('click', () => toggleFormat('em'));
   document.getElementById('underlineBtn').addEventListener('click', () => toggleFormat('u'));
@@ -150,8 +181,9 @@
   document.getElementById('h4Btn').addEventListener('click', () => toggleFormat('h4'));
   document.getElementById('h5Btn').addEventListener('click', () => toggleFormat('h5'));
   document.getElementById('h6Btn').addEventListener('click', () => toggleFormat('h6'));
-  
-  // Paste event handler for custom paste behavior
+  document.getElementById('clearBtn').addEventListener('click', clearFormatting);
+
+  // Custom paste behavior
   editor.addEventListener('paste', (e) => {
     if (e.shiftKey) {
       e.preventDefault();
