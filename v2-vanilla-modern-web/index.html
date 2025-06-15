@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Rich Text Editor - Selection/Range Version (with Headings)</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    #toolbar { margin-bottom: 5px; }
+    #toolbar button { margin-right: 4px; }
+    #editor {
+      border: 1px solid #ccc;
+      padding: 5px;
+      min-height: 100px;
+    }
+  </style>
+</head>
+<body>
+
+<h2>Rich Text Editor (Selection & Range version with Headings)</h2>
+<div id="toolbar">
+  <button id="boldBtn"><strong>B</strong></button>
+  <button id="italicBtn"><em>I</em></button>
+  <button id="underlineBtn"><u>U</u></button>
+  <button id="strikeBtn"><s>S</s></button>
+  <button id="linkBtn">Link</button>
+  <!-- Heading buttons -->
+  <button id="h1Btn">H1</button>
+  <button id="h2Btn">H2</button>
+  <button id="h3Btn">H3</button>
+  <button id="h4Btn">H4</button>
+  <button id="h5Btn">H5</button>
+  <button id="h6Btn">H6</button>
+</div>
+<div id="editor" contenteditable="true"></div>
+
+<script>
+(function() {
+  const editor = document.getElementById('editor');
+  
+  // Utility: find nearest ancestor of node with given tag name within the editor
+  function findAncestor(node, tagName) {
+    tagName = tagName.toUpperCase();
+    while (node && node !== editor) {
+      if (node.nodeName === tagName) return node;
+      node = node.parentNode;
+    }
+    return null;
+  }
+  
+  // Wrap the current selection in a given tag (e.g., STRONG, EM, U, S, H1...H6)
+  function wrapSelection(tagName) {
+    const sel = document.getSelection();
+    if (!sel || sel.rangeCount === 0) return;
+    const range = sel.getRangeAt(0);
+    if (range.collapsed) return;  // nothing selected
+    const wrapper = document.createElement(tagName);
+    wrapper.appendChild(range.extractContents());
+    range.insertNode(wrapper);
+    
+    // Reselect the newly inserted content
+    sel.removeAllRanges();
+    const newRange = document.createRange();
+    newRange.selectNodeContents(wrapper);
+    sel.addRange(newRange);
+  }
+  
+  // Remove a formatting/block tag (if the selection is entirely inside one)
+  function unwrapSelection(tagName) {
+    const sel = document.getSelection();
+    if (!sel || sel.rangeCount === 0) return;
+    const range = sel.getRangeAt(0);
+    if (range.collapsed) return;
+    const startElem = findAncestor(range.startContainer, tagName);
+    const endElem = findAncestor(range.endContainer, tagName);
+    if (startElem && startElem === endElem) {
+      const elem = startElem;
+      const parent = elem.parentNode;
+      while (elem.firstChild) {
+        parent.insertBefore(elem.firstChild, elem);
+      }
+      parent.removeChild(elem);
+    }
+  }
+  
+  // Toggle formatting or block tag
+  function toggleFormat(tagName) {
+    const sel = document.getSelection();
+    if (!sel || sel.rangeCount === 0) return;
+    const range = sel.getRangeAt(0);
+    if (range.collapsed) return;
+    const startElem = findAncestor(range.startContainer, tagName);
+    const endElem = findAncestor(range.endContainer, tagName);
+    if (startElem && startElem === endElem) {
+      unwrapSelection(tagName);
+    } else {
+      wrapSelection(tagName);
+    }
+    editor.focus();
+  }
+  
+  // Insert or edit hyperlink
+  function insertLink() {
+    const sel = document.getSelection();
+    if (!sel || sel.rangeCount === 0) return;
+    const range = sel.getRangeAt(0);
+    if (range.collapsed) return;
+    const url = prompt('Enter URL:', 'http://');
+    if (url) {
+      const anchor = document.createElement('a');
+      anchor.href = url;
+      anchor.appendChild(range.extractContents());
+      range.insertNode(anchor);
+      sel.removeAllRanges();
+      const afterLink = document.createRange();
+      afterLink.setStartAfter(anchor);
+      afterLink.setEndAfter(anchor);
+      sel.addRange(afterLink);
+    }
+    editor.focus();
+  }
+  
+  // Insert plain text at the cursor (used for plain-text paste)
+  function insertTextAtCursor(text) {
+    const sel = document.getSelection();
+    if (!sel || sel.rangeCount === 0) return;
+    const range = sel.getRangeAt(0);
+    range.deleteContents();
+    const textNode = document.createTextNode(text);
+    range.insertNode(textNode);
+    range.setStartAfter(textNode);
+    range.setEndAfter(textNode);
+    sel.removeAllRanges();
+    sel.addRange(range);
+  }
+  
+  // Simple URL detector
+  function isUrl(text) {
+    return /^https?:\/\//.test(text);
+  }
+  
+  // Toolbar button handlers
+  document.getElementById('boldBtn').addEventListener('click', () => toggleFormat('strong'));
+  document.getElementById('italicBtn').addEventListener('click', () => toggleFormat('em'));
+  document.getElementById('underlineBtn').addEventListener('click', () => toggleFormat('u'));
+  document.getElementById('strikeBtn').addEventListener('click', () => toggleFormat('s'));
+  document.getElementById('linkBtn').addEventListener('click', insertLink);
+  document.getElementById('h1Btn').addEventListener('click', () => toggleFormat('h1'));
+  document.getElementById('h2Btn').addEventListener('click', () => toggleFormat('h2'));
+  document.getElementById('h3Btn').addEventListener('click', () => toggleFormat('h3'));
+  document.getElementById('h4Btn').addEventListener('click', () => toggleFormat('h4'));
+  document.getElementById('h5Btn').addEventListener('click', () => toggleFormat('h5'));
+  document.getElementById('h6Btn').addEventListener('click', () => toggleFormat('h6'));
+  
+  // Paste event handler for custom paste behavior
+  editor.addEventListener('paste', (e) => {
+    if (e.shiftKey) {
+      e.preventDefault();
+      const text = (e.clipboardData || window.clipboardData).getData('text/plain');
+      insertTextAtCursor(text);
+    } else {
+      const text = (e.clipboardData || window.clipboardData).getData('text/plain');
+      const sel = document.getSelection();
+      if (sel && sel.rangeCount > 0 && !sel.isCollapsed && isUrl(text)) {
+        e.preventDefault();
+        const range = sel.getRangeAt(0);
+        const anchor = document.createElement('a');
+        anchor.href = text;
+        anchor.appendChild(range.extractContents());
+        range.insertNode(anchor);
+        sel.removeAllRanges();
+        const afterLink = document.createRange();
+        afterLink.setStartAfter(anchor);
+        afterLink.setEndAfter(anchor);
+        sel.addRange(afterLink);
+      }
+    }
+  });
+})();
+</script>
+
+</body>
+</html>
