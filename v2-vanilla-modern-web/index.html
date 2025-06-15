@@ -2,11 +2,12 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Rich Text Editor - Selection/Range Version (with Headings & Clear)</title>
+  <title>Rich Text Editor - Selection/Range Version (with Headings, Font Size, & Clear)</title>
   <style>
     body { font-family: sans-serif; padding: 20px; }
     #toolbar { margin-bottom: 5px; }
-    #toolbar button { margin-right: 4px; }
+    #toolbar button, #toolbar input { margin-right: 4px; }
+    #fontSizeInput { width: 60px; }
     #editor {
       border: 1px solid #ccc;
       padding: 5px;
@@ -16,7 +17,7 @@
 </head>
 <body>
 
-<h2>Rich Text Editor (Selection & Range version with Headings & Clear)</h2>
+<h2>Rich Text Editor (Selection & Range version with Headings, Font Size, & Clear)</h2>
 <div id="toolbar">
   <button id="boldBtn"><strong>B</strong></button>
   <button id="italicBtn"><em>I</em></button>
@@ -30,6 +31,10 @@
   <button id="h4Btn">H4</button>
   <button id="h5Btn">H5</button>
   <button id="h6Btn">H6</button>
+  <!-- Font size controls -->
+  <button id="fontDecreaseBtn">–</button>
+  <input type="number" id="fontSizeInput" placeholder="mixed" />
+  <button id="fontIncreaseBtn">+</button>
   <!-- Clear formatting button -->
   <button id="clearBtn">Clear</button>
 </div>
@@ -49,6 +54,9 @@
 <script>
 (function() {
   const editor = document.getElementById('editor');
+  const fontSizeInput = document.getElementById('fontSizeInput');
+  const decBtn = document.getElementById('fontDecreaseBtn');
+  const incBtn = document.getElementById('fontIncreaseBtn');
 
   // Utility: find nearest ancestor of node with given tag name within the editor
   function findAncestor(node, tagName) {
@@ -69,8 +77,7 @@
     const wrapper = document.createElement(tagName);
     wrapper.appendChild(range.extractContents());
     range.insertNode(wrapper);
-   
-    // Reselect the newly inserted content
+    // Reselect
     sel.removeAllRanges();
     const newRange = document.createRange();
     newRange.selectNodeContents(wrapper);
@@ -95,7 +102,7 @@
     }
   }
 
-  // Toggle formatting or block tag
+  // Toggle a tag
   function toggleFormat(tagName) {
     const sel = document.getSelection();
     if (!sel || sel.rangeCount === 0) return;
@@ -121,15 +128,15 @@
     range.deleteContents();
     const textNode = document.createTextNode(text);
     range.insertNode(textNode);
-    // Move cursor after inserted text
-    range.setStartAfter(textNode);
-    range.setEndAfter(textNode);
+    // Reselect just the text
+    range.selectNode(textNode);
     sel.removeAllRanges();
     sel.addRange(range);
     editor.focus();
+    updateFontSizeInput();
   }
 
-  // Insert or edit hyperlink
+  // Insert or edit link
   function insertLink() {
     const sel = document.getSelection();
     if (!sel || sel.rangeCount === 0) return;
@@ -141,16 +148,16 @@
       anchor.href = url;
       anchor.appendChild(range.extractContents());
       range.insertNode(anchor);
+      const after = document.createRange();
+      after.setStartAfter(anchor);
+      after.collapse(true);
       sel.removeAllRanges();
-      const afterLink = document.createRange();
-      afterLink.setStartAfter(anchor);
-      afterLink.setEndAfter(anchor);
-      sel.addRange(afterLink);
+      sel.addRange(after);
     }
     editor.focus();
   }
 
-  // Insert plain text at cursor (for plain-text paste)
+  // Insert plain text (for Shift+Paste)
   function insertTextAtCursor(text) {
     const sel = document.getSelection();
     if (!sel || sel.rangeCount === 0) return;
@@ -159,14 +166,90 @@
     const textNode = document.createTextNode(text);
     range.insertNode(textNode);
     range.setStartAfter(textNode);
-    range.setEndAfter(textNode);
+    range.collapse(true);
     sel.removeAllRanges();
     sel.addRange(range);
   }
 
-  // Simple URL detector
+  // Detect a URL
   function isUrl(text) {
     return /^https?:\/\//.test(text);
+  }
+
+  // Get computed font size at selection start
+  function getSelectionFontSize() {
+    const sel = document.getSelection();
+    if (!sel || sel.rangeCount === 0) return null;
+    const range = sel.getRangeAt(0);
+    const node = range.startContainer.nodeType === Node.TEXT_NODE
+      ? range.startContainer.parentElement
+      : range.startContainer;
+    const size = window.getComputedStyle(node).fontSize;
+    return parseInt(size, 10);
+  }
+
+  // Apply inline font size to selection or set for future typing
+  function applyFontSize(size) {
+    const sel = document.getSelection();
+    if (!sel || sel.rangeCount === 0) return;
+    const range = sel.getRangeAt(0);
+    if (range.collapsed) {
+      // Insert an empty styled span for future typing
+      const span = document.createElement('span');
+      span.style.fontSize = size + 'px';
+      span.appendChild(document.createTextNode('\u200B')); // zero-width space
+      range.insertNode(span);
+      // Place caret inside the span after the ZWS
+      const newRange = document.createRange();
+      newRange.setStart(span.firstChild, 1);
+      newRange.collapse(true);
+      sel.removeAllRanges();
+      sel.addRange(newRange);
+      editor.focus();
+      return;
+    }
+    // Wrap selected contents
+    const span = document.createElement('span');
+    span.style.fontSize = size + 'px';
+    span.appendChild(range.extractContents());
+    range.insertNode(span);
+    // Reselect
+    sel.removeAllRanges();
+    const newRange = document.createRange();
+    newRange.selectNodeContents(span);
+    sel.addRange(newRange);
+    editor.focus();
+  }
+
+  // Update font size input based on selection or caret position
+  function updateFontSizeInput() {
+    const sel = document.getSelection();
+    if (!sel || sel.rangeCount === 0) return;
+    const range = sel.getRangeAt(0);
+    if (range.collapsed) {
+      // show font size at caret
+      const size = getSelectionFontSize();
+      if (size != null) {
+        fontSizeInput.value = size;
+        fontSizeInput.placeholder = '';
+      } else {
+        fontSizeInput.value = '';
+        fontSizeInput.placeholder = '';
+      }
+      return;
+    }
+    const startSize = getSelectionFontSize();
+    const endElem = range.endContainer.nodeType === Node.TEXT_NODE
+      ? range.endContainer.parentElement
+      : range.endContainer;
+    const endSize = parseInt(window.getComputedStyle(endElem).fontSize, 10);
+    if (startSize != null && startSize === endSize) {
+      fontSizeInput.value = startSize;
+      fontSizeInput.placeholder = '';
+    } else {
+      fontSizeInput.value = '';
+      fontSizeInput.placeholder = 'mixed';
+    }
   }
 
   // Toolbar handlers
@@ -182,6 +265,31 @@
   document.getElementById('h5Btn').addEventListener('click', () => toggleFormat('h5'));
   document.getElementById('h6Btn').addEventListener('click', () => toggleFormat('h6'));
   document.getElementById('clearBtn').addEventListener('click', clearFormatting);
+
+  // Font size controls
+  decBtn.addEventListener('click', () => {
+    let current = parseInt(fontSizeInput.value, 10);
+    if (isNaN(current)) current = getSelectionFontSize() || 16;
+    const newSize = current - 1;
+    fontSizeInput.value = newSize;
+    applyFontSize(newSize);
+  });
+  incBtn.addEventListener('click', () => {
+    let current = parseInt(fontSizeInput.value, 10);
+    if (isNaN(current)) current = getSelectionFontSize() || 16;
+    const newSize = current + 1;
+    fontSizeInput.value = newSize;
+    applyFontSize(newSize);
+  });
+  fontSizeInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      const val = parseInt(fontSizeInput.value, 10);
+      if (!isNaN(val)) applyFontSize(val);
+    }
+  });
+
+  // Update on selection change
+  document.addEventListener('selectionchange', updateFontSizeInput);
 
   // Custom paste behavior
   editor.addEventListener('paste', (e) => {
@@ -202,7 +310,7 @@
         sel.removeAllRanges();
         const afterLink = document.createRange();
         afterLink.setStartAfter(anchor);
-        afterLink.setEndAfter(anchor);
+        afterLink.collapse(true);
         sel.addRange(afterLink);
       }
     }
