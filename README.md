@@ -62,3 +62,14 @@ Multiple implementations of a Rich Text Editor
 * [UI/UX] View showing keyboard shortcuts
 * [Customization] Customize keyboard shortcuts
 * Accessibility
+* JSON Editor/Builder
+
+
+# Divs/Paragraphs vs LineBreaks
+| Aspect | `<br>`-only (single line breaks) | `<p>` \/ `<div>` blocks |
+|--------|--------------------------------|---------------------------|
+| Semantics & accessibility | Just a line break. Screen readers don’t announce a new paragraph—just "line break."Good for poems or addresses. | True paragraphs\/sections. Screen readers announce “paragraph X of Y,” improving structure. |
+| Styling & spacing | All styling must be manual (e.g. marginal spacing via CSS on <br> or wrapper).No automatic margin before/after. | Browsers apply default margins, you can target blocks via CSS selectors, control spacing globally. |
+| Copy-paste resilience | You end up with huge runs of text with `<br>`s; editors or other apps may collapse or misinterpret them. | Blocks map naturally to most paste targets (Word, Gmail, etc.). You get real paragraphs. |
+| Editing UX | No notion of “current paragraph” means features like “toggle paragraph style” are awkward. | You can select, drag, or style entire paragraphs more easily. |
+| HTML payload size | Slightly lighter per “Enter” than wrapping a full `<p>…\<p>`. | More markup overhead per block, but negligible unless authoring massive docs. |
