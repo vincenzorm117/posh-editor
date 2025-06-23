@@ -37,6 +37,7 @@
   <button id="fontIncreaseBtn">+</button>
   <!-- Clear formatting button -->
   <button id="clearBtn">Clear</button>
+  <button id="saveBtn">Save</button>
 </div>
 <div id="editor" contenteditable="true">
   <h1>Rich Text Editor Demo</h1>
@@ -252,6 +253,70 @@
     }
   }
 
+  // Function clean html
+  function cleanHtml(html) {
+    // Create a temporary container and insert the HTML
+    const temp = document.createElement('div');
+    temp.innerHTML = html;
+
+    // Remove empty style and class attributes
+    const elements = temp.querySelectorAll('*');
+    for (let j = 0; j < elements.length; j++) {
+      const el = elements[j];
+      // Check all attributes for empty values
+      for (let i = 0; i < el.attributes.length; i++) {
+        const attr = el.attributes[i];
+        if (attr?.value?.trim() === '') {
+          el.removeAttribute(attr.name);
+        }
+      }
+      
+      // Remove empty spans
+      if ( !el.attributes.length && 
+        (!el.textContent || el.textContent === '\u200B')) {
+        if (el.parentNode) {
+          el.parentNode.removeChild(el);
+        } else {
+          el.remove();
+        }
+      }
+    }
+
+    // Remove trailing <br> tags
+    const brs = temp.querySelectorAll('br');
+    for (let i = brs.length - 1; i >= 0; i--) {
+      const br = brs[i];
+      if (br.nextSibling === null || br.nextSibling.nodeType === Node.TEXT_NODE && br.nextSibling.textContent.trim() === '') {
+        br.parentNode.removeChild(br);
+      }
+    }
+
+    // Remove empty elements
+    const emptyElements = temp.querySelectorAll('*:empty')
+    for (let i = emptyElements.length - 1; i >= 0; i--) {
+      const el = emptyElements[i];
+      if (el.parentNode) {
+        el.parentNode.removeChild(el);
+      } else {
+        el.remove();
+      }
+    }
+
+    // Return the cleaned HTML
+    return temp.innerHTML;
+  }
+
+  // Save content (for demonstration purposes)
+  function onSave() {
+    console.clear();
+    const editor = document.getElementById('editor');
+    const content = editor.innerHTML;
+    console.log('[RAW content]');
+    console.log(content);
+    console.log('[Clean content]');
+    console.log(cleanHtml(content));
+  }
+
   // Toolbar handlers
   document.getElementById('boldBtn').addEventListener('click', () => toggleFormat('strong'));
   document.getElementById('italicBtn').addEventListener('click', () => toggleFormat('em'));
@@ -265,6 +330,7 @@
   document.getElementById('h5Btn').addEventListener('click', () => toggleFormat('h5'));
   document.getElementById('h6Btn').addEventListener('click', () => toggleFormat('h6'));
   document.getElementById('clearBtn').addEventListener('click', clearFormatting);
+  document.getElementById('editor').addEventListener('input', onSave);
 
   // Font size controls
   decBtn.addEventListener('click', () => {
