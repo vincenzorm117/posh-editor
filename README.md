@@ -63,6 +63,11 @@ Multiple implementations of a Rich Text Editor
 * [Customization] Customize keyboard shortcuts
 * Accessibility
 * JSON Editor/Builder
+* [Keyboard] * [Space] creates unordered list
+* [Keyboard] 1. [Space] creates ordered list
+* [Keyboard] Ordered list, tab creates sublist
+* [Keyboard] Ordered list, Shift+tab exits list one level up
+
 
 
 # Divs/Paragraphs vs LineBreaks
