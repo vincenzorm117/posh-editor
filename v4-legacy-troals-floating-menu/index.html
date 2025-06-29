@@ -19,6 +19,36 @@
         padding: 5px;
         min-height: 100px;
       }
+      /* Styling for the floating menu */
+      #floating-menu {
+        position: absolute;
+        display: none;
+        background-color: white;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        padding: 5px;
+        z-index: 1000;
+        white-space: nowrap;
+      }
+      #floating-menu button {
+        margin-right: 4px;
+        cursor: pointer;
+        background: #f5f5f5;
+        border: 1px solid #ddd;
+        border-radius: 3px;
+        padding: 2px 5px;
+      }
+      #floating-menu button:last-child {
+        margin-right: 0;
+      }
+
+      #redbox {
+        position: absolute;
+        border: 1px solid red;
+        background: rgba(255, 0, 0, 0.1);
+        pointer-events: none; /* Allow clicks to pass through */
+      }
     </style>
   </head>
   <body>
@@ -32,6 +62,19 @@
       <button data-command="insertUnorderedList">• List</button>
       <button data-command="insertOrderedList">1. List</button>
     </div>
+    
+    <!-- Add the floating menu -->
+    <div id="floating-menu">
+      <button data-command="bold"><strong>B</strong></button>
+      <button data-command="italic"><em>I</em></button>
+      <button data-command="underline"><u>U</u></button>
+      <button data-command="strikeThrough"><s>S</s></button>
+      <button id="floatingLinkBtn">Link</button>
+      <button data-command="insertUnorderedList">• List</button>
+      <button data-command="insertOrderedList">1. List</button>
+    </div>
+    <div id="redbox"></div>
+    
     <div id="editor" contenteditable="true">
       <div><b>Rich Text Editor Demo</b></div>
       <p>
@@ -60,17 +103,28 @@
     <script>
       (function () {
         const editor = document.getElementById("editor");
+        const floatingMenu = document.getElementById("floating-menu");
+
+        function debounce(func, delay) {
+          let timeout;
+          return function (...args) {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(this, args), delay);
+          };
+        }
+        
         // Setup toolbar buttons for basic formatting commands
-        document
-          .querySelectorAll("#toolbar button[data-command]")
-          .forEach((button) => {
+        function setupFormatButtons(container) {
+          container.querySelectorAll("button[data-command]").forEach((button) => {
             const command = button.getAttribute("data-command");
-            button.addEventListener("click", () => {
+            button.addEventListener("click", (e) => {
+              // Prevent the click from dismissing the menu immediately
+              e.stopPropagation();
+              
               if (command === "createLink") {
-                // (Not used here; link handled by separate button)
-                return;
+                return; // Handled separately
               }
-              // Handle formatBlock commands for headings
+              
               if (command === "formatBlock") {
                 const value = button.getAttribute("data-value");
                 document.execCommand(command, false, value);
@@ -81,14 +135,88 @@
               editor.focus();
             });
           });
-        // Set up hyperlink button (prompts for URL)
-        document.getElementById("linkBtn").addEventListener("click", () => {
-          const url = prompt("Enter URL:", "http://");
-          if (url) {
-            document.execCommand("createLink", false, url);
+        }
+        
+        // Setup both toolbars
+        setupFormatButtons(document.getElementById("toolbar"));
+        setupFormatButtons(floatingMenu);
+        
+        // Set up hyperlink buttons
+        function setupLinkButton(button) {
+          button.addEventListener("click", (e) => {
+            e.stopPropagation(); // Prevent menu from closing
+            const url = prompt("Enter URL:", "http://");
+            if (url) {
+              document.execCommand("createLink", false, url);
+            }
+            editor.focus();
+          });
+        }
+        
+        setupLinkButton(document.getElementById("linkBtn"));
+        setupLinkButton(document.getElementById("floatingLinkBtn"));
+        
+        // Position the menu above the selection
+        function positionMenuAboveSelection() {
+          const selection = document.getSelection();
+          if (!selection.rangeCount) return;
+          
+          const range = selection.getRangeAt(0);
+          const rect = range.getBoundingClientRect();
+          
+
+          const redbox = document.getElementById("redbox");
+          redbox.style.left = `${rect.left + window.scrollX}px`;
+          redbox.style.top = `${rect.top + window.scrollY}px`;
+          redbox.style.width = `${rect.width}px`;
+          redbox.style.height = `${rect.height}px`;
+          
+          // Calculate position (centered above selection)
+          const menuWidth = floatingMenu.offsetWidth;
+          const menuHeight = floatingMenu.offsetHeight;
+          let left = rect.left + (rect.width / 2) - (menuWidth / 2);
+          const top = rect.top - menuHeight - 10; // 5px above the selection
+          
+          // Make sure menu doesn't go off screen
+          if (left < 10) left = 10;
+          if (left + menuWidth > window.innerWidth - 10) {
+            left = window.innerWidth - menuWidth - 10;
           }
-          editor.focus();
-        });
+          
+          // Set position
+          floatingMenu.style.left = `${left + window.scrollX}px`;
+          floatingMenu.style.top = `${top  + window.scrollY}px`;
+        }
+        
+        // Check if selection is inside the editor
+        function isSelectionInEditor(selection) {
+          if (!selection.rangeCount) return false;
+          
+          const range = selection.getRangeAt(0);
+          let node = range.commonAncestorContainer;
+          
+          // Walk up the DOM tree to see if we're inside the editor
+          while (node) {
+            if (node.id === "editor") return true;
+            node = node.parentNode;
+          }
+          
+          return false;
+        }
+        
+        // Show/hide the floating menu based on selection
+        document.addEventListener("selectionchange", debounce(() => {
+          const selection = document.getSelection();
+          
+          // Only show if there's a selection inside the editor
+          if (selection && !selection.isCollapsed && isSelectionInEditor(selection)) {
+            floatingMenu.style.display = "block";
+            positionMenuAboveSelection();
+          } else {
+            floatingMenu.style.display = "none";
+          }
+        }, 100));
+        
         // Helper: detect if text looks like a URL (simple check for http/https)
         function isUrl(text) {
           return /^https?:\/\//.test(text);
