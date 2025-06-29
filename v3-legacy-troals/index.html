@@ -34,15 +34,27 @@
     </div>
     <div id="editor" contenteditable="true">
       <div><b>Rich Text Editor Demo</b></div>
-      <p>This is a <strong>rich text editor</strong> built with vanilla JavaScript.</p>
+      <p>
+        This is a <strong>rich text editor</strong> built with vanilla
+        JavaScript.
+      </p>
       <p>You can create:</p>
       <ul>
         <li>Bold, <em>italic</em>, and <u>underlined</u> text</li>
         <li><s>Strikethrough</s> content</li>
-        <li>Various <a href="https://developer.mozilla.org/en-US/docs/Web/API/Selection">heading levels</a></li>
+        <li>
+          Various
+          <a href="https://developer.mozilla.org/en-US/docs/Web/API/Selection"
+            >heading levels</a
+          >
+        </li>
       </ul>
-      <p>Try selecting text and using the toolbar buttons above to format it!</p>
-      <p>You can also paste URLs on selected text to automatically create links.</p>
+      <p>
+        Try selecting text and using the toolbar buttons above to format it!
+      </p>
+      <p>
+        You can also paste URLs on selected text to automatically create links.
+      </p>
     </div>
 
     <script>
@@ -118,7 +130,10 @@
 
             result += indent + "<" + element + ">\r\n";
 
-            if (element.match(/^<?\w[^>]*[^\/]$/) && !element.startsWith("input")) {
+            if (
+              element.match(/^<?\w[^>]*[^\/]$/) &&
+              !element.startsWith("input")
+            ) {
               indent += tab;
             }
           });
