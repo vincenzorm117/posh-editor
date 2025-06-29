@@ -117,6 +117,62 @@
           }
         });
 
+
+        editor.addEventListener("input", (e) => {
+          // If not inserting a space, do nothing
+          if (e.inputType !== "insertText" || e.data !== " ") {
+            return;
+          }
+
+          const selection = document.getSelection();
+          if (!selection || !selection.rangeCount) return;
+
+          const range = selection.getRangeAt(0);
+          const node = range.startContainer;
+
+          // Only process if we're in a text node
+          if (node.nodeType !== Node.TEXT_NODE) return;
+
+          // Get the current text content and position
+          const text = node.textContent;
+          const position = range.startOffset;
+          const matches = text.match(/^\s*(\*|1\.)\s$/);
+          const bulletType = matches?.[1] ?? null;
+
+          // Check if the cursor is positioned right after "* "
+          if ( range.startOffset < 2 || bulletType === null) {
+            return;
+          }
+
+          // Check if not in a list
+          let parent = node.parentNode;
+          while (parent && parent !== editor) {
+            if (parent.nodeName === "UL" || parent.nodeName === "OL" || parent.nodeName === "LI") {
+              return; // Already in a list, don't convert
+            }
+            parent = parent.parentNode;
+          }
+
+          let parentNode = node.parentNode;
+          if(bulletType === '*') {
+            // Create the unordered list
+            document.execCommand("insertUnorderedList", false, null);
+          } else {
+            // Create the unordered list
+            document.execCommand("insertOrderedList", false, null);
+          }
+          // Clear the text after the bullet
+          const list = parentNode.childNodes[0]
+          const li = list.childNodes[0]
+          li.innerHTML = '';
+
+          // Position the cursor after the bullet
+          range.setStart(li, 0);
+          range.setEnd(li, 0);
+          selection.removeAllRanges();
+          selection.addRange(range);
+        });
+
         // Function to format HTML with proper indentation
         function formatHtml(html) {
           var tab = "  ";
