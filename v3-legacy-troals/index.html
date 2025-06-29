@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Rich Text Editor - execCommand Version</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        padding: 20px;
+      }
+      #toolbar {
+        margin-bottom: 5px;
+      }
+      #toolbar button {
+        margin-right: 4px;
+      }
+      #editor {
+        border: 1px solid #ccc;
+        padding: 5px;
+        min-height: 100px;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Rich Text Editor (execCommand version)</h2>
+    <div id="toolbar">
+      <button data-command="bold"><strong>B</strong></button>
+      <button data-command="italic"><em>I</em></button>
+      <button data-command="underline"><u>U</u></button>
+      <button data-command="strikeThrough"><s>S</s></button>
+      <button id="linkBtn">Link</button>
+    </div>
+    <div id="editor" contenteditable="true">
+      <div><b>Rich Text Editor Demo</b></div>
+      <p>This is a <strong>rich text editor</strong> built with vanilla JavaScript.</p>
+      <p>You can create:</p>
+      <ul>
+        <li>Bold, <em>italic</em>, and <u>underlined</u> text</li>
+        <li><s>Strikethrough</s> content</li>
+        <li>Various <a href="https://developer.mozilla.org/en-US/docs/Web/API/Selection">heading levels</a></li>
+      </ul>
+      <p>Try selecting text and using the toolbar buttons above to format it!</p>
+      <p>You can also paste URLs on selected text to automatically create links.</p>
+    </div>
+
+    <script>
+      (function () {
+        const editor = document.getElementById("editor");
+        // Setup toolbar buttons for basic formatting commands
+        document
+          .querySelectorAll("#toolbar button[data-command]")
+          .forEach((button) => {
+            const command = button.getAttribute("data-command");
+            button.addEventListener("click", () => {
+              if (command === "createLink") {
+                // (Not used here; link handled by separate button)
+                return;
+              }
+              // Handle formatBlock commands for headings
+              if (command === "formatBlock") {
+                const value = button.getAttribute("data-value");
+                document.execCommand(command, false, value);
+              } else {
+                document.execCommand(command, false, null);
+              }
+
+              editor.focus();
+            });
+          });
+        // Set up hyperlink button (prompts for URL)
+        document.getElementById("linkBtn").addEventListener("click", () => {
+          const url = prompt("Enter URL:", "http://");
+          if (url) {
+            document.execCommand("createLink", false, url);
+          }
+          editor.focus();
+        });
+        // Helper: detect if text looks like a URL (simple check for http/https)
+        function isUrl(text) {
+          return /^https?:\/\//.test(text);
+        }
+        // Handle paste events
+        editor.addEventListener("paste", (e) => {
+          if (e.shiftKey) {
+            // Paste as plain text (strip formatting)
+            e.preventDefault();
+            const text = (e.clipboardData || window.clipboardData).getData(
+              "text/plain"
+            );
+            document.execCommand("insertText", false, text);
+          } else {
+            // Default paste unless we need to convert URL->link
+            const text = (e.clipboardData || window.clipboardData).getData(
+              "text/plain"
+            );
+            const selection = document.getSelection();
+            if (!selection.isCollapsed && isUrl(text)) {
+              // If user is pasting a URL over a selected text, make that text a link
+              e.preventDefault();
+              document.execCommand("createLink", false, text);
+            }
+            // Otherwise, let the default paste happen (which preserves formatting)
+          }
+        });
+
+        // Function to format HTML with proper indentation
+        function formatHtml(html) {
+          const tab = "  "; // 2 spaces for indentation
+          let result = "";
+          let indent = 0;
+
+          html.split(/>\s*</).forEach((element, index) => {
+            if (index > 0) {
+              element = "<" + element;
+            }
+            if (index < html.split(/>\s*</).length - 1) {
+              element = element + ">";
+            }
+
+            // Decrease indent for closing tags
+            if (element.match(/^<\/\w/)) {
+              indent--;
+            }
+
+            // Add the element with proper indentation
+            result += tab.repeat(indent) + element;
+
+            // Add newline if not the last element
+            if (index < html.split(/>\s*</).length - 1) {
+              result += "\n";
+            }
+
+            // Increase indent for opening tags (but not self-closing or text content)
+            if (element.match(/^<\w[^>]*[^\/]>$/)) {
+              indent++;
+            }
+          });
+
+          return result;
+        }
+
+        // Save content (for demonstration purposes)
+        function onSave() {
+          console.clear();
+          const editor = document.getElementById("editor");
+          const content = editor.innerHTML;
+          console.log("[RAW content]");
+          console.log(content);
+          console.log("[Formatted content]");
+          console.log(formatHtml(content));
+        }
+        document.getElementById("editor").addEventListener("input", onSave);
+      })();
+    </script>
+  </body>
+</html>
