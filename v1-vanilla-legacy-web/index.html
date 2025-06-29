@@ -36,7 +36,7 @@
       <button data-command="formatBlock" data-value="h5">H5</button>
       <button data-command="formatBlock" data-value="h6">H6</button>
     </div>
-    <div id="editor" contenteditable="true"><!-- Editable content here --></div>
+    <div id="editor" contenteditable="true"></div>
 
     <script>
       (function () {
@@ -51,7 +51,6 @@
                 // (Not used here; link handled by separate button)
                 return;
               }
-              
               // Handle formatBlock commands for headings
               if (command === "formatBlock") {
                 const value = button.getAttribute("data-value");
@@ -59,7 +58,7 @@
               } else {
                 document.execCommand(command, false, null);
               }
-              
+
               editor.focus();
             });
           });
@@ -98,6 +97,54 @@
             // Otherwise, let the default paste happen (which preserves formatting)
           }
         });
+
+        // Function to format HTML with proper indentation
+        function formatHtml(html) {
+          const tab = "  "; // 2 spaces for indentation
+          let result = "";
+          let indent = 0;
+
+          html.split(/>\s*</).forEach((element, index) => {
+            if (index > 0) {
+              element = "<" + element;
+            }
+            if (index < html.split(/>\s*</).length - 1) {
+              element = element + ">";
+            }
+
+            // Decrease indent for closing tags
+            if (element.match(/^<\/\w/)) {
+              indent--;
+            }
+
+            // Add the element with proper indentation
+            result += tab.repeat(indent) + element;
+
+            // Add newline if not the last element
+            if (index < html.split(/>\s*</).length - 1) {
+              result += "\n";
+            }
+
+            // Increase indent for opening tags (but not self-closing or text content)
+            if (element.match(/^<\w[^>]*[^\/]>$/)) {
+              indent++;
+            }
+          });
+
+          return result;
+        }
+
+        // Save content (for demonstration purposes)
+        function onSave() {
+          console.clear();
+          const editor = document.getElementById("editor");
+          const content = editor.innerHTML;
+          console.log("[RAW content]");
+          console.log(content);
+          console.log("[Formatted content]");
+          console.log(formatHtml(content));
+        }
+        document.getElementById("editor").addEventListener("input", onSave);
       })();
     </script>
   </body>
