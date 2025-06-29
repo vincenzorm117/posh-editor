@@ -105,39 +105,25 @@
 
         // Function to format HTML with proper indentation
         function formatHtml(html) {
-          const tab = "  "; // 2 spaces for indentation
-          let result = "";
-          let indent = 0;
+          var tab = "  ";
+          var result = "";
+          var indent = "";
 
-          html.split(/>\s*</).forEach((element, index) => {
-            if (index > 0) {
-              element = "<" + element;
-            }
-            if (index < html.split(/>\s*</).length - 1) {
-              element = element + ">";
+          html.split(/>\s*</).forEach(function (element) {
+            if (element.match(/^\/\w/)) {
+              indent = indent.substring(tab.length);
             }
 
-            // Decrease indent for closing tags
-            if (element.match(/^<\/\w/)) {
-              indent--;
-            }
+            result += indent + "<" + element + ">\r\n";
 
-            // Add the element with proper indentation
-            result += tab.repeat(indent) + element;
-
-            // Add newline if not the last element
-            if (index < html.split(/>\s*</).length - 1) {
-              result += "\n";
-            }
-
-            // Increase indent for opening tags (but not self-closing or text content)
-            if (element.match(/^<\w[^>]*[^\/]>$/)) {
-              indent++;
+            if (element.match(/^<?\w[^>]*[^\/]$/) && !element.startsWith("input")) {
+              indent += tab;
             }
           });
 
-          return result;
+          return result.substring(1, result.length - 3);
         }
+
 
         // Save content (for demonstration purposes)
         function onSave() {
