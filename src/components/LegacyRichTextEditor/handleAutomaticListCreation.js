@@ -33,6 +33,7 @@ const handleAutomaticListCreation = (event, rootParentNode) => {
   const node = range.startContainer;
   // Only process if we're in a text node
   if (node.nodeType !== Node.TEXT_NODE) return;
+
   // [Step] Perform checks to ensure we're in a text node and the text matches the bullet pattern
   // [Check] if the text content matches "* " or "1. "
   const matches = node.textContent.match(/^(\*|1\.)\s$/);
@@ -41,12 +42,14 @@ const handleAutomaticListCreation = (event, rootParentNode) => {
   if (range.startOffset < 2 || bulletType === null) {
     return;
   }
+
   // [Check] if the text is already in a list
   // Check if we're already inside a list element
   const closestList = node.parentElement.closest("ul, ol");
   if (closestList !== null && rootParentNode.contains(closestList)) {
     return;
   }
+
   // [Step] If we reach here, we need to convert the text to a list
   let parentNode = node.parentNode;
   if (bulletType === "*") {
@@ -56,6 +59,7 @@ const handleAutomaticListCreation = (event, rootParentNode) => {
     // Create the unordered list
     document.execCommand("insertOrderedList", false, null);
   }
+
   // [Step] Clear the text after the bullet
   const list = parentNode.childNodes[0];
   const li = list.childNodes[0];
