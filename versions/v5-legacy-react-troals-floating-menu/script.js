@@ -1,0 +1,236 @@
+const editor = document.getElementById("editor");
+const floatingMenu = document.getElementById("floating-menu");
+
+function debounce(func, delay) {
+  let timeout;
+  return function (...args) {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func.apply(this, args), delay);
+  };
+}
+
+// Setup toolbar buttons for basic formatting commands
+function setupFormatButtons(container) {
+  container.querySelectorAll("button[data-command]").forEach((button) => {
+    const command = button.getAttribute("data-command");
+    button.addEventListener("click", (e) => {
+      // Prevent the click from dismissing the menu immediately
+      e.stopPropagation();
+
+      if (command === "createLink") {
+        return; // Handled separately
+      }
+
+      if (command === "formatBlock") {
+        const value = button.getAttribute("data-value");
+        document.execCommand(command, false, value);
+      } else {
+        document.execCommand(command, false, null);
+      }
+
+      editor.focus();
+    });
+  });
+}
+
+// Setup both toolbars
+setupFormatButtons(document.getElementById("toolbar"));
+setupFormatButtons(floatingMenu);
+
+// Set up hyperlink buttons
+function setupLinkButton(button) {
+  button.addEventListener("click", (e) => {
+    e.stopPropagation(); // Prevent menu from closing
+    const url = prompt("Enter URL:", "http://");
+    if (url) {
+      document.execCommand("createLink", false, url);
+    }
+    editor.focus();
+  });
+}
+
+setupLinkButton(document.getElementById("linkBtn"));
+setupLinkButton(document.getElementById("floatingLinkBtn"));
+
+// Position the menu above the selection
+function positionMenuAboveSelection() {
+  const selection = document.getSelection();
+  if (!selection.rangeCount) return;
+
+  const range = selection.getRangeAt(0);
+  const rect = range.getBoundingClientRect();
+
+  const redbox = document.getElementById("redbox");
+  redbox.style.left = `${rect.left + window.scrollX}px`;
+  redbox.style.top = `${rect.top + window.scrollY}px`;
+  redbox.style.width = `${rect.width}px`;
+  redbox.style.height = `${rect.height}px`;
+
+  // Calculate position (centered above selection)
+  const menuWidth = floatingMenu.offsetWidth;
+  const menuHeight = floatingMenu.offsetHeight;
+  let left = rect.left + rect.width / 2 - menuWidth / 2;
+  const top = rect.top - menuHeight - 10; // 5px above the selection
+
+  // Make sure menu doesn't go off screen
+  if (left < 10) left = 10;
+  if (left + menuWidth > window.innerWidth - 10) {
+    left = window.innerWidth - menuWidth - 10;
+  }
+
+  // Set position
+  floatingMenu.style.left = `${left + window.scrollX}px`;
+  floatingMenu.style.top = `${top + window.scrollY}px`;
+}
+
+// Check if selection is inside the editor
+function isSelectionInEditor(selection) {
+  if (!selection.rangeCount) return false;
+
+  const range = selection.getRangeAt(0);
+  let node = range.commonAncestorContainer;
+
+  // Walk up the DOM tree to see if we're inside the editor
+  while (node) {
+    if (node.id === "editor") return true;
+    node = node.parentNode;
+  }
+
+  return false;
+}
+
+// Show/hide the floating menu based on selection
+document.addEventListener(
+  "selectionchange",
+  debounce(() => {
+    const selection = document.getSelection();
+
+    // Only show if there's a selection inside the editor
+    if (selection && !selection.isCollapsed && isSelectionInEditor(selection)) {
+      floatingMenu.style.display = "block";
+      positionMenuAboveSelection();
+    } else {
+      floatingMenu.style.display = "none";
+    }
+  }, 100)
+);
+
+// Helper: detect if text looks like a URL (simple check for http/https)
+function isUrl(text) {
+  return /^https?:\/\//.test(text);
+}
+// Handle paste events
+editor.addEventListener("paste", (e) => {
+  if (e.shiftKey) {
+    // Paste as plain text (strip formatting)
+    e.preventDefault();
+    const text = (e.clipboardData || window.clipboardData).getData(
+      "text/plain"
+    );
+    document.execCommand("insertText", false, text);
+  } else {
+    // Default paste unless we need to convert URL->link
+    const text = (e.clipboardData || window.clipboardData).getData(
+      "text/plain"
+    );
+    const selection = document.getSelection();
+    if (!selection.isCollapsed && isUrl(text)) {
+      // If user is pasting a URL over a selected text, make that text a link
+      e.preventDefault();
+      document.execCommand("createLink", false, text);
+    }
+    // Otherwise, let the default paste happen (which preserves formatting)
+  }
+});
+
+editor.addEventListener("input", (e) => {
+  // If not inserting a space, do nothing
+  if (e.inputType !== "insertText" || e.data !== " ") {
+    return;
+  }
+
+  const selection = document.getSelection();
+  if (!selection || !selection.rangeCount) return;
+
+  const range = selection.getRangeAt(0);
+  const node = range.startContainer;
+
+  // Only process if we're in a text node
+  if (node.nodeType !== Node.TEXT_NODE) return;
+
+  // Get the current text content and position
+  const text = node.textContent;
+  const position = range.startOffset;
+  const matches = text.match(/^\s*(\*|1\.)\s$/);
+  const bulletType = matches?.[1] ?? null;
+
+  // Check if the cursor is positioned right after "* "
+  if (range.startOffset < 2 || bulletType === null) {
+    return;
+  }
+
+  // Check if not in a list
+  let parent = node.parentNode;
+  while (parent && parent !== editor) {
+    if (
+      parent.nodeName === "UL" ||
+      parent.nodeName === "OL" ||
+      parent.nodeName === "LI"
+    ) {
+      return; // Already in a list, don't convert
+    }
+    parent = parent.parentNode;
+  }
+
+  let parentNode = node.parentNode;
+  if (bulletType === "*") {
+    // Create the unordered list
+    document.execCommand("insertUnorderedList", false, null);
+  } else {
+    // Create the unordered list
+    document.execCommand("insertOrderedList", false, null);
+  }
+  // Clear the text after the bullet
+  const list = parentNode.childNodes[0];
+  const li = list.childNodes[0];
+  li.innerHTML = "";
+
+  // Position the cursor after the bullet
+  range.setStart(li, 0);
+  range.setEnd(li, 0);
+  selection.removeAllRanges();
+  selection.addRange(range);
+});
+
+// Function to format HTML with proper indentation
+function formatHtml(html) {
+  var tab = "  ";
+  var result = "";
+  var indent = "";
+
+  html.split(/>\s*</).forEach(function (element) {
+    if (element.match(/^\/\w/)) {
+      indent = indent.substring(tab.length);
+    }
+
+    result += indent + "<" + element + ">\r\n";
+
+    if (element.match(/^<?\w[^>]*[^\/]$/) && !element.startsWith("input")) {
+      indent += tab;
+    }
+  });
+
+  return result.substring(1, result.length - 3);
+}
+
+// Save content (for demonstration purposes)
+function onSave() {
+  // console.clear();
+  // const editor = document.getElementById("editor");
+  // const content = editor.innerHTML;
+  // console.log("[RAW content]");
+  // console.log(content);
+  // console.log("[Formatted content]");
+  // console.log(formatHtml(content));
+}
+document.getElementById("editor").addEventListener("input", onSave);
