@@ -44,9 +44,22 @@ const handleBulletShift = (event) => {
     document.execCommand("outdent", false, null);
   } else {
     // Indent the list item
-    document.execCommand("indent", false, null);
-  }
 
+    // Get parent ul
+    const list = closest(node, "ul, ol");
+    let listStyleType = null;
+    if (list.nodeName === "UL") {
+      listStyleType = list.classList.contains("!list-[circle]") ? "" : "!list-[circle]";
+    } else if (list.nodeName === "OL") {
+      // listStyleType = list.classList.contains("list-decimal") ? "list-decimal" : "list-decimal";
+      listStyleType = "";
+    }
+    
+    document.execCommand("indent", false, null);
+    const newNode = document.getSelection().getRangeAt(0).startContainer;
+    const newNodeList = closest(newNode, "ul, ol");
+    if (listStyleType) newNodeList.classList.add(listStyleType);
+  }
 };
 
 export default handleBulletShift;
