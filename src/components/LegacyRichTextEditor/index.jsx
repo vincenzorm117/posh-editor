@@ -15,6 +15,7 @@ import { useEffect, useRef, useState } from "react";
 import { defaultFormatStates } from "./constants";
 import getSelectionFormatting from "./getSelectionFormatting";
 import handleAutomaticListCreation from "./handleAutomaticListCreation";
+import handleBulletShift from "./handleBulletShift";
 
 const RichTextEditor = ({
   value,
@@ -65,6 +66,8 @@ const RichTextEditor = ({
   const onKeyDown = (event) => {
     // [Step] If the editor is disabled, do nothing
     if (disabled) return;
+    // [Step] Handle Tab/Shift+Tab for list indentation
+    handleBulletShift(event);
     // [Step] Check for keyboard shortcuts for formatting
     // Check if Cmd+Shift+S is pressed for strikethrough
     if (event.metaKey && event.shiftKey && event?.key?.toLowerCase() === "x") {
