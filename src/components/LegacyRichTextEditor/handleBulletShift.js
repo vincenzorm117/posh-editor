@@ -35,13 +35,6 @@ const handleBulletShift = (event) => {
   // Get the range and start container
   const range = selection.getRangeAt(0);
   const node = range.startContainer;
-  // console.table(
-  //   node?.nodeType,
-  //   node?.nodeName,
-  //   node?.parentElement?.nodeName,
-  //   // node?.closest("ul, ol")?.nodeName,
-  //   node?.parentElement?.closest("li")?.nodeName
-  // );
 
   // Only process if the selected node is within a list item
   if (!closest(node, "li")) return;
@@ -51,32 +44,9 @@ const handleBulletShift = (event) => {
     document.execCommand("outdent", false, null);
   } else {
     // Indent the list item
-
-    // Get parent ul
-    const list = closest(node, "ul, ol");
-    let listStyleType = null;
-    if (list.nodeName === "UL") {
-      debugger
-      listStyleType = list.classList.contains("!list-[circle]") ? "" : "!list-[circle]";
-    } else if (list.nodeName === "OL") {
-      // listStyleType = list.classList.contains("list-decimal") ? "list-decimal" : "list-decimal";
-      listStyleType = "";
-    }
-    
     document.execCommand("indent", false, null);
-    const newNode = document.getSelection().getRangeAt(0).startContainer;
-    const newNodeList = closest(newNode, "ul, ol");
-    if (listStyleType) newNodeList.classList.add(listStyleType);
   }
 
-  // debugger;
-  // console.table(
-  //   node?.nodeType,
-  //   node?.nodeName,
-  //   node?.parentElement?.nodeName,
-  //   // node?.closest("ul, ol")?.nodeName,
-  //   node?.parentElement?.closest("li")?.nodeName
-  // );
 };
 
 export default handleBulletShift;
