@@ -164,27 +164,24 @@ const RichTextEditor = ({
     >
       <div
         className={cn(
-          "absolute z-10 top-[1px] left-0 right-0 px-2 py-1 border-b border-gray-300 bg-white mx-[1px] rounded-tl-xl rounded-tr-xl hover:shadow-md transition-shadow overflow-x-auto whitespace-nowrap no-scrollbar",
+          "absolute z-10 top-[1px] left-0 right-0 px-2 py-1 border-b border-gray-300 bg-white mx-[1px] rounded-tl-xl rounded-tr-xl hover:shadow-md transition-shadow overflow-x-auto whitespace-nowrap no-scrollbar [&_button]:mx-1 [&_button]:p-1 [&_button]:rounded-md [&_button]:hover:bg-gray-100 [&_button]:focus:outline-none [&_button]:focus:ring-2 [&_button]:focus:ring-[#12B8FF] [&_button]:cursor-pointer",
           isLoading && "!bg-[#eee] !border-gray-300  animate-pulse"
         )}
       >
         <button
           onClick={() => format("bold")}
-          variant="ghost"
           className={cn("relative", formatStates.bold && "text-[#12B8FF]")}
         >
           <IconBold />
         </button>
         <button
           onClick={() => format("italic")}
-          variant="ghost"
           className="relative"
         >
           <IconItalic className={cn(formatStates.italic && "text-[#12B8FF]")} />
         </button>
         <button
           onClick={() => format("underline")}
-          variant="ghost"
           className="relative"
         >
           <IconUnderline
@@ -193,24 +190,23 @@ const RichTextEditor = ({
         </button>
         <button
           onClick={() => format("strikeThrough")}
-          variant="ghost"
           className="relative"
         >
           <IconStrikeThrough
             className={cn(formatStates.strikeThrough && "text-[#12B8FF]")}
           />
         </button>
-        <button onClick={onHyperLinkClick} variant="ghost">
+        <button onClick={onHyperLinkClick}>
           <IconHyperlink
             className={cn(formatStates.hyperlink && "text-[#12B8FF]")}
           />
         </button>
-        <button onClick={() => format("insertUnorderedList")} variant="ghost">
+        <button onClick={() => format("insertUnorderedList")}>
           <IconUnorderedList
             className={cn(formatStates.unorderedList && "text-[#12B8FF]")}
           />
         </button>
-        <button onClick={() => format("insertOrderedList")} variant="ghost">
+        <button onClick={() => format("insertOrderedList")}>
           <IconOrderedList
             className={cn(formatStates.orderedList && "text-[#12B8FF]")}
           />
@@ -218,7 +214,7 @@ const RichTextEditor = ({
       </div>
       <div
         className={cn(
-          "empty:before:content-[attr(placeholder)] whitespace-pre-wrap min-h-[100px] w-full border border-gray-300 rounded-xl px-3 pt-[58px] pb-3 relative focus:outline-none focus:ring-4 focus:ring-[#12B8FF] bg-white text-gray-600 [&_a]:text-blue-600 [&_a]:underline [&_ul]:list-disc [&_ol]:list-decimal [&_ul]:pl-5 [&_ol]:pl-5",
+          "empty:before:content-[attr(placeholder)] min-h-[100px] w-full border border-gray-300 rounded-xl px-3 pt-[58px] pb-3 relative focus:outline-none focus:ring-4 focus:ring-[#12B8FF] bg-white text-gray-600 [&_a]:text-blue-600 [&_a]:underline [&_ul]:list-disc [&_ol]:list-decimal [&_ul]:pl-5 [&_ol]:pl-5",
           // NOTE: whitespace-pre-wrap is necessary to preserve newlines \n in content and so you don't have to encode/decode <br/> tags.
           isLoading &&
             "!text-transparent !bg-[#eee] !border-gray-300  animate-pulse"
