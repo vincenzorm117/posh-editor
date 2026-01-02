@@ -36,7 +36,7 @@ const handleAutomaticListCreation = (event, rootParentNode) => {
 
   // [Step] Perform checks to ensure we're in a text node and the text matches the bullet pattern
   // [Check] if the text content matches "* " or "1. "
-  const matches = node.textContent.match(/^(\*|1\.)\s$/);
+  const matches = node.textContent.match(/^(\*|1\.)\s.*$/);
   const bulletType = matches?.[1] ?? null;
   // [Check] if the cursor is positioned right after "* " or "1. "
   if (range.startOffset < 2 || bulletType === null) {
@@ -51,25 +51,21 @@ const handleAutomaticListCreation = (event, rootParentNode) => {
   }
 
   // [Step] If we reach here, we need to convert the text to a list
-  let parentNode = node.parentNode;
-  if (bulletType === "*") {
+  if (["*"].includes(bulletType)) {
     // Create the unordered list
     document.execCommand("insertUnorderedList", false, null);
   } else {
-    // Create the unordered list
+    // Create the ordered list
     document.execCommand("insertOrderedList", false, null);
   }
 
-  // [Step] Clear the text after the bullet
-  const list = parentNode.childNodes[0];
-  const li = list.childNodes[0];
-  li.innerHTML = "";
-
-  // [Step] Position the cursor after the bullet
-  range.setStart(li, 0);
-  range.setEnd(li, 0);
-  selection.removeAllRanges();
-  selection.addRange(range);
+  // [Step] Clear the bullet text at the start of the new list item
+  const newNode = document.getSelection().getRangeAt(0).startContainer;
+  newNode.parentElement.innerHTML = newNode.parentElement.innerHTML.replace(
+    /^(\*|1\.)(\s|&nbsp;)/,
+    ""
+  );
 };
+
 
 export default handleAutomaticListCreation;
