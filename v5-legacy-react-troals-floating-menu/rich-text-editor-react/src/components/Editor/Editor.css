@@ -1,0 +1,17 @@
+body {
+  font-family: sans-serif;
+  padding: 20px;
+}
+
+#editor {
+  border: 1px solid #ccc;
+  padding: 5px;
+  min-height: 100px;
+}
+
+#redbox {
+  position: absolute;
+  border: 1px solid red;
+  background: rgba(255, 0, 0, 0.1);
+  pointer-events: none; /* Allow clicks to pass through */
+}

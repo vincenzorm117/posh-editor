@@ -1,0 +1,12 @@
+body {
+  font-family: sans-serif;
+  padding: 20px;
+}
+
+#toolbar {
+  margin-bottom: 5px;
+}
+
+#toolbar button {
+  margin-right: 4px;
+}
