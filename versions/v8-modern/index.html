@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Modern Rich Text Editor - v7</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, sans-serif;
+        padding: 40px;
+        background: #f5f5f5;
+      }
+
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+      }
+
+      .toolbar {
+        display: flex;
+        gap: 8px;
+        padding: 12px;
+        background: #fafafa;
+        border-bottom: 1px solid #e0e0e0;
+      }
+
+      .toolbar button {
+        padding: 8px 16px;
+        border: 1px solid #d0d0d0;
+        background: white;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 500;
+        transition: all 0.2s;
+      }
+
+      .toolbar button:hover {
+        background: #f0f0f0;
+        border-color: #b0b0b0;
+      }
+
+      .toolbar button:active {
+        background: #e0e0e0;
+      }
+
+      .toolbar button.active {
+        background: #2196f3;
+        color: white;
+        border-color: #2196f3;
+      }
+
+      #editor {
+        min-height: 400px;
+        padding: 24px;
+        outline: none;
+        font-size: 16px;
+        line-height: 1.6;
+      }
+
+      #editor h1 {
+        font-size: 2em;
+        margin-bottom: 0.5em;
+        font-weight: 600;
+      }
+
+      #editor h2 {
+        font-size: 1.5em;
+        margin-bottom: 0.5em;
+        font-weight: 600;
+      }
+
+      #editor h3 {
+        font-size: 1.25em;
+        margin-bottom: 0.5em;
+        font-weight: 600;
+      }
+
+      #editor p {
+        margin-bottom: 1em;
+      }
+
+      #editor ul,
+      #editor ol {
+        margin-left: 2em;
+        margin-bottom: 1em;
+      }
+
+      #editor li {
+        margin-bottom: 0.5em;
+      }
+
+      #editor strong {
+        font-weight: 600;
+      }
+
+      #editor:focus {
+        background: #fafafa;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="toolbar">
+        <button id="boldBtn" title="Bold (Ctrl+B)">Bold</button>
+      </div>
+      <div id="editor" contenteditable="true">
+        <h1>Welcome to the Modern Rich Text Editor</h1>
+        <p>
+          This is a paragraph with some <strong>bold text</strong> already in
+          it. Select any text and click the Bold button to toggle bold
+          formatting.
+        </p>
+        <h2>Features</h2>
+        <p>This editor maintains the structure of your document including:</p>
+        <ul>
+          <li>Paragraphs and their formatting</li>
+          <li>Headlines at different levels</li>
+          <li>Lists and their items</li>
+          <li>Line breaks and spacing</li>
+        </ul>
+        <h3>Try It Out</h3>
+        <p>
+          Select text across multiple elements and apply bold formatting. The
+          structure will be preserved!
+        </p>
+        <p>
+          You can select text within a single paragraph, or across multiple
+          paragraphs and headlines.
+        </p>
+      </div>
+    </div>
+
+    <script>
+      const editor = document.getElementById("editor");
+      const boldBtn = document.getElementById("boldBtn");
+
+      function treeWalkerNodesArray(walker) {
+        let node;
+        const nodes = [];
+        while ((node = walker.nextNode())) {
+          nodes.push(node);
+        }
+        return nodes;
+      }
+
+      function walkTree(walker, rootRange) {
+
+        
+        const wrapper = document.createElement("b");
+        const range = document.createRange();
+        const treeWalkerNodes = treeWalkerNodesArray(walker);
+
+        debugger;
+        for(let node of treeWalkerNodes) {
+          // Skip nodes that are just whitespace
+          if(/^\s+$/.test(node.textContent)) {
+            continue;
+          }
+          
+          if( node == rootRange.startContainer) {
+            range.setStart(node, rootRange.startOffset)
+          } else {
+            range.setStart(node, 0)
+          }
+
+          if(node == rootRange.endContainer) {
+            range.setEnd(node, rootRange.endOffset)
+          } else {
+            range.setEnd(node, node.length)
+          }
+          console.log(node.textContent.slice(range.startOffset, range.endOffset))
+
+          range.surroundContents(wrapper);
+        }
+      }
+
+      function bold(selection, range) {
+        console.log(selection);
+        console.log(range);
+
+        const walker = document.createTreeWalker(
+          editor,
+          NodeFilter.SHOW_TEXT,
+          {
+            acceptNode(node) {
+              return range.intersectsNode(node)
+                ? NodeFilter.FILTER_ACCEPT
+                : NodeFilter.FILTER_REJECT;
+            },
+          },
+          false
+        );
+
+        walkTree(walker, range);
+      }
+
+      function format(command) {
+        const selection = window.getSelection();
+        const range = selection.getRangeAt(0);
+
+        if (selection.isCollapsed) {
+          return;
+        }
+
+        if (command === "bold") {
+          bold(selection, range);
+        }
+      }
+
+      boldBtn.addEventListener("click", format.bind(this, "bold"));
+    </script>
+  </body>
+</html>

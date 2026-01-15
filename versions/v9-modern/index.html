@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Modern Rich Text Editor - v7</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, sans-serif;
+        padding: 40px;
+        background: #f5f5f5;
+      }
+
+      .margin {
+        margin: 0 auto;
+        max-width: 800px;
+      }
+
+      .container {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+      }
+
+      .toolbar {
+        display: flex;
+        gap: 8px;
+        padding: 12px;
+        background: #fafafa;
+        border-bottom: 1px solid #e0e0e0;
+      }
+
+      .toolbar button {
+        padding: 8px 16px;
+        border: 1px solid #d0d0d0;
+        background: white;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 500;
+        transition: all 0.2s;
+      }
+
+      .toolbar button:hover {
+        background: #f0f0f0;
+        border-color: #b0b0b0;
+      }
+
+      .toolbar button:active {
+        background: #e0e0e0;
+      }
+
+      .toolbar button.active {
+        background: #2196f3;
+        color: white;
+        border-color: #2196f3;
+      }
+
+      #editor {
+        min-height: 400px;
+        padding: 24px;
+        outline: none;
+        font-size: 16px;
+        line-height: 1.6;
+      }
+
+      #editor h1 {
+        font-size: 2em;
+        margin-bottom: 0.5em;
+        font-weight: 600;
+      }
+
+      #editor h2 {
+        font-size: 1.5em;
+        margin-bottom: 0.5em;
+        font-weight: 600;
+      }
+
+      #editor h3 {
+        font-size: 1.25em;
+        margin-bottom: 0.5em;
+        font-weight: 600;
+      }
+
+      #editor p {
+        margin-bottom: 1em;
+      }
+
+      #editor ul,
+      #editor ol {
+        margin-left: 2em;
+        margin-bottom: 1em;
+      }
+
+      #editor li {
+        margin-bottom: 0.5em;
+      }
+
+      #editor strong {
+        font-weight: 600;
+      }
+
+      #editor:focus {
+        background: #fafafa;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="margin">
+      <div class="container">
+        <div class="toolbar">
+          <button id="boldBtn" title="Bold (Ctrl+B)" data-testid="btn-bold">Bold</button>
+        </div>
+        <div id="editor" contenteditable="true" data-testid="posh">
+          <h1>Welcome to the Modern Rich Text Editor</h1>
+          <p>
+            This is a paragraph with some <strong>bold text</strong> already in
+            it. Select any text and click the Bold button to toggle bold
+            formatting.
+          </p>
+          <h2>Features</h2>
+          <p>This editor maintains the structure of your document including:</p>
+          <ul>
+            <li>Paragraphs and their formatting</li>
+            <li>Headlines at different levels</li>
+            <li>Lists and their items</li>
+            <li>Line breaks and spacing</li>
+          </ul>
+          <h3>Try It Out</h3>
+          <p>
+            Select text across multiple elements and apply bold formatting. The
+            structure will be preserved!
+          </p>
+          <p>
+            You can select text within a single paragraph, or across multiple
+            paragraphs and headlines.
+          </p>
+        </div>
+      </div>
+      <p class="mt-6">
+        Outside text content. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam
+        convallis, nisl vel tincidunt luctus, nunc urna aliquam nunc, eget
+        aliquam massa nisl quis neque.
+      </p>
+    </div>
+
+    <script>
+      const editor = document.getElementById("editor");
+      const boldBtn = document.getElementById("boldBtn");
+
+      editor.addEventListener("keydown", (e) => {
+        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "b") {
+          e.preventDefault();
+          bold();
+        }
+      });
+
+      boldBtn.addEventListener("click", () => {
+        bold();
+      });
+
+      const BOLD_SELECTOR = "b,strong";
+
+
+      function bold() {
+
+        const sel = window.getSelection();
+        if (!sel || sel.rangeCount === 0) return;
+
+        const range = sel.getRangeAt(0);
+        if (range.collapsed) return;
+
+        // Only handle selections inside the editor
+        if (!editor.contains(range.commonAncestorContainer)) return;
+
+        // editor.focus();
+
+        // Decide whether to add or remove bold
+        const shouldRemove = selectionFullyBold(range);
+
+        const textNodes = getSelectedTextNodes(range, editor);
+        if (textNodes.length === 0) return;
+
+        // Apply mutation in a stable way:
+        // For each text node, isolate the selected part then wrap/unwrap it.
+        for (const node of textNodes) {
+          const sub = intersectionRangeForTextNode(range, node);
+          if (!sub) continue;
+
+          // Isolate selected substring into its own Text node
+          const isolated = isolateTextInRange(
+            node,
+            sub.startOffset,
+            sub.endOffset
+          );
+          if (!isolated || isolated.nodeValue === "") continue;
+
+          if (shouldRemove) {
+            unwrapBoldForNode(isolated);
+          } else {
+            wrapBoldNode(isolated);
+          }
+        }
+
+        cleanupBold(editor);
+        cleanupBold(editor);
+      }
+
+      function clamp(value, min, max) {
+        return Math.min(Math.max(value, min), max);
+      }
+
+      function closest(node, selector) {
+        if (node == null) return null;
+        const _node = node.nodeType === Node.TEXT_NODE ? node.parentElement : node;
+        return _node.closest(selector);
+      };
+
+      // ---------- Decision: is selection fully bold? ----------
+      function selectionFullyBold(range) {
+        const textNodes = getSelectedTextNodes(range);
+        if (textNodes.length === 0) return false;
+
+        // Every selected text node's selected segment must be within bold
+        for (const node of textNodes) {
+          const sub = intersectionRangeForTextNode(range, node);
+          if (!sub) continue;
+
+          // If any portion isn't bold, treat as not fully bold
+          const isBold = isNodeWithinBold(node);
+          if (!isBold) return false;
+        }
+        return true;
+      }
+
+      function isNodeWithinBold(node) {
+        const el = node.parentElement;
+        return !!(el && el.closest(BOLD_SELECTOR));
+      }
+
+      // ---------- Collect text nodes intersecting selection ----------
+      function getSelectedTextNodes(
+        range,
+        root = range.commonAncestorContainer
+      ) {
+        const ancestor =
+          root.nodeType === Node.ELEMENT_NODE ? root : root.parentElement;
+        if (!ancestor) return [];
+
+        const walker = document.createTreeWalker(
+          ancestor,
+          NodeFilter.SHOW_TEXT,
+          {
+            acceptNode: (node) => {
+              if (!node.nodeValue || node.nodeValue.trim() === "")
+                return NodeFilter.FILTER_REJECT;
+              // intersectsNode is widely supported in modern browsers
+              return range.intersectsNode(node)
+                ? NodeFilter.FILTER_ACCEPT
+                : NodeFilter.FILTER_REJECT;
+            },
+          }
+        );
+
+        const nodes = [];
+        let n;
+        while ((n = walker.nextNode())) nodes.push(n);
+
+        // Ensure stable document order
+        return nodes;
+      }
+
+      // ---------- Compute intersection offsets for a text node ----------
+      function intersectionRangeForTextNode(baseRange, textNode) {
+        // Build a range that covers the whole text node
+        const nodeRange = document.createRange();
+        nodeRange.selectNodeContents(textNode);
+
+        // If no intersection, bail
+        if (!baseRange.intersectsNode(textNode)) return null;
+
+        // Compute start offset
+        let start = 0;
+        if (baseRange.startContainer === textNode)
+          start = baseRange.startOffset;
+
+        // If the startContainer is before this node, start stays 0
+
+        // Compute end offset
+        let end = textNode.nodeValue.length;
+        if (baseRange.endContainer === textNode) end = baseRange.endOffset;
+
+        // Clamp just in case
+        start = clamp(start, 0, textNode.nodeValue.length);
+        end = clamp(end, 0, textNode.nodeValue.length);
+        if (start === end) return null;
+
+        return { startOffset: start, endOffset: end };
+      }
+
+      // ---------- Split text node so selected segment is its own node ----------
+      function isolateTextInRange(textNode, startOffset, endOffset) {
+        // Split end first so offsets remain valid
+        let node = textNode;
+
+        if (endOffset < node.nodeValue.length) {
+          node.splitText(endOffset);
+        }
+        if (startOffset > 0) {
+          node = node.splitText(startOffset);
+        }
+        return node; // this node now corresponds exactly to selected text
+      }
+
+      // ---------- Apply bold ----------
+      function wrapBoldNode(textNode) {
+        // If already bold, do nothing
+        if (isNodeWithinBold(textNode)) return;
+
+        const strong = document.createElement("b");
+        textNode.parentNode.insertBefore(strong, textNode);
+        strong.appendChild(textNode);
+      }
+
+      // ---------- Remove bold ----------
+      function unwrapBoldForNode(textNode) {
+        const boldEl =
+          textNode.parentElement &&
+          textNode.parentElement.closest(BOLD_SELECTOR);
+        if (!boldEl) return;
+
+        // Only unwrap the closest bold wrapper around this text node
+        // Move the text node out, then remove wrapper if empty.
+        const parent = boldEl.parentNode;
+        parent.insertBefore(textNode, boldEl);
+
+        // If bold element becomes empty (or only whitespace), remove it
+        if (!boldEl.textContent || boldEl.textContent.trim() === "") {
+          boldEl.remove();
+        } else if (boldEl.childNodes.length === 0) {
+          boldEl.remove();
+        }
+      }
+
+      // ---------- Cleanup / normalization ----------
+      function cleanupBold(root) {
+        // 1) Merge adjacent <strong>/<b> siblings
+        mergeAdjacentBold(root);
+
+        // 2) Remove empty bold tags
+        for (const el of root.querySelectorAll(BOLD_SELECTOR)) {
+          if (!el.textContent || el.textContent.trim() === "") el.remove();
+        }
+
+        // 3) Merge adjacent text nodes (cheap pass)
+        root.normalize();
+      }
+
+      function mergeAdjacentBold(root) {
+        const walker = document.createTreeWalker(root, NodeFilter.SHOW_ELEMENT);
+        const toCheck = [];
+        let n;
+        while ((n = walker.nextNode())) {
+          if (n.matches && n.matches(BOLD_SELECTOR)) toCheck.push(n);
+        }
+        for (const el of toCheck) {
+          const next = el.nextSibling;
+          if (
+            next &&
+            next.nodeType === Node.ELEMENT_NODE &&
+            next.matches(BOLD_SELECTOR)
+          ) {
+            // Move children from next into el then remove next
+            while (next.firstChild) el.appendChild(next.firstChild);
+            next.remove();
+          }
+        }
+      }
+    </script>
+  </body>
+<!--
+[Steps to bold/unbold selection]
+1. get selection
+2. get range
+3. check if range is in editor
+4. determine if bolding or unbolding
+5. get all textNodes
+6. LOOP for each node in textNode
+  1. get intersecting range on node
+  2. split text node to isolate it
+  3. if should bold
+    1. is node within bold return
+    2. create b element
+    3. insert b element
+    4. append text node to b element
+  4. else (if unbold)
+    1. find the bold element of the textNode
+    2. if none exist, return
+    3. insert textNode before the bold element
+    4. if the bold element is empty, remove it
+-->
+
+</html>
