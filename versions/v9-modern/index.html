@@ -180,6 +180,16 @@
         // Only handle selections inside the editor
         if (!editor.contains(range.commonAncestorContainer)) return;
 
+        if (sel.anchorNode.parentElement.firstChild == sel.anchorNode && sel.anchorOffset === 0) {
+          const newRange = document.createRange();
+
+          newRange.setStart(range.startContainer.parentElement, 0);
+          newRange.setEnd(range.endContainer, range.endOffset);
+
+          sel.removeAllRanges();
+          sel.addRange(newRange);
+        }
+
         // editor.focus();
 
         // Decide whether to add or remove bold
