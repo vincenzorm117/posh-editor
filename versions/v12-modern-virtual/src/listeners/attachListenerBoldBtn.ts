@@ -1,5 +1,6 @@
-import virtualApplyBold from './actions/virtualApplyBold';
-import render from './render';
+import virtualApplyBold from '../actions/virtualApplyBold';
+import render from '../render';
+import updateUI from '../updateUI';
 
 function attachListenerBoldBtn(state: State, boldBtnSelector: string) {
   // If no selector defined, skip
@@ -13,13 +14,9 @@ function attachListenerBoldBtn(state: State, boldBtnSelector: string) {
   }
   // Attach click listener
   boldBtn.addEventListener('click', () => {
-    const newState = virtualApplyBold(state);
-    state = {
-      ...state,
-      ...newState,
-    };
-
+    virtualApplyBold(state);
     render(state);
+    updateUI(state);
   });
 }
 

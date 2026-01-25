@@ -1,5 +1,5 @@
-import virtualApplyBold from './actions/virtualApplyBold';
-import render from './render';
+import virtualApplyBold from '../actions/virtualApplyBold';
+import render from '../render';
 
 const attachListenerKeydown = (state: State) => {
   const editor = state.editor.element!;
@@ -7,12 +7,7 @@ const attachListenerKeydown = (state: State) => {
   editor.addEventListener('keydown', (e: KeyboardEvent) => {
     if ((e.ctrlKey || e.metaKey) && e.key === 'b') {
       e.preventDefault();
-      const newState = virtualApplyBold(state);
-      state = {
-        ...state,
-        ...newState,
-      };
-
+      virtualApplyBold(state);
       render(state);
     }
   });

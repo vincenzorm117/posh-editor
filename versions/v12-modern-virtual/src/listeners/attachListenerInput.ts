@@ -1,8 +1,9 @@
-import render from './render';
-import { clamp } from './helpers/clamp';
-import virtualBuildIndex from './virtualBuildIndex';
-import virtualizeDOM from './virtualizeDOM';
-import { virtualizeSelection } from './virtualizeSelection';
+import render from '../render';
+import { clamp } from '../helpers/clamp';
+import virtualBuildIndex from '../virtualBuildIndex';
+import virtualizeDOM from '../virtualizeDOM';
+import { virtualizeSelection } from '../virtualizeSelection';
+import updateUI from '../updateUI';
 
 const attachListenerInput = (state: State) => {
   const editorElement = state.editor.element;
@@ -25,6 +26,7 @@ const attachListenerInput = (state: State) => {
     };
 
     render(state);
+    updateUI(state);
   });
 };
 export default attachListenerInput;

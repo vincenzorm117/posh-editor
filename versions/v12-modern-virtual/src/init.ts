@@ -1,7 +1,7 @@
-import attachListenerBoldBtn from './attachListenerBoldBtn';
-import attachListenerInput from './attachListenerInput';
-import attachListenerKeydown from './attachListenerKeydown';
-import attachListenerSelectionChange from './attachListenerSelectionChange';
+import attachListenerBoldBtn from './listeners/attachListenerBoldBtn';
+import attachListenerInput from './listeners/attachListenerInput';
+import attachListenerKeydown from './listeners/attachListenerKeydown';
+import attachListenerSelectionChange from './listeners/attachListenerSelectionChange';
 import { domIsValidDocument } from './domIsValidDocument';
 import render from './render';
 import virtualBuildIndex from './virtualBuildIndex';
