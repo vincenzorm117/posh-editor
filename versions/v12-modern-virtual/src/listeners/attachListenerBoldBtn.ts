@@ -1,6 +1,6 @@
 import virtualApplyBold from '../actions/virtualApplyBold';
 import render from '../render';
-import updateUI from '../updateUI';
+import debugUpdateUI from '../debug/debugUpdateUI';
 
 function attachListenerBoldBtn(state: State, boldBtnSelector: string) {
   // If no selector defined, skip
@@ -16,7 +16,7 @@ function attachListenerBoldBtn(state: State, boldBtnSelector: string) {
   boldBtn.addEventListener('click', () => {
     virtualApplyBold(state);
     render(state);
-    updateUI(state);
+    debugUpdateUI(state);
   });
 }
 

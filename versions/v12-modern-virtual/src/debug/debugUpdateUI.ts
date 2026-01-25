@@ -1,3 +1,5 @@
+import debugRenderVirtualDocument from "./debugRenderVirtualDocument";
+
 const updateUI = (state: State) => {
   document.getElementById('cell-in-editor')!.innerText = state.virtualSelection
     ?.isInsideEditor
@@ -13,16 +15,8 @@ const updateUI = (state: State) => {
     String(state.virtualSelection.focus) || 'N/A';
 
   // New: write formatted virtual document JSON
-  const virtualDocEl = document.getElementById('virtual-document-json');
-  if (virtualDocEl) {
-    try {
-      virtualDocEl.textContent = state.virtualDocument
-        ? JSON.stringify(state.virtualDocument, null, 2)
-        : 'N/A';
-    } catch {
-      virtualDocEl.textContent = 'N/A';
-    }
-  }
+  const virtualDocEl = document.getElementById('virtual-document-json')!;
+  virtualDocEl.textContent = debugRenderVirtualDocument(state)
 };
 
 export default updateUI;
