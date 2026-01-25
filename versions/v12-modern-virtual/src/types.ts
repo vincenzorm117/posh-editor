@@ -24,10 +24,10 @@ type VirtualIndex = {
 };
 
 type VirtualSelection = {
-  anchor?: number;
-  focus?: number;
-  direction?: 'forward' | 'backward' | 'none';
-  isCollapsed?: boolean;
+  anchor: number;
+  focus: number;
+  direction: 'forward' | 'backward' | 'none';
+  isCollapsed: boolean;
   isInsideEditor: boolean;
 };
 
@@ -57,8 +57,8 @@ type EditorState = {
 
 type State = {
   editor: EditorState;
-  virtualDocument?: VirtualDocument;
-  virtualSelection?: VirtualSelection;
+  virtualDocument: VirtualDocument;
+  virtualSelection: VirtualSelection;
   virtualIndex?: VirtualIndex;
   virtualTree?: VirtualTree;
 };

@@ -3,6 +3,8 @@ import { clamp } from '../helpers/clamp';
 import vCreateInline from '../vCreateInline';
 import vInlinesHaveSameMarks from '../vInlinesHaveSameMarks';
 import getOrderedSelection from '../utils/getOrderedSelection';
+import virtualBuildIndex from '../virtualBuildIndex';
+import { virtualizeSelection } from '../virtualizeSelection';
 
 const virtualApplyMarksInline = (
   virtualInlines: VirtualInline[],
@@ -83,11 +85,11 @@ const virtualApplyMarksInRange = (
   state: State,
   marksToApply: Record<string, boolean>,
 ) => {
-  const { virtualSelection } = state;
+  const { virtualSelection, virtualDocument } = state;
   const { startPosition, endPosition } = getOrderedSelection(virtualSelection!);
 
   let newBlocks = [] as VirtualBlock[];
-  const virtualBlocks = state.virtualDocument?.blocks ?? [];
+  const virtualBlocks = virtualDocument.blocks ?? [];
   let globalPosition = 0;
 
   for (let bi = 0; bi < virtualBlocks.length; bi++) {
@@ -122,13 +124,13 @@ const virtualApplyMarksInRange = (
     globalPosition += blockLength + 1;
   }
 
-  return {
-    ...state,
-    virtualDocument: {
-      ...state.virtualDocument,
-      blocks: newBlocks,
-    },
-  } as State;
+  state.virtualDocument = {
+    type: 'document',
+    blocks: newBlocks,
+  };
+
+  state.virtualIndex = virtualBuildIndex(state);
+  state.virtualSelection = virtualizeSelection(state);
 };
 
 export default virtualApplyMarksInRange;

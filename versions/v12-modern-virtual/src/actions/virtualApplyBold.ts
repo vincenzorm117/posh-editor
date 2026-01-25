@@ -2,7 +2,7 @@ import render from '../render';
 import virtualApplyMarksInRange from './virtualApplyMarksInRange';
 import virtualIsBolded from './virtualIsBolded';
 
-const virtualApplyBold = (state: State): State => {
+const virtualApplyBold = (state: State) => {
   const { virtualSelection } = state;
 
   if (!virtualSelection) return state;
@@ -13,7 +13,7 @@ const virtualApplyBold = (state: State): State => {
   // Check if selection is already bolded
   const isBolded = virtualIsBolded(state);
   // Apply or remove bold mark based on current state
-  return virtualApplyMarksInRange(state, { bold: !isBolded });
+  virtualApplyMarksInRange(state, { bold: !isBolded });
 };
 
 export default virtualApplyBold;
