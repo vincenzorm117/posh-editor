@@ -67,6 +67,8 @@ Multiple implementations of a Rich Text Editor
 * [Keyboard] 1. [Space] creates ordered list
 * [Keyboard] Ordered list, tab creates sublist
 * [Keyboard] Ordered list, Shift+tab exits list one level up
+* [Lists] Be able to start list with 1. | a. | A. | i. | I. | * | - (should be supported by list-style CSS prop)
+
 
 
 
