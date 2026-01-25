@@ -9,6 +9,8 @@
  * generateArray(5); // Returns [0, 1, 2, 3, 4]
  * ```
  */
-function generateArray(size: number) {
+const generateArray = (size: number) => {
   return Array.from({ length: size }, (_, i) => i);
 }
+
+export default generateArray;

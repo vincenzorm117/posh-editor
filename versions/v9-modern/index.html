@@ -110,6 +110,32 @@
       #editor:focus {
         background: #fafafa;
       }
+
+      #debugBtn {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        padding: 12px 20px;
+        background: #ff5722;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 600;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        transition: all 0.2s;
+        z-index: 1000;
+      }
+
+      #debugBtn:hover {
+        background: #e64a19;
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+      }
+
+      #debugBtn.active {
+        background: #4caf50;
+      }
     </style>
   </head>
   <body>
@@ -120,12 +146,17 @@
         </div>
         <div id="editor" contenteditable="true" data-testid="posh">
           <h1>Welcome to the Modern Rich Text Editor</h1>
+          <h2><b>Bold</b><i>Italic</i></h2>
+          <p>Line br starts right after this<br>then break</p>
           <p>
             This is a paragraph with some <strong>bold text</strong> already in
-            it. Select any text and click the Bold button to toggle bold
+            it. Select any text and<br>click the Bold button to toggle bold
             formatting.
           </p>
           <h2>Features</h2>
+          <p><b><u><i></i></u></b></p>
+          <p><b><u><i></i></u></b></p>
+          <p>Tag test <span class="select-none bg-[red]/30 rounded-sm inline-block px-1" contenteditable="false" tabindex="0" data-embed="1">Embedded block (select me) <b>contenteditable="false"</b> and <b>user-select:none</b></span> with some text after. I have.</p>
           <p>This editor maintains the structure of your document including:</p>
           <ul>
             <li>Paragraphs and their formatting</li>
@@ -144,16 +175,59 @@
           </p>
         </div>
       </div>
-      <p class="mt-6">
-        Outside text content. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam
-        convallis, nisl vel tincidunt luctus, nunc urna aliquam nunc, eget
-        aliquam massa nisl quis neque.
+      <p class="my-6">
+        Outside text content. Lorem ipsum dolor sit amet, consectetur adipiscing
+        elit. Nullam convallis, nisl vel tincidunt luctus, nunc urna aliquam
+        nunc, eget aliquam massa nisl quis neque.
       </p>
     </div>
+
+    <button id="debugBtn">Debug Selection</button>
 
     <script>
       const editor = document.getElementById("editor");
       const boldBtn = document.getElementById("boldBtn");
+      const debugBtn = document.getElementById("debugBtn");
+
+      // Selection debugging
+      let debugEnabled = false;
+      let selectionChangeListener = null;
+
+      debugBtn.addEventListener("click", () => {
+        debugEnabled = !debugEnabled;
+        debugBtn.classList.toggle("active", debugEnabled);
+        debugBtn.textContent = debugEnabled ? "Debug: ON" : "Debug Selection";
+
+        if (debugEnabled) {
+          selectionChangeListener = () => {
+            const sel = window.getSelection();
+            console.log("=== Selection Changed ===");
+            console.log("Selection:", sel);
+            console.log("anchorNode:", sel.anchorNode);
+            console.log("anchorOffset:", sel.anchorOffset);
+            console.log("focusNode:", sel.focusNode);
+            console.log("focusOffset:", sel.focusOffset);
+            console.log("rangeCount:", sel.rangeCount);
+            // if (sel.rangeCount > 0) {
+            //   const range = sel.getRangeAt(0);
+            //   console.log("Range:", range);
+            //   console.log("startContainer:", range.startContainer);
+            //   console.log("startOffset:", range.startOffset);
+            //   console.log("endContainer:", range.endContainer);
+            //   console.log("endOffset:", range.endOffset);
+            // }
+            console.log("========================");
+          };
+          document.addEventListener("selectionchange", selectionChangeListener);
+          console.log("✅ Selection debugging enabled");
+        } else {
+          if (selectionChangeListener) {
+            document.removeEventListener("selectionchange", selectionChangeListener);
+            selectionChangeListener = null;
+          }
+          console.log("❌ Selection debugging disabled");
+        }
+      });
 
       editor.addEventListener("keydown", (e) => {
         if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "b") {
@@ -168,9 +242,7 @@
 
       const BOLD_SELECTOR = "b,strong";
 
-
       function bold() {
-
         const sel = window.getSelection();
         if (!sel || sel.rangeCount === 0) return;
 
@@ -229,9 +301,10 @@
 
       function closest(node, selector) {
         if (node == null) return null;
-        const _node = node.nodeType === Node.TEXT_NODE ? node.parentElement : node;
+        const _node =
+          node.nodeType === Node.TEXT_NODE ? node.parentElement : node;
         return _node.closest(selector);
-      };
+      }
 
       // ---------- Decision: is selection fully bold? ----------
       function selectionFullyBold(range) {
@@ -394,8 +467,9 @@
         }
       }
     </script>
+    <script src="./tests.js"></script>
   </body>
-<!--
+  <!--
 [Steps to bold/unbold selection]
 1. get selection
 2. get range
@@ -415,6 +489,4 @@
     2. if none exist, return
     3. insert textNode before the bold element
     4. if the bold element is empty, remove it
--->
-
-</html>
+--></html>
