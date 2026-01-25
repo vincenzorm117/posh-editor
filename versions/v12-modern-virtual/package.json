@@ -1,0 +1,32 @@
+{
+  "name": "v12-modern-virtual",
+  "version": "1.0.0",
+  "description": "Virtual DOM Rich Text Editor with TypeScript and Webpack",
+  "main": "dist/bundle.js",
+  "scripts": {
+    "build": "webpack --mode production",
+    "devserve": "webpack-dev-server --mode development --watch --open",
+    "devold": "webpack --mode development --watch",
+    "dev": "webpack serve --mode development --open",
+    "test": "jest",
+    "generate:graph": "npx depcruise src --include-only \"^src\" --output-type dot | dot -T svg > dependency-graph.svg"
+  },
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "dependency-cruiser": "^17.3.7",
+    "jest": "^30.2.0",
+    "madge": "^8.0.0",
+    "ts-jest": "^29.4.6",
+    "ts-loader": "^9.5.1",
+    "typescript": "^5.3.3",
+    "webpack": "^5.89.0",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^4.15.1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@playwright/test": "^1.58.0"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.foldingImportsByDefault": true,
+  "javascript.preferences.organizeImports": {
+    "typeOrder": "auto"
+  },
+  "typescript.preferences.organizeImports": {
+    "typeOrder": "auto"
+  }
+}
