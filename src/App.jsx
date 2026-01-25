@@ -14,7 +14,7 @@ const App = () => {
       <LegacyRichTextEditor
         focusOnMount={true}
         value={editorContent}
-        onSave={(content) => console.log("Saved content:", content)}
+        // onSave={(content) => console.log("Saved content:", content)}
       />
     </>
   );

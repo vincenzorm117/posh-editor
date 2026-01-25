@@ -39,27 +39,30 @@ const handleBulletShift = (event) => {
   // Only process if the selected node is within a list item
   if (!closest(node, "li")) return;
 
+  // If Shift key is pressed, outdent the list item
   if (nativeEvent.shiftKey) {
-    // Outdent the list item
     document.execCommand("outdent", false, null);
-  } else {
-    // Indent the list item
-
-    // Get parent ul
-    const list = closest(node, "ul, ol");
-    let listStyleType = null;
-    if (list.nodeName === "UL") {
-      listStyleType = list.classList.contains("!list-[circle]") ? "" : "!list-[circle]";
-    } else if (list.nodeName === "OL") {
-      // listStyleType = list.classList.contains("list-decimal") ? "list-decimal" : "list-decimal";
-      listStyleType = "";
-    }
-    
-    document.execCommand("indent", false, null);
-    const newNode = document.getSelection().getRangeAt(0).startContainer;
-    const newNodeList = closest(newNode, "ul, ol");
-    if (listStyleType) newNodeList.classList.add(listStyleType);
+    return;
   }
+  // Indent the list item
+
+  // Get parent ul
+  const list = closest(node, "ul, ol");
+  let listStyleType = null;
+  if (list.nodeName === "UL") {
+    listStyleType = list.classList.contains("!list-[circle]") 
+      ? "!list-[square]" 
+      : (list.classList.contains("!list-[square]") ? "" : "!list-[circle]");
+    debugger;
+  } else if (list.nodeName === "OL") {
+    // listStyleType = list.classList.contains("list-decimal") ? "list-decimal" : "list-decimal";
+    listStyleType = "";
+  }
+  
+  document.execCommand("indent", false, null);
+  const newNode = document.getSelection().getRangeAt(0).startContainer;
+  const newNodeList = closest(newNode, "ul, ol");
+  if (listStyleType) newNodeList.classList.add(listStyleType);
 };
 
 export default handleBulletShift;
