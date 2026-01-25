@@ -82,6 +82,34 @@
           paragraphs and headlines.
         </p>
       </div>
+
+      <!-- Selection State Table -->
+      <div class="mt-6">
+        <div class="overflow-x-auto">
+          <table
+            class="min-w-full text-sm border border-warm-300 rounded-xl overflow-hidden"
+          >
+            <thead class="bg-warm-200 text-warm-700">
+              <tr>
+                <th class="px-4 py-2 text-left font-semibold">InEditor</th>
+                <th class="px-4 py-2 text-left font-semibold">IsCollapsed</th>
+                <th class="px-4 py-2 text-left font-semibold">Anchor</th>
+                <th class="px-4 py-2 text-left font-semibold">Focus</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-warm-300">
+              <tr class="bg-white">
+                <td id="cell-in-editor" class="px-4 py-2 text-warm-800">—</td>
+                <td id="cell-is-collapsed" class="px-4 py-2 text-warm-800">
+                  —
+                </td>
+                <td id="cell-anchor" class="px-4 py-2 text-warm-800">—</td>
+                <td id="cell-focus" class="px-4 py-2 text-warm-800">—</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
 
     <script src="dist/bundle.js"></script>
