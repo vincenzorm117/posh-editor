@@ -4,10 +4,25 @@ import vCreateBlock from './vCreateBlock';
 import vCreateInline from './vCreateInline';
 import vInlinesHaveSameMarks from './vInlinesHaveSameMarks';
 
-const virtualizeBlock = (blockNode: Node): VirtualBlock => {
+const virtualizeBlock = (
+  blockNode: Node,
+  editorElement: HTMLElement,
+  options: VirtualizeOptions = {},
+): VirtualBlock => {
   // If text node, create a paragraph block and wrap text
   if (blockNode.nodeType === Node.TEXT_NODE) {
-    return vCreateBlock('p', [vCreateInline(blockNode.textContent ?? '')]);
+    let text = blockNode.textContent ?? '';
+
+    // If options to trim whitespace, do so
+    if (options.trimBlockWhiteSpace) {
+      if (blockNode == editorElement.lastChild) {
+        text = text.replace(/\s+$/g, '');
+      } else if (blockNode == editorElement.firstChild) {
+        text = text.replace(/^\s+/g, '');
+      }
+    }
+
+    return vCreateBlock('p', [vCreateInline(text, {}, options)]);
   }
 
   // If not an element node at this point, throw error
@@ -46,16 +61,27 @@ const virtualizeBlock = (blockNode: Node): VirtualBlock => {
       n.nodeType === Node.ELEMENT_NODE &&
       (n as HTMLElement).tagName === 'BR'
     ) {
-      newChildren.push(vCreateInline('\n'));
+      newChildren.push(vCreateInline('\n', {}, options));
     }
 
-    // If text node, add text inline
-    if (n.nodeType === Node.TEXT_NODE) {
-      // TODO: experiment with CHAR_ZERO_WIDTH_SPACE handling
-      let text = n.textContent ?? '';
-      text = text == CHAR_ZERO_WIDTH_SPACE ? '' : text;
-      newChildren.push(vCreateInline(text, domGenerateMarks(n)));
+    // Rest of the nodes must be text nodes
+    if (n.nodeType !== Node.TEXT_NODE) {
+      throw new Error('Unsupported node type in virtualizeBlock');
     }
+
+    // TODO: experiment with CHAR_ZERO_WIDTH_SPACE handling
+    let text = n.textContent ?? '';
+    text = text == CHAR_ZERO_WIDTH_SPACE ? '' : text;
+    // If options to trim whitespace, do so
+    if (options.trimBlockWhiteSpace) {
+      if (n == elementBlockNode.lastChild) {
+        text = text.replace(/\s+$/g, '');
+      } else if (n == elementBlockNode.firstChild) {
+        text = text.replace(/^\s+/g, '');
+      }
+    }
+
+    newChildren.push(vCreateInline(text, domGenerateMarks(n), options));
   }
 
   // Merge consecutive text inlines

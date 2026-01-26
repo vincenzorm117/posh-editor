@@ -32,7 +32,11 @@ function init(
     },
   } as State;
 
-  state.virtualDocument = virtualizeDOM(editorElement);
+  state.virtualDocument = virtualizeDOM(editorElement, {
+    trimBlockWhiteSpace: true,
+    shrinkConsecutiveSpaces: true,
+    convertNewlinesToSpaces: true,
+  });
   state.virtualSelection = virtualizeSelection(state);
   state.virtualIndex = virtualBuildIndex(state);
 

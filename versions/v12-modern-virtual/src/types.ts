@@ -39,6 +39,12 @@ type VirtualDocument = {
   blocks: VirtualBlock[];
 };
 
+type VirtualizeOptions = {
+  trimBlockWhiteSpace?: boolean;
+  shrinkConsecutiveSpaces?: boolean;
+  convertNewlinesToSpaces?: boolean;
+};
+
 type VirtualBlock = {
   type: 'element';
   id: string;
