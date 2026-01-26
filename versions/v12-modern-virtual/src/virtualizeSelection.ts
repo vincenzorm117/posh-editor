@@ -1,3 +1,4 @@
+import getVirtualSelectionMarks from './actions/getVirtualSelectionMarks';
 import { CHAR_ZERO_WIDTH_SPACE } from './constants';
 import { domIsSelectionInEditor } from './domIsSelectionInEditor';
 import { clamp } from './helpers/clamp';
@@ -291,12 +292,20 @@ export function virtualizeSelection(state: State): VirtualSelection {
     }
 
     const caretNode = domLeafPointToVirtualOffset(editorElement, caretLeaf);
-    return {
+    const vSel = {
       anchor: caretNode,
       focus: caretNode,
       isCollapsed: true,
       isInsideEditor: true,
+      direction: 'none',
     } as VirtualSelection;
+
+    vSel.marks = getVirtualSelectionMarks({
+      ...state,
+      virtualSelection: vSel as VirtualSelection,
+    });
+
+    return vSel;
   }
 
   const anchorLeaf = domNextLeafPoint(
@@ -315,10 +324,24 @@ export function virtualizeSelection(state: State): VirtualSelection {
     return { isInsideEditor: false } as VirtualSelection;
   }
 
-  return {
-    anchor: domLeafPointToVirtualOffset(editorElement, anchorLeaf),
-    focus: domLeafPointToVirtualOffset(editorElement, focusLeaf),
+  const anchor = domLeafPointToVirtualOffset(editorElement, anchorLeaf);
+  const focus = domLeafPointToVirtualOffset(editorElement, focusLeaf);
+
+
+  const vSel = {
+    anchor: anchor,
+    focus: focus,
     isCollapsed: false,
     isInsideEditor: true,
+    direction: anchor < focus ? 'forward' : 'backward',
   } as VirtualSelection;
+
+  
+  vSel.marks = getVirtualSelectionMarks({
+    ...state,
+    virtualSelection: vSel as VirtualSelection,
+  });
+
+
+  return vSel
 }
