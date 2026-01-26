@@ -1,4 +1,4 @@
-import uid from './uid';
+import uid from './helpers/uid';
 
 const vCreateBlock = (tag: string, children: any[] = []): VirtualBlock => {
   return {

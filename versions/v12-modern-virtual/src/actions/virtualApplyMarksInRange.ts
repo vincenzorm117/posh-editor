@@ -1,4 +1,4 @@
-import uid from '../uid';
+import uid from '../helpers/uid';
 import { clamp } from '../helpers/clamp';
 import vCreateInline from '../vCreateInline';
 import vInlinesHaveSameMarks from '../vInlinesHaveSameMarks';
