@@ -1,52 +1,55 @@
 import getOrderedSelection from '../utils/getOrderedSelection';
 
 const virtualIsBolded = (state: State): boolean => {
-  const { virtualSelection, virtualDocument } = state;
-  if (!virtualSelection || virtualSelection.isCollapsed) {
+  const { virtualSelection, virtualDocument, virtualIndex } = state;
+  if (
+    !virtualSelection ||
+    !virtualDocument ||
+    !virtualIndex ||
+    !virtualSelection.isInsideEditor
+  ) {
     return false;
   }
 
   const { startPosition, endPosition } = getOrderedSelection(virtualSelection);
 
-  let globalPosition = 0;
   let virtualBlocks = virtualDocument?.blocks || [];
-  for (let bi = 0; bi < virtualBlocks.length; bi++) {
-    const block = virtualBlocks[bi];
-    const blockLength = block.children.reduce(
-      (sum, inline) => sum + inline.text.length,
-      0,
-    );
+  for (let i = 0; i < virtualBlocks.length; i++) {
+    const block = virtualBlocks[i];
+    const { length, globalPosition, inlines } = virtualIndex?.blocks[i]!;
 
     // Selection starts after this block
-    if (globalPosition + blockLength < startPosition) {
-      globalPosition += blockLength;
+    if (globalPosition + length < startPosition) {
       continue;
     }
 
     if (endPosition < globalPosition) {
-      // TODO: consider short-circuiting to true here since all prior inlines were bolded
       break;
     }
 
-    for (let ii = 0; ii < block.children.length; ii++) {
-      const inline = block.children[ii];
-      const inlineLength = inline.text.length;
+    for (let j = 0; j < block.children.length; j++) {
+      const inline = block.children[j];
+      const { globalPosition, length } = inlines[j]!;
 
-      if (globalPosition + inlineLength <= startPosition) {
-        globalPosition += inlineLength;
+      // Case: inline fully contains selection
+      if (
+        globalPosition <= startPosition &&
+        endPosition <= globalPosition + length
+      ) {
+        return !!inline?.marks?.bold;
+      }
+
+      if (globalPosition + length <= startPosition) {
         continue;
       }
 
-      if (endPosition <= globalPosition) {
-        // TODO: consider short-circuiting to true here since all prior inlines were bolded
+      if (endPosition < globalPosition) {
         break;
       }
 
       if (!inline?.marks?.bold) {
         return false;
       }
-
-      globalPosition += inlineLength;
     }
   }
 
