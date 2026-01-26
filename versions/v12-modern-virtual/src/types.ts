@@ -32,6 +32,7 @@ type VirtualSelection = {
   direction: 'forward' | 'backward' | 'none';
   isCollapsed: boolean;
   isInsideEditor: boolean;
+  marks: Record<string, 'true' | 'false' | 'mixed'>;
 };
 
 type VirtualDocument = {
