@@ -1,5 +1,6 @@
 import { clamp } from '../helpers/clamp';
 import getOrderedSelection from '../utils/getOrderedSelection';
+import debugRenderVirtualInline from './debugRenderVirtualInline';
 
 const getUnderscoreLine = (
   block: VirtualBlock,
@@ -59,7 +60,7 @@ const debugRenderVirtualDocument = (state: State) => {
     const { virtualDocument, virtualSelection, virtualIndex } = state;
 
     const textBlocks = virtualDocument.blocks.map((block) =>
-      block.children.map((inline) => inline.text).join(''),
+      block.children.map(debugRenderVirtualInline).join(''),
     );
 
     if (
