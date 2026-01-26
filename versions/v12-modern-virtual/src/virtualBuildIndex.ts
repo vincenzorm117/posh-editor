@@ -7,6 +7,13 @@ const virtualBuildIndex = (state: State): VirtualIndex => {
   for (let blockIndex = 0; blockIndex < virtualBlocks.length; blockIndex++) {
     const block = virtualBlocks[blockIndex];
     let blockPosition = 0;
+    const virtualInlineIndexes = [];
+
+    const virtualBlockIndex = {
+      blockIndex,
+      id: block.id,
+      globalPosition,
+    };
 
     for (
       let inlineIndex = 0;
@@ -14,25 +21,29 @@ const virtualBuildIndex = (state: State): VirtualIndex => {
       inlineIndex++
     ) {
       const inline = block.children[inlineIndex];
-      inlineById.set(inline.id, {
+      const virtualInlineIndex = {
         blockIndex,
         inlineIndex,
         globalPosition,
         blockPosition,
         length: inline.text.length,
-      });
+        id: inline.id,
+      };
+
+      inlineById.set(inline.id, virtualInlineIndex);
+      virtualInlineIndexes.push(virtualInlineIndex);
 
       blockPosition += inline.text.length;
+      globalPosition += inline.text.length;
     }
 
     blocks.push({
-      blockIndex,
-      id: block.id,
-      globalPosition,
+      ...virtualBlockIndex,
       length: blockPosition,
+      inlines: virtualInlineIndexes,
     });
 
-    globalPosition += blockPosition + 1;
+    globalPosition += +1;
   }
 
   return {

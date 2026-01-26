@@ -3,23 +3,26 @@ type DomPoint = {
   offset: number;
 };
 
+type VirtualInlineIndex = {
+  blockIndex: number;
+  inlineIndex: number;
+  id: string;
+  globalPosition: number;
+  blockPosition: number;
+  length: number;
+};
+
+type VirtualBlockIndex = {
+  blockIndex: number;
+  id: string;
+  globalPosition: number;
+  length: number;
+  inlines: VirtualInlineIndex[];
+};
+
 type VirtualIndex = {
-  blocks: {
-    blockIndex: number;
-    id: string;
-    globalPosition: number;
-    length: number;
-  }[];
-  inlineById: Map<
-    string,
-    {
-      blockIndex: number;
-      inlineIndex: number;
-      globalPosition: number;
-      blockPosition: number;
-      length: number;
-    }
-  >;
+  blocks: VirtualBlockIndex[];
+  inlineById: Map<string, VirtualInlineIndex>;
   globalLength: number;
 };
 
