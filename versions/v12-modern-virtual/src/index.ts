@@ -1,3 +1,4 @@
+import debugUpdateUI from './debug/debugUpdateUI';
 import init from './init';
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -10,5 +11,6 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   // @ts-ignore
   window.state = state;
+  debugUpdateUI(state);
   console.log(state);
 });

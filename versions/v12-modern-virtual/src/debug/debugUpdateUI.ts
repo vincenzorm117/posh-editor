@@ -1,6 +1,6 @@
-import debugRenderVirtualDocument from "./debugRenderVirtualDocument";
+import debugRenderVirtualDocument from './debugRenderVirtualDocument';
 
-const updateUI = (state: State) => {
+const debugUpdateUI = (state: State) => {
   document.getElementById('cell-in-editor')!.innerText = state.virtualSelection
     ?.isInsideEditor
     ? '✅'
@@ -16,7 +16,7 @@ const updateUI = (state: State) => {
 
   // New: write formatted virtual document JSON
   const virtualDocEl = document.getElementById('virtual-document-json')!;
-  virtualDocEl.textContent = debugRenderVirtualDocument(state)
+  virtualDocEl.innerHTML = debugRenderVirtualDocument(state);
 };
 
-export default updateUI;
+export default debugUpdateUI;
