@@ -8,7 +8,7 @@ import { virtualizeSelection } from '../virtualizeSelection';
 
 const virtualApplyMarksInline = (
   virtualInlines: VirtualInline[],
-  globalPosition: number,
+  inlinesIndex: VirtualInlineIndex[],
   startPosition: number,
   endPosition: number,
   marksToApply: Record<string, boolean>,
@@ -17,17 +17,16 @@ const virtualApplyMarksInline = (
 
   for (let i = 0; i < virtualInlines.length; i++) {
     const inline = virtualInlines[i];
+    const { globalPosition, length } = inlinesIndex[i];
     const inlineLength = inline.text.length;
-    const globalInlineStart = globalPosition;
-    const globalInlineEnd = globalPosition + inlineLength;
+    console.log(inlineLength - length);
 
-    if (globalInlineEnd < startPosition) {
-      globalPosition += inlineLength;
+    if (globalPosition + length < startPosition) {
       newInlines.push(inline);
       continue;
     }
 
-    if (endPosition < globalInlineStart) {
+    if (endPosition < globalPosition) {
       newInlines.push(inline);
       continue;
     }
@@ -85,22 +84,25 @@ const virtualApplyMarksInRange = (
   state: State,
   marksToApply: Record<string, boolean>,
 ) => {
-  const { virtualSelection, virtualDocument } = state;
+  const { virtualSelection, virtualDocument, virtualIndex } = state;
+  if (
+    !virtualSelection ||
+    !virtualDocument ||
+    !virtualSelection.isInsideEditor
+  ) {
+    return;
+  }
+
   const { startPosition, endPosition } = getOrderedSelection(virtualSelection!);
 
   let newBlocks = [] as VirtualBlock[];
   const virtualBlocks = virtualDocument.blocks ?? [];
-  let globalPosition = 0;
 
-  for (let bi = 0; bi < virtualBlocks.length; bi++) {
-    const block = virtualBlocks[bi];
-    const blockLength = block.children.reduce(
-      (sum, inline) => sum + inline.text.length,
-      0,
-    );
+  for (let i = 0; i < virtualBlocks.length; i++) {
+    const block = virtualBlocks[i];
+    const { length, globalPosition, inlines } = virtualIndex?.blocks[i]!;
 
-    if (globalPosition + blockLength < startPosition) {
-      globalPosition += blockLength + 1;
+    if (globalPosition + length < startPosition) {
       newBlocks.push(block);
       continue;
     }
@@ -114,14 +116,12 @@ const virtualApplyMarksInRange = (
       ...block,
       children: virtualApplyMarksInline(
         block.children,
-        globalPosition,
+        inlines,
         startPosition,
         endPosition,
         marksToApply,
       ),
     });
-
-    globalPosition += blockLength + 1;
   }
 
   state.virtualDocument = {
