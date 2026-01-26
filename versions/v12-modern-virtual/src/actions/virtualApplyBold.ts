@@ -1,4 +1,3 @@
-import render from '../render';
 import virtualApplyMarksInRange from './virtualApplyMarksInRange';
 import virtualIsBolded from './virtualIsBolded';
 

@@ -1,5 +1,5 @@
 import virtualApplyBold from '../actions/virtualApplyBold';
-import render from '../render';
+import render from '../render/render';
 
 const attachListenerKeydown = (state: State) => {
   const editor = state.editor.element!;

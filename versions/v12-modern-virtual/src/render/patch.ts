@@ -1,4 +1,4 @@
-import didVirtualNodeChange from './didVirtualNodeChange';
+import didVirtualNodeChange from '../didVirtualNodeChange';
 import domCreateNode from './domCreateNode';
 import domUpdateHtmlProps from './domUpdateHtmlProps';
 

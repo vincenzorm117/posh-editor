@@ -1,4 +1,4 @@
-import render from '../render';
+import render from '../render/render';
 import { clamp } from '../helpers/clamp';
 import virtualBuildIndex from '../virtualBuildIndex';
 import virtualizeDOM from '../virtualizeDOM';

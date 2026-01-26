@@ -1,5 +1,5 @@
 import virtualApplyBold from '../actions/virtualApplyBold';
-import render from '../render';
+import render from '../render/render';
 import debugUpdateUI from '../debug/debugUpdateUI';
 
 function attachListenerBoldBtn(state: State, boldBtnSelector: string) {

@@ -3,7 +3,7 @@ import attachListenerInput from './listeners/attachListenerInput';
 import attachListenerKeydown from './listeners/attachListenerKeydown';
 import attachListenerSelectionChange from './listeners/attachListenerSelectionChange';
 import { domIsValidDocument } from './domIsValidDocument';
-import render from './render';
+import render from './render/render';
 import virtualBuildIndex from './virtualBuildIndex';
 import virtualizeDOM from './virtualizeDOM';
 import { virtualizeSelection } from './virtualizeSelection';
