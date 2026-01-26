@@ -1,3 +1,4 @@
+import trimVirtualBlockWhiteSpace from './trimVirtualBlockWhiteSpace';
 import virtualizeBlock from './virtualizeBlock';
 
 function virtualizeDOM(
@@ -12,12 +13,16 @@ function virtualizeDOM(
     },
   );
 
-  return {
+  const vDoc: VirtualDocument = {
     type: 'document',
-    blocks: nonEmptyBlockNodes.map((bn) =>
-      virtualizeBlock(bn, editorElement, options),
-    ),
-  } as VirtualDocument;
+    blocks: nonEmptyBlockNodes.map((bn) => virtualizeBlock(bn, options)),
+  };
+
+  if (options.trimBlockWhiteSpace) {
+    vDoc.blocks = vDoc.blocks.map(trimVirtualBlockWhiteSpace);
+  }
+
+  return vDoc;
 }
 
 export default virtualizeDOM;

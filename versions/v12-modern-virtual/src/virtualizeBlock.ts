@@ -6,22 +6,11 @@ import vInlinesHaveSameMarks from './vInlinesHaveSameMarks';
 
 const virtualizeBlock = (
   blockNode: Node,
-  editorElement: HTMLElement,
   options: VirtualizeOptions = {},
 ): VirtualBlock => {
   // If text node, create a paragraph block and wrap text
   if (blockNode.nodeType === Node.TEXT_NODE) {
     let text = blockNode.textContent ?? '';
-
-    // If options to trim whitespace, do so
-    if (options.trimBlockWhiteSpace) {
-      if (blockNode == editorElement.lastChild) {
-        text = text.replace(/\s+$/g, '');
-      } else if (blockNode == editorElement.firstChild) {
-        text = text.replace(/^\s+/g, '');
-      }
-    }
-
     return vCreateBlock('p', [vCreateInline(text, {}, options)]);
   }
 
@@ -72,15 +61,6 @@ const virtualizeBlock = (
     // TODO: experiment with CHAR_ZERO_WIDTH_SPACE handling
     let text = n.textContent ?? '';
     text = text == CHAR_ZERO_WIDTH_SPACE ? '' : text;
-    // If options to trim whitespace, do so
-    if (options.trimBlockWhiteSpace) {
-      if (n == elementBlockNode.lastChild) {
-        text = text.replace(/\s+$/g, '');
-      } else if (n == elementBlockNode.firstChild) {
-        text = text.replace(/^\s+/g, '');
-      }
-    }
-
     newChildren.push(vCreateInline(text, domGenerateMarks(n), options));
   }
 
