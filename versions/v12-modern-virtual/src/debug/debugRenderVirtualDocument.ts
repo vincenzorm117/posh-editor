@@ -8,39 +8,39 @@ const getUnderscoreLine = (
   startPosition: number,
   endPosition: number,
 ) => {
-  if (blockIndex.globalPosition! + blockIndex.length < startPosition) {
+  const { globalPosition } = blockIndex;
+
+  if (globalPosition + blockIndex.length < startPosition) {
     return undefined;
   }
 
-  if (blockIndex.globalPosition! > endPosition) {
+  if (endPosition < globalPosition) {
     return undefined;
   }
 
   return block.children.map((inline, j) => {
-    const index = blockIndex.inlines[j];
-    if (index.globalPosition + inline.text.length < startPosition) {
+    const { globalPosition } = blockIndex.inlines[j];
+    const inlineLength = inline.text.length;
+
+    if (globalPosition + inlineLength < startPosition) {
+      return '&nbsp;'.repeat(inlineLength);
+    }
+
+    if (endPosition < globalPosition) {
       return '';
     }
 
-    if (index.globalPosition > endPosition) {
-      return '';
-    }
-
-    const cutStart = clamp(
-      startPosition - index.globalPosition,
-      0,
-      inline.text.length,
-    );
-    const cutEnd = clamp(
-      endPosition - index.globalPosition,
-      0,
-      inline.text.length,
-    );
+    const cutStart = clamp(startPosition - globalPosition, 0, inlineLength);
+    const cutEnd = clamp(endPosition - globalPosition, 0, inlineLength);
 
     let underscoreLine = '';
 
     if (startPosition == endPosition) {
-      return '&nbsp;'.repeat(cutStart) + '^';
+      if (cutEnd === inlineLength) {
+        return '&nbsp;'.repeat(cutStart);
+      } else {
+        return '&nbsp;'.repeat(cutStart) + '^';
+      }
     } else {
       if (0 < cutStart) {
         underscoreLine += '&nbsp;'.repeat(cutStart);
