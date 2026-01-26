@@ -114,10 +114,12 @@ const devirtualizeSelection = (state: State) => {
 
   // Update selection by clearing existing ranges and adding new range
   selection.removeAllRanges();
-  const range = document.createRange();
-  range.setStart(anchorPos.node, anchorPos.offset);
-  range.setEnd(focusPos.node, focusPos.offset);
-  selection.addRange(range);
+  selection.setBaseAndExtent(
+    anchorPos.node,
+    anchorPos.offset,
+    focusPos.node,
+    focusPos.offset,
+  );
 };
 
 export default devirtualizeSelection;
