@@ -37,8 +37,8 @@ function init(
     shrinkConsecutiveSpaces: true,
     convertNewlinesToSpaces: true,
   });
-  state.virtualSelection = virtualizeSelection(state);
   state.virtualIndex = virtualBuildIndex(state);
+  state.virtualSelection = virtualizeSelection(state);
 
   attachListenerSelectionChange(state);
   attachListenerKeydown(state);

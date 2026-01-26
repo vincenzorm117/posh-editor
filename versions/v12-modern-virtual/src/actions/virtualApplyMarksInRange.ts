@@ -19,7 +19,6 @@ const virtualApplyMarksInline = (
     const inline = virtualInlines[i];
     const { globalPosition, length } = inlinesIndex[i];
     const inlineLength = inline.text.length;
-    console.log(inlineLength - length);
 
     if (globalPosition + length < startPosition) {
       newInlines.push(inline);

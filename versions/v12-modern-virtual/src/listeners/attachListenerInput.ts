@@ -8,16 +8,10 @@ import debugUpdateUI from '../debug/debugUpdateUI';
 const attachListenerInput = (state: State) => {
   const editorElement = state.editor.element;
 
-  let str = '';
-
   editorElement.addEventListener('input', (event: Event) => {
-    const { data } = event as InputEvent;
-    str += data ?? '';
-    console.log(str);
-
-    const vSel = virtualizeSelection(state);
     state.virtualDocument = virtualizeDOM(state.editor.element);
     state.virtualIndex = virtualBuildIndex(state);
+    const vSel = virtualizeSelection(state);
 
     state.virtualSelection = {
       ...vSel,
