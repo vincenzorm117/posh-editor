@@ -101,9 +101,13 @@
     const container = document.createElement('div');
     container.id = 'test-results-container';
     container.className =
-      'max-h-[50vh] max-w-200 mx-auto overflow-auto bg-white shadow-2xl border-t-4 border-indigo-500 z-50';
+      'fixed bottom-0 left-0 right-0 max-w-full overflow-auto bg-white shadow-2xl border-t-4 border-indigo-500 z-50';
+    container.style.height = '40vh';
+    container.style.minHeight = '150px';
+    container.style.maxHeight = '80vh';
 
     container.innerHTML = `
+    <div id="resize-handle" class="absolute top-0 left-0 right-0 h-3 bg2-indigo-500 cursor-ns-resize hover:bg-indigo-400 transition-colors z-10" style="margin-top: -4px;"></div>
     <div class="top-0 bg-gradient-to-r from-indigo-600 to-purple-600 px-4 py-2 flex items-center justify-between">
       <div class="flex items-center gap-2">
         <h2 class="text-base font-bold text-white">🧪 Test Results</h2>
@@ -133,6 +137,40 @@
   `;
 
     document.body.appendChild(container);
+
+    // Resize functionality
+    const resizeHandle = container.querySelector('#resize-handle');
+    let isResizing = false;
+    let startY = 0;
+    let startHeight = 0;
+
+    resizeHandle.addEventListener('mousedown', (e) => {
+      isResizing = true;
+      startY = e.clientY;
+      startHeight = container.offsetHeight;
+      document.body.style.cursor = 'ns-resize';
+      e.preventDefault();
+    });
+
+    document.addEventListener('mousemove', (e) => {
+      if (!isResizing) return;
+      
+      const deltaY = startY - e.clientY;
+      const newHeight = startHeight + deltaY;
+      const minHeight = 150;
+      const maxHeight = window.innerHeight * 0.8;
+      
+      if (newHeight >= minHeight && newHeight <= maxHeight) {
+        container.style.height = newHeight + 'px';
+      }
+    });
+
+    document.addEventListener('mouseup', () => {
+      if (isResizing) {
+        isResizing = false;
+        document.body.style.cursor = '';
+      }
+    });
 
     // Toggle collapse functionality
     const toggleBtn = container.querySelector('#toggle-tests');
