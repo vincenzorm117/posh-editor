@@ -9,7 +9,7 @@ const virtualApplyBold = (state: State) => {
     return state;
   }
   // Check if selection is already bolded
-  const isBolded = virtualSelection.marks?.bold !== 'mixed'
+  const isBolded = virtualSelection.marks?.bold === 'true';
   // Apply or remove bold mark based on current state
   virtualApplyMarksInRange(state, { bold: !isBolded });
 };
