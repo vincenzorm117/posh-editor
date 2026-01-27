@@ -2,9 +2,12 @@ const path = require('path');
 
 module.exports = {
   mode: 'development', // Important for readable source maps
-  entry: './src/index.ts',
+  entry: {
+    bundle: './src/index.ts',
+    tests: './src/tests/index.js',
+  },
   output: {
-    filename: 'bundle.js',
+    filename: '[name].js',
     path: path.resolve(__dirname, 'dist'),
   },
   module: {
@@ -31,12 +34,9 @@ module.exports = {
   },
   devServer: {
     static: path.join(__dirname, 'dist'),
-    // static: {
-    //   directory: __dirname,
-    // },
     compress: true,
     port: 3000,
-    // hot: true,
+    hot: true,
   },
   devtool: 'source-map', // or 'inline-source-map' for development
 };

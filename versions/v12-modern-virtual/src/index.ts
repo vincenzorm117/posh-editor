@@ -1,5 +1,9 @@
 import debugUpdateUI from './debug/debugUpdateUI';
 import init from './init';
+import render from './render/render';
+import virtualBuildIndex from './virtualBuildIndex';
+import virtualizeDOM from './virtualizeDOM';
+import { virtualizeSelection } from './virtualizeSelection';
 
 document.addEventListener('DOMContentLoaded', () => {
   // const editor = document.getElementById('editor') as HTMLDivElement | null;
@@ -11,6 +15,14 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   // @ts-ignore
   window.state = state;
+  // @ts-ignore
+  window.virtualizeDOM = virtualizeDOM;
+  // @ts-ignore
+  window.virtualBuildIndex = virtualBuildIndex;
+  // @ts-ignore
+  window.virtualizeSelection = virtualizeSelection;
+  // @ts-ignore
+  window.render = render;
   debugUpdateUI(state);
   console.log(state);
 });
