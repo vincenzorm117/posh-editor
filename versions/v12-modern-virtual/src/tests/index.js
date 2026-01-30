@@ -2,7 +2,12 @@
   const SELECTOR_EDITOR = '[data-testid="posh"]';
   const SELECTOR_BOLD_BTN = '[data-testid="btn-bold"]';
 
-  const waitAtBreakpoint = 'bold-unbold';
+  // Set up editor content and selection
+  const editor = document.querySelector(SELECTOR_EDITOR);
+  // Click bold button
+  const boldBtnEl = document.querySelector(SELECTOR_BOLD_BTN);
+
+  const waitAtBreakpoint = 'bold-unbold-three-paragraphs2';
 
   // prettier-ignore
   const tests = [
@@ -11,88 +16,263 @@
   ////////////////////////////////////////////////////////////////////////////////////////////////////
   // Start at 0
   { breakpoint: 'bold-only' },
-  { before: `<p>01234</p>`, after: `<p>01234</p>`,        start: 0, end: 0, selected: '',      commands: ['bold'] },
-  { before: `<p>01234</p>`, after: `<p><b>0</b>1234</p>`, start: 0, end: 1, selected: '0',     commands: ['bold'] },
-  { before: `<p>01234</p>`, after: `<p><b>01</b>234</p>`, start: 0, end: 2, selected: '01',    commands: ['bold'] },
-  { before: `<p>01234</p>`, after: `<p><b>012</b>34</p>`, start: 0, end: 3, selected: '012',   commands: ['bold'] },
-  { before: `<p>01234</p>`, after: `<p><b>0123</b>4</p>`, start: 0, end: 4, selected: '0123',  commands: ['bold'] },
-  { before: `<p>01234</p>`, after: `<p><b>01234</b></p>`, start: 0, end: 5, selected: '01234', commands: ['bold'] },
+  { before: `<p>01234</p>`, after: `<p>01234</p>`,        selected: '',      commands: ['select[0,0,0|0][0,0,0|0]', 'bold'] },
+  { before: `<p>01234</p>`, after: `<p><b>0</b>1234</p>`, selected: '0',     commands: ['select[0,0,0|0][0,0,0|1]', 'bold'] },
+  { before: `<p>01234</p>`, after: `<p><b>01</b>234</p>`, selected: '01',    commands: ['select[0,0,0|0][0,0,0|2]', 'bold'] },
+  { before: `<p>01234</p>`, after: `<p><b>012</b>34</p>`, selected: '012',   commands: ['select[0,0,0|0][0,0,0|3]', 'bold'] },
+  { before: `<p>01234</p>`, after: `<p><b>0123</b>4</p>`, selected: '0123',  commands: ['select[0,0,0|0][0,0,0|4]', 'bold'] },
+  { before: `<p>01234</p>`, after: `<p><b>01234</b></p>`, selected: '01234', commands: ['select[0,0,0|0][0,0,0|5]', 'bold'] },
   // Start at 1
-  { before: `<p>01234</p>`, after: `<p>01234</p>`,        start: 1, end: 1, selected: '',      commands: ['bold'] },
-  { before: `<p>01234</p>`, after: `<p>0<b>1</b>234</p>`, start: 1, end: 2, selected: '1',     commands: ['bold'] },
-  { before: `<p>01234</p>`, after: `<p>0<b>12</b>34</p>`, start: 1, end: 3, selected: '12',    commands: ['bold'] },
-  { before: `<p>01234</p>`, after: `<p>0<b>123</b>4</p>`, start: 1, end: 4, selected: '123',   commands: ['bold'] },
-  { before: `<p>01234</p>`, after: `<p>0<b>1234</b></p>`, start: 1, end: 5, selected: '1234',  commands: ['bold'] },
+  { before: `<p>01234</p>`, after: `<p>01234</p>`,        selected: '',      commands: ['select[0,0,0|1][0,0,0|1]', 'bold'] },
+  { before: `<p>01234</p>`, after: `<p>0<b>1</b>234</p>`, selected: '1',     commands: ['select[0,0,0|1][0,0,0|2]', 'bold'] },
+  { before: `<p>01234</p>`, after: `<p>0<b>12</b>34</p>`, selected: '12',    commands: ['select[0,0,0|1][0,0,0|3]', 'bold'] },
+  { before: `<p>01234</p>`, after: `<p>0<b>123</b>4</p>`, selected: '123',   commands: ['select[0,0,0|1][0,0,0|4]', 'bold'] },
+  { before: `<p>01234</p>`, after: `<p>0<b>1234</b></p>`, selected: '1234',  commands: ['select[0,0,0|1][0,0,0|5]', 'bold'] },
   // Start at 2
-  { before: `<p>01234</p>`, after: `<p>01234</p>`,        start: 2, end: 2, selected: '',      commands: ['bold'] },
-  { before: `<p>01234</p>`, after: `<p>01<b>2</b>34</p>`, start: 2, end: 3, selected: '2',     commands: ['bold'] },
-  { before: `<p>01234</p>`, after: `<p>01<b>23</b>4</p>`, start: 2, end: 4, selected: '23',    commands: ['bold'] },
-  { before: `<p>01234</p>`, after: `<p>01<b>234</b></p>`, start: 2, end: 5, selected: '234',   commands: ['bold'] },
+  { before: `<p>01234</p>`, after: `<p>01234</p>`,        selected: '',      commands: ['select[0,0,0|2][0,0,0|2]', 'bold'] },
+  { before: `<p>01234</p>`, after: `<p>01<b>2</b>34</p>`, selected: '2',     commands: ['select[0,0,0|2][0,0,0|3]', 'bold'] },
+  { before: `<p>01234</p>`, after: `<p>01<b>23</b>4</p>`, selected: '23',    commands: ['select[0,0,0|2][0,0,0|4]', 'bold'] },
+  { before: `<p>01234</p>`, after: `<p>01<b>234</b></p>`, selected: '234',   commands: ['select[0,0,0|2][0,0,0|5]', 'bold'] },
   // Start at 3
-  { before: `<p>01234</p>`, after: `<p>01234</p>`,        start: 3, end: 3, selected: '',      commands: ['bold'] },
-  { before: `<p>01234</p>`, after: `<p>012<b>3</b>4</p>`, start: 3, end: 4, selected: '3',     commands: ['bold'] },
-  { before: `<p>01234</p>`, after: `<p>012<b>34</b></p>`, start: 3, end: 5, selected: '34',    commands: ['bold'] },
+  { before: `<p>01234</p>`, after: `<p>01234</p>`,        selected: '',      commands: ['select[0,0,0|3][0,0,0|3]', 'bold'] },
+  { before: `<p>01234</p>`, after: `<p>012<b>3</b>4</p>`, selected: '3',     commands: ['select[0,0,0|3][0,0,0|4]', 'bold'] },
+  { before: `<p>01234</p>`, after: `<p>012<b>34</b></p>`, selected: '34',    commands: ['select[0,0,0|3][0,0,0|5]', 'bold'] },
   // Start at 4
-  { before: `<p>01234</p>`, after: `<p>01234</p>`,        start: 4, end: 4, selected: '',      commands: ['bold'] },
-  { before: `<p>01234</p>`, after: `<p>0123<b>4</b></p>`, start: 4, end: 5, selected: '4',     commands: ['bold'] },
+  { before: `<p>01234</p>`, after: `<p>01234</p>`,        selected: '',      commands: ['select[0,0,0|4][0,0,0|4]', 'bold'] },
+  { before: `<p>01234</p>`, after: `<p>0123<b>4</b></p>`, selected: '4',     commands: ['select[0,0,0|4][0,0,0|5]', 'bold'] },
   // Start at 5
-  { before: `<p>01234</p>`, after: `<p>01234</p>`,        start: 5, end: 5, selected: '',      commands: ['bold'] },
+  { before: `<p>01234</p>`, after: `<p>01234</p>`,        selected: '',      commands: ['select[0,0,0|5][0,0,0|5]', 'bold'] },
   ////////////////////////////////////////////////////////////////////////////////////////////////////
   // Bold and then unbold
   ////////////////////////////////////////////////////////////////////////////////////////////////////
   // Start at 0
   { breakpoint: 'bold-unbold' },
-  { before: `<p>01234</p>`, after: `<p>01234</p>`,        start: 0, end: 0, selected: '',      commands: ['bold', 'bold'] },
-  { before: `<p>01234</p>`, after: `<p>01234</p>`,        start: 0, end: 1, selected: '0',     commands: ['bold', 'bold'] },
-  { before: `<p>01234</p>`, after: `<p>01234</p>`,        start: 0, end: 2, selected: '01',    commands: ['bold', 'bold'] },
-  { before: `<p>01234</p>`, after: `<p>01234</p>`,        start: 0, end: 3, selected: '012',   commands: ['bold', 'bold'] },
-  { before: `<p>01234</p>`, after: `<p>01234</p>`,        start: 0, end: 4, selected: '0123',  commands: ['bold', 'bold'] },
-  { before: `<p>01234</p>`, after: `<p>01234</p>`,        start: 0, end: 5, selected: '01234', commands: ['bold', 'bold'] },
+  { before: `<p>01234</p>`, after: `<p>01234</p>`,        selected: '',      commands: ['select[0,0,0|0][0,0,0|0]', 'bold', 'bold'] },
+  { before: `<p>01234</p>`, after: `<p>01234</p>`,        selected: '0',     commands: ['select[0,0,0|0][0,0,0|1]', 'bold', 'bold'] },
+  { before: `<p>01234</p>`, after: `<p>01234</p>`,        selected: '01',    commands: ['select[0,0,0|0][0,0,0|2]', 'bold', 'bold'] },
+  { before: `<p>01234</p>`, after: `<p>01234</p>`,        selected: '012',   commands: ['select[0,0,0|0][0,0,0|3]', 'bold', 'bold'] },
+  { before: `<p>01234</p>`, after: `<p>01234</p>`,        selected: '0123',  commands: ['select[0,0,0|0][0,0,0|4]', 'bold', 'bold'] },
+  { before: `<p>01234</p>`, after: `<p>01234</p>`,        selected: '01234', commands: ['select[0,0,0|0][0,0,0|5]', 'bold', 'bold'] },
   // Start at 1
-  { before: `<p>01234</p>`, after: `<p>01234</p>`,        start: 1, end: 1, selected: '',      commands: ['bold', 'bold'] },
-  { before: `<p>01234</p>`, after: `<p>01234</p>`,        start: 1, end: 2, selected: '1',     commands: ['bold', 'bold'] },
-  { before: `<p>01234</p>`, after: `<p>01234</p>`,        start: 1, end: 3, selected: '12',    commands: ['bold', 'bold'] },
-  { before: `<p>01234</p>`, after: `<p>01234</p>`,        start: 1, end: 4, selected: '123',   commands: ['bold', 'bold'] },
-  { before: `<p>01234</p>`, after: `<p>01234</p>`,        start: 1, end: 5, selected: '1234',  commands: ['bold', 'bold'] },
+  { before: `<p>01234</p>`, after: `<p>01234</p>`,        selected: '',      commands: ['select[0,0,0|1][0,0,0|1]', 'bold', 'bold'] },
+  { before: `<p>01234</p>`, after: `<p>01234</p>`,        selected: '1',     commands: ['select[0,0,0|1][0,0,0|2]', 'bold', 'bold'] },
+  { before: `<p>01234</p>`, after: `<p>01234</p>`,        selected: '12',    commands: ['select[0,0,0|1][0,0,0|3]', 'bold', 'bold'] },
+  { before: `<p>01234</p>`, after: `<p>01234</p>`,        selected: '123',   commands: ['select[0,0,0|1][0,0,0|4]', 'bold', 'bold'] },
+  { before: `<p>01234</p>`, after: `<p>01234</p>`,        selected: '1234',  commands: ['select[0,0,0|1][0,0,0|5]', 'bold', 'bold'] },
   // Start at 2
-  { before: `<p>01234</p>`, after: `<p>01234</p>`,        start: 2, end: 2, selected: '',      commands: ['bold', 'bold'] },
-  { before: `<p>01234</p>`, after: `<p>01234</p>`,        start: 2, end: 3, selected: '2',     commands: ['bold', 'bold'] },
-  { before: `<p>01234</p>`, after: `<p>01234</p>`,        start: 2, end: 4, selected: '23',    commands: ['bold', 'bold'] },
-  { before: `<p>01234</p>`, after: `<p>01234</p>`,        start: 2, end: 5, selected: '234',   commands: ['bold', 'bold'] },
+  { before: `<p>01234</p>`, after: `<p>01234</p>`,        selected: '',      commands: ['select[0,0,0|2][0,0,0|2]', 'bold', 'bold'] },
+  { before: `<p>01234</p>`, after: `<p>01234</p>`,        selected: '2',     commands: ['select[0,0,0|2][0,0,0|3]', 'bold', 'bold'] },
+  { before: `<p>01234</p>`, after: `<p>01234</p>`,        selected: '23',    commands: ['select[0,0,0|2][0,0,0|4]', 'bold', 'bold'] },
+  { before: `<p>01234</p>`, after: `<p>01234</p>`,        selected: '234',   commands: ['select[0,0,0|2][0,0,0|5]', 'bold', 'bold'] },
   // Start at 3
-  { before: `<p>01234</p>`, after: `<p>01234</p>`,        start: 3, end: 3, selected: '',      commands: ['bold', 'bold'] },
-  { before: `<p>01234</p>`, after: `<p>01234</p>`,        start: 3, end: 4, selected: '3',     commands: ['bold', 'bold'] },
-  { before: `<p>01234</p>`, after: `<p>01234</p>`,        start: 3, end: 5, selected: '34',    commands: ['bold', 'bold'] },
+  { before: `<p>01234</p>`, after: `<p>01234</p>`,        selected: '',      commands: ['select[0,0,0|3][0,0,0|3]', 'bold', 'bold'] },
+  { before: `<p>01234</p>`, after: `<p>01234</p>`,        selected: '3',     commands: ['select[0,0,0|3][0,0,0|4]', 'bold', 'bold'] },
+  { before: `<p>01234</p>`, after: `<p>01234</p>`,        selected: '34',    commands: ['select[0,0,0|3][0,0,0|5]', 'bold', 'bold'] },
   // Start at 4
-  { before: `<p>01234</p>`, after: `<p>01234</p>`,        start: 4, end: 4, selected: '',      commands: ['bold', 'bold'] },
-  { before: `<p>01234</p>`, after: `<p>01234</p>`,        start: 4, end: 5, selected: '4',     commands: ['bold', 'bold'] },
-  // // Start at 5
-  { before: `<p>01234</p>`, after: `<p>01234</p>`,        start: 5, end: 5, selected: '',      commands: ['bold', 'bold'] },
+  { before: `<p>01234</p>`, after: `<p>01234</p>`,        selected: '',      commands: ['select[0,0,0|4][0,0,0|4]', 'bold', 'bold'] },
+  { before: `<p>01234</p>`, after: `<p>01234</p>`,        selected: '4',     commands: ['select[0,0,0|4][0,0,0|5]', 'bold', 'bold'] },
+  // Start at 5
+  { before: `<p>01234</p>`, after: `<p>01234</p>`,        selected: '',      commands: ['select[0,0,0|5][0,0,0|5]', 'bold', 'bold'] },
   ////////////////////////////////////////////////////////////////////////////////////////////////////
-  // Bold across multiple paragraphs
+  // Bold across two paragraphs
   ////////////////////////////////////////////////////////////////////////////////////////////////////
-  { breakpoint: 'bold-multiple-paragraphs' },
-  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`, start: 0, end: 0, selected: '', commands: ['bold'] },
-  { before: `<p>01234</p><p>56789</p>`, after: `<p><b>0</b>1234</p><p>56789</p>`, start: 0, end: 1, selected: '0', commands: ['bold'] },
-  { before: `<p>01234</p><p>56789</p>`, after: `<p><b>01</b>234</p><p>56789</p>`, start: 0, end: 2, selected: '01', commands: ['bold'] },
-  { before: `<p>01234</p><p>56789</p>`, after: `<p><b>012</b>34</p><p>56789</p>`, start: 0, end: 3, selected: '012', commands: ['bold'] },
-  { before: `<p>01234</p><p>56789</p>`, after: `<p><b>0123</b>4</p><p>56789</p>`, start: 0, end: 4, selected: '0123', commands: ['bold'] },
-  { before: `<p>01234</p><p>56789</p>`, after: `<p><b>01234</b></p><p>56789</p>`, start: 0, end: 5, selected: '01234', commands: ['bold'] },
-  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`, start: 1, end: 1, selected: '', commands: ['bold'] },
-  { before: `<p>01234</p><p>56789</p>`, after: `<p>0<b>1</b>234</p><p>56789</p>`, start: 1, end: 2, selected: '1', commands: ['bold'] },
-  { before: `<p>01234</p><p>56789</p>`, after: `<p>0<b>12</b>34</p><p>56789</p>`, start: 1, end: 3, selected: '12', commands: ['bold'] },
-  { before: `<p>01234</p><p>56789</p>`, after: `<p>0<b>123</b>4</p><p>56789</p>`, start: 1, end: 4, selected: '123', commands: ['bold'] },
-  { before: `<p>01234</p><p>56789</p>`, after: `<p>0<b>1234</b></p><p>56789</p>`, start: 1, end: 5, selected: '1234', commands: ['bold'] },
-  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`, start: 2, end: 2, selected: '', commands: ['bold'] },
-  { before: `<p>01234</p><p>56789</p>`, after: `<p>01<b>2</b>34</p><p>56789</p>`, start: 2, end: 3, selected: '2', commands: ['bold'] },
-  { before: `<p>01234</p><p>56789</p>`, after: `<p>01<b>23</b>4</p><p>56789</p>`, start: 2, end: 4, selected: '23', commands: ['bold'] },
-  { before: `<p>01234</p><p>56789</p>`, after: `<p>01<b>234</b></p><p>56789</p>`, start: 2, end: 5, selected: '234', commands: ['bold'] },
-  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`, start: 3, end: 3, selected: '', commands: ['bold'] },
-  { before: `<p>01234</p><p>56789</p>`, after: `<p>012<b>3</b>4</p><p>56789</p>`, start: 3, end: 4, selected: '3', commands: ['bold'] },
-  { before: `<p>01234</p><p>56789</p>`, after: `<p>012<b>34</b></p><p>56789</p>`, start: 3, end: 5, selected: '34', commands: ['bold'] },
-  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`, start: 4, end: 4, selected: '', commands: ['bold'] },
-  { before: `<p>01234</p><p>56789</p>`, after: `<p>0123<b>4</b></p><p>56789</p>`, start: 4, end: 5, selected: '4', commands: ['bold'] },
-  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`, start: 5, end: 5, selected: '', commands: ['bold'] }
+  { breakpoint: 'bold-two-paragraphs' },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`,        selected: '',      commands: ['select[0,0,0|0][0,0,0|0]', 'bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p><b>0</b>1234</p><p>56789</p>`, selected: '0',     commands: ['select[0,0,0|0][0,0,0|1]', 'bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p><b>01</b>234</p><p>56789</p>`, selected: '01',    commands: ['select[0,0,0|0][0,0,0|2]', 'bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p><b>012</b>34</p><p>56789</p>`, selected: '012',   commands: ['select[0,0,0|0][0,0,0|3]', 'bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p><b>0123</b>4</p><p>56789</p>`, selected: '0123',  commands: ['select[0,0,0|0][0,0,0|4]', 'bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p><b>01234</b></p><p>56789</p>`, selected: '01234', commands: ['select[0,0,0|0][0,0,0|5]', 'bold'] },
+  // Selection spans into second paragraph
+  { before: `<p>01234</p><p>56789</p>`, after: `<p><b>01234</b></p><p><b>&ZeroWidthSpace;</b>56789</p>`, selected: '01234\n\n', commands: ['select[0,0,0|0][1,0,0|0]', 'bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p><b>01234</b></p><p><b>5</b>6789</p>`, selected: '01234\n\n5', commands: ['select[0,0,0|0][1,0,0|1]', 'bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p><b>01234</b></p><p><b>56</b>789</p>`, selected: '01234\n\n56', commands: ['select[0,0,0|0][1,0,0|2]', 'bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p><b>01234</b></p><p><b>567</b>89</p>`, selected: '01234\n\n567', commands: ['select[0,0,0|0][1,0,0|3]', 'bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p><b>01234</b></p><p><b>5678</b>9</p>`, selected: '01234\n\n5678', commands: ['select[0,0,0|0][1,0,0|4]', 'bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p><b>01234</b></p><p><b>56789</b></p>`, selected: '01234\n\n56789', commands: ['select[0,0,0|0][1,0,0|5]', 'bold'] },
+  // Start at 1
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`,        selected: '',      commands: ['select[0,0,0|1][0,0,0|1]', 'bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>0<b>1</b>234</p><p>56789</p>`, selected: '1',     commands: ['select[0,0,0|1][0,0,0|2]', 'bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>0<b>12</b>34</p><p>56789</p>`, selected: '12',    commands: ['select[0,0,0|1][0,0,0|3]', 'bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>0<b>123</b>4</p><p>56789</p>`, selected: '123',   commands: ['select[0,0,0|1][0,0,0|4]', 'bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>0<b>1234</b></p><p>56789</p>`, selected: '1234',  commands: ['select[0,0,0|1][0,0,0|5]', 'bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>0<b>1234</b></p><p><b>&ZeroWidthSpace;</b>56789</p>`, selected: '1234\n\n', commands: ['select[0,0,0|1][1,0,0|0]', 'bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>0<b>1234</b></p><p><b>5</b>6789</p>`, selected: '1234\n\n5', commands: ['select[0,0,0|1][1,0,0|1]', 'bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>0<b>1234</b></p><p><b>56</b>789</p>`, selected: '1234\n\n56', commands: ['select[0,0,0|1][1,0,0|2]', 'bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>0<b>1234</b></p><p><b>567</b>89</p>`, selected: '1234\n\n567', commands: ['select[0,0,0|1][1,0,0|3]', 'bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>0<b>1234</b></p><p><b>5678</b>9</p>`, selected: '1234\n\n5678', commands: ['select[0,0,0|1][1,0,0|4]', 'bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>0<b>1234</b></p><p><b>56789</b></p>`, selected: '1234\n\n56789', commands: ['select[0,0,0|1][1,0,0|5]', 'bold'] },
+  // Start at 2
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`,        selected: '',      commands: ['select[0,0,0|2][0,0,0|2]', 'bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01<b>2</b>34</p><p>56789</p>`, selected: '2',     commands: ['select[0,0,0|2][0,0,0|3]', 'bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01<b>23</b>4</p><p>56789</p>`, selected: '23',    commands: ['select[0,0,0|2][0,0,0|4]', 'bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01<b>234</b></p><p>56789</p>`, selected: '234',   commands: ['select[0,0,0|2][0,0,0|5]', 'bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01<b>234</b></p><p><b>&ZeroWidthSpace;</b>56789</p>`, selected: '234\n\n', commands: ['select[0,0,0|2][1,0,0|0]', 'bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01<b>234</b></p><p><b>5</b>6789</p>`, selected: '234\n\n5', commands: ['select[0,0,0|2][1,0,0|1]', 'bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01<b>234</b></p><p><b>56</b>789</p>`, selected: '234\n\n56', commands: ['select[0,0,0|2][1,0,0|2]', 'bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01<b>234</b></p><p><b>567</b>89</p>`, selected: '234\n\n567', commands: ['select[0,0,0|2][1,0,0|3]', 'bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01<b>234</b></p><p><b>5678</b>9</p>`, selected: '234\n\n5678', commands: ['select[0,0,0|2][1,0,0|4]', 'bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01<b>234</b></p><p><b>56789</b></p>`, selected: '234\n\n56789', commands: ['select[0,0,0|2][1,0,0|5]', 'bold'] },
+  // Start at 3
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`,        selected: '',      commands: ['select[0,0,0|3][0,0,0|3]', 'bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>012<b>3</b>4</p><p>56789</p>`, selected: '3',     commands: ['select[0,0,0|3][0,0,0|4]', 'bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>012<b>34</b></p><p>56789</p>`, selected: '34',    commands: ['select[0,0,0|3][0,0,0|5]', 'bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>012<b>34</b></p><p><b>&ZeroWidthSpace;</b>56789</p>`, selected: '34\n\n', commands: ['select[0,0,0|3][1,0,0|0]', 'bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>012<b>34</b></p><p><b>5</b>6789</p>`, selected: '34\n\n5', commands: ['select[0,0,0|3][1,0,0|1]', 'bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>012<b>34</b></p><p><b>56</b>789</p>`, selected: '34\n\n56', commands: ['select[0,0,0|3][1,0,0|2]', 'bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>012<b>34</b></p><p><b>567</b>89</p>`, selected: '34\n\n567', commands: ['select[0,0,0|3][1,0,0|3]', 'bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>012<b>34</b></p><p><b>5678</b>9</p>`, selected: '34\n\n5678', commands: ['select[0,0,0|3][1,0,0|4]', 'bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>012<b>34</b></p><p><b>56789</b></p>`, selected: '34\n\n56789', commands: ['select[0,0,0|3][1,0,0|5]', 'bold'] },
+  // Start at 4
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`,        selected: '',      commands: ['select[0,0,0|4][0,0,0|4]', 'bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>0123<b>4</b></p><p>56789</p>`, selected: '4',     commands: ['select[0,0,0|4][0,0,0|5]', 'bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>0123<b>4</b></p><p><b>&ZeroWidthSpace;</b>56789</p>`, selected: '4\n\n', commands: ['select[0,0,0|4][1,0,0|0]', 'bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>0123<b>4</b></p><p><b>5</b>6789</p>`, selected: '4\n\n5', commands: ['select[0,0,0|4][1,0,0|1]', 'bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>0123<b>4</b></p><p><b>56</b>789</p>`, selected: '4\n\n56', commands: ['select[0,0,0|4][1,0,0|2]', 'bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>0123<b>4</b></p><p><b>567</b>89</p>`, selected: '4\n\n567', commands: ['select[0,0,0|4][1,0,0|3]', 'bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>0123<b>4</b></p><p><b>5678</b>9</p>`, selected: '4\n\n5678', commands: ['select[0,0,0|4][1,0,0|4]', 'bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>0123<b>4</b></p><p><b>56789</b></p>`, selected: '4\n\n56789', commands: ['select[0,0,0|4][1,0,0|5]', 'bold'] },
+  // Start at 5
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`,        selected: '',      commands: ['select[0,0,0|5][0,0,0|5]', 'bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234<b>&ZeroWidthSpace;</b></p><p><b>&ZeroWidthSpace;</b>56789</p>`,        selected: '&ZeroWidthSpace;\n\n',  commands: ['select[0,0,0|5][1,0,0|0]', 'bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234<b>&ZeroWidthSpace;</b></p><p><b>5</b>6789</p>`, selected: '&ZeroWidthSpace;\n\n5', commands: ['select[0,0,0|5][1,0,0|1]', 'bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234<b>&ZeroWidthSpace;</b></p><p><b>56</b>789</p>`, selected: '&ZeroWidthSpace;\n\n56', commands: ['select[0,0,0|5][1,0,0|2]', 'bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234<b>&ZeroWidthSpace;</b></p><p><b>567</b>89</p>`, selected: '&ZeroWidthSpace;\n\n567', commands: ['select[0,0,0|5][1,0,0|3]', 'bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234<b>&ZeroWidthSpace;</b></p><p><b>5678</b>9</p>`, selected: '&ZeroWidthSpace;\n\n5678', commands: ['select[0,0,0|5][1,0,0|4]', 'bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234<b>&ZeroWidthSpace;</b></p><p><b>56789</b></p>`, selected: '&ZeroWidthSpace;\n\n56789', commands: ['select[0,0,0|5][1,0,0|5]', 'bold'] },
+  // Start at 6 (end of second paragraph)
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`,        selected: '',      commands: ['select[1,0,0|0][1,0,0|0]', 'bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p><b>5</b>6789</p>`, selected: '5',     commands: ['select[1,0,0|0][1,0,0|1]', 'bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p><b>56</b>789</p>`, selected: '56',    commands: ['select[1,0,0|0][1,0,0|2]', 'bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p><b>567</b>89</p>`, selected: '567',   commands: ['select[1,0,0|0][1,0,0|3]', 'bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p><b>5678</b>9</p>`, selected: '5678',  commands: ['select[1,0,0|0][1,0,0|4]', 'bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p><b>56789</b></p>`, selected: '56789', commands: ['select[1,0,0|0][1,0,0|5]', 'bold'] },
+  // Start at 7
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`,        selected: '',      commands: ['select[1,0,0|1][1,0,0|1]', 'bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>5<b>6</b>789</p>`, selected: '6',     commands: ['select[1,0,0|1][1,0,0|2]', 'bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>5<b>67</b>89</p>`, selected: '67',    commands: ['select[1,0,0|1][1,0,0|3]', 'bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>5<b>678</b>9</p>`, selected: '678',   commands: ['select[1,0,0|1][1,0,0|4]', 'bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>5<b>6789</b></p>`, selected: '6789',  commands: ['select[1,0,0|1][1,0,0|5]', 'bold'] },
+  // Start at 8
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`,        selected: '',      commands: ['select[1,0,0|2][1,0,0|2]', 'bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56<b>7</b>89</p>`, selected: '7',     commands: ['select[1,0,0|2][1,0,0|3]', 'bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56<b>78</b>9</p>`, selected: '78',    commands: ['select[1,0,0|2][1,0,0|4]', 'bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56<b>789</b></p>`, selected: '789',   commands: ['select[1,0,0|2][1,0,0|5]', 'bold'] },
+  // Start at 9
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`,        selected: '',      commands: ['select[1,0,0|3][1,0,0|3]', 'bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>567<b>8</b>9</p>`, selected: '8',     commands: ['select[1,0,0|3][1,0,0|4]', 'bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>567<b>89</b></p>`, selected: '89',    commands: ['select[1,0,0|3][1,0,0|5]', 'bold'] },
+  // Start at 10
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`,        selected: '',      commands: ['select[1,0,0|4][1,0,0|4]', 'bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>5678<b>9</b></p>`, selected: '9',     commands: ['select[1,0,0|4][1,0,0|5]', 'bold'] },
+  // Start at 11
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`,        selected: '',      commands: ['select[1,0,0|5][1,0,0|5]', 'bold'] },
+  ////////////////////////////////////////////////////////////////////////////////////////////////////
+  // Bold unbold across two paragraphs
+  ////////////////////////////////////////////////////////////////////////////////////////////////////
+  { breakpoint: 'bold-unbold-two-paragraphs' },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`,        selected: '',      commands: ['select[0,0,0|0][0,0,0|0]', 'bold','bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`, selected: '0',     commands: ['select[0,0,0|0][0,0,0|1]', 'bold','bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`, selected: '01',    commands: ['select[0,0,0|0][0,0,0|2]', 'bold','bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`, selected: '012',   commands: ['select[0,0,0|0][0,0,0|3]', 'bold','bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`, selected: '0123',  commands: ['select[0,0,0|0][0,0,0|4]', 'bold','bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`, selected: '01234', commands: ['select[0,0,0|0][0,0,0|5]', 'bold','bold'] },
+  // Selection spans into second paragraph
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`, selected: '01234\n\n', commands: ['select[0,0,0|0][1,0,0|0]', 'bold','bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`, selected: '01234\n\n5', commands: ['select[0,0,0|0][1,0,0|1]', 'bold','bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`, selected: '01234\n\n56', commands: ['select[0,0,0|0][1,0,0|2]', 'bold','bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`, selected: '01234\n\n567', commands: ['select[0,0,0|0][1,0,0|3]', 'bold','bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`, selected: '01234\n\n5678', commands: ['select[0,0,0|0][1,0,0|4]', 'bold','bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`, selected: '01234\n\n56789', commands: ['select[0,0,0|0][1,0,0|5]', 'bold','bold'] },
+  // Start at 1
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`,        selected: '',      commands: ['select[0,0,0|1][0,0,0|1]', 'bold','bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`, selected: '1',     commands: ['select[0,0,0|1][0,0,0|2]', 'bold','bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`, selected: '12',    commands: ['select[0,0,0|1][0,0,0|3]', 'bold','bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`, selected: '123',   commands: ['select[0,0,0|1][0,0,0|4]', 'bold','bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`, selected: '1234',  commands: ['select[0,0,0|1][0,0,0|5]', 'bold','bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`, selected: '1234\n\n', commands: ['select[0,0,0|1][1,0,0|0]', 'bold','bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`, selected: '1234\n\n5', commands: ['select[0,0,0|1][1,0,0|1]', 'bold','bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`, selected: '1234\n\n56', commands: ['select[0,0,0|1][1,0,0|2]', 'bold','bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`, selected: '1234\n\n567', commands: ['select[0,0,0|1][1,0,0|3]', 'bold','bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`, selected: '1234\n\n5678', commands: ['select[0,0,0|1][1,0,0|4]', 'bold','bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`, selected: '1234\n\n56789', commands: ['select[0,0,0|1][1,0,0|5]', 'bold','bold'] },
+  // Start at 2
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`,        selected: '',      commands: ['select[0,0,0|2][0,0,0|2]', 'bold','bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`, selected: '2',     commands: ['select[0,0,0|2][0,0,0|3]', 'bold','bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`, selected: '23',    commands: ['select[0,0,0|2][0,0,0|4]', 'bold','bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`, selected: '234',   commands: ['select[0,0,0|2][0,0,0|5]', 'bold','bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`, selected: '234\n\n', commands: ['select[0,0,0|2][1,0,0|0]', 'bold','bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`, selected: '234\n\n5', commands: ['select[0,0,0|2][1,0,0|1]', 'bold','bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`, selected: '234\n\n56', commands: ['select[0,0,0|2][1,0,0|2]', 'bold','bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`, selected: '234\n\n567', commands: ['select[0,0,0|2][1,0,0|3]', 'bold','bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`, selected: '234\n\n5678', commands: ['select[0,0,0|2][1,0,0|4]', 'bold','bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`, selected: '234\n\n56789', commands: ['select[0,0,0|2][1,0,0|5]', 'bold','bold'] },
+  // Start at 3
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`,        selected: '',      commands: ['select[0,0,0|3][0,0,0|3]', 'bold','bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`, selected: '3',     commands: ['select[0,0,0|3][0,0,0|4]', 'bold','bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`, selected: '34',    commands: ['select[0,0,0|3][0,0,0|5]', 'bold','bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`, selected: '34\n\n', commands: ['select[0,0,0|3][1,0,0|0]', 'bold','bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`, selected: '34\n\n5', commands: ['select[0,0,0|3][1,0,0|1]', 'bold','bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`, selected: '34\n\n56', commands: ['select[0,0,0|3][1,0,0|2]', 'bold','bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`, selected: '34\n\n567', commands: ['select[0,0,0|3][1,0,0|3]', 'bold','bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`, selected: '34\n\n5678', commands: ['select[0,0,0|3][1,0,0|4]', 'bold','bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`, selected: '34\n\n56789', commands: ['select[0,0,0|3][1,0,0|5]', 'bold','bold'] },
+  // Start at 4
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`,        selected: '',      commands: ['select[0,0,0|4][0,0,0|4]', 'bold','bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`, selected: '4',     commands: ['select[0,0,0|4][0,0,0|5]', 'bold','bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`, selected: '4\n\n', commands: ['select[0,0,0|4][1,0,0|0]', 'bold','bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`, selected: '4\n\n5', commands: ['select[0,0,0|4][1,0,0|1]', 'bold','bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`, selected: '4\n\n56', commands: ['select[0,0,0|4][1,0,0|2]', 'bold','bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`, selected: '4\n\n567', commands: ['select[0,0,0|4][1,0,0|3]', 'bold','bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`, selected: '4\n\n5678', commands: ['select[0,0,0|4][1,0,0|4]', 'bold','bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`, selected: '4\n\n56789', commands: ['select[0,0,0|4][1,0,0|5]', 'bold','bold'] },
+  // Start at 5
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`,        selected: '',      commands: ['select[0,0,0|5][0,0,0|5]', 'bold','bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234<b>&ZeroWidthSpace;</b></p><p><b>&ZeroWidthSpace;</b>56789</p>`,        selected: '&ZeroWidthSpace;\n\n',  commands: ['select[0,0,0|5][1,0,0|0]', 'bold','bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`, selected: '\n5', commands: ['select[0,0,0|5][1,0,0|1]', 'bold','bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`, selected: '\n56', commands: ['select[0,0,0|5][1,0,0|2]', 'bold','bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`, selected: '\n567', commands: ['select[0,0,0|5][1,0,0|3]', 'bold','bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`, selected: '\n5678', commands: ['select[0,0,0|5][1,0,0|4]', 'bold','bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`, selected: '\n56789', commands: ['select[0,0,0|5][1,0,0|5]', 'bold','bold'] },
+  // Start at 6 (end of second paragraph)
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`,        selected: '',      commands: ['select[1,0,0|0][1,0,0|0]', 'bold','bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`, selected: '5',     commands: ['select[1,0,0|0][1,0,0|1]', 'bold','bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`, selected: '56',    commands: ['select[1,0,0|0][1,0,0|2]', 'bold','bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`, selected: '567',   commands: ['select[1,0,0|0][1,0,0|3]', 'bold','bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`, selected: '5678',  commands: ['select[1,0,0|0][1,0,0|4]', 'bold','bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`, selected: '56789', commands: ['select[1,0,0|0][1,0,0|5]', 'bold','bold'] },
+  // Start at 7
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`,        selected: '',      commands: ['select[1,0,0|1][1,0,0|1]', 'bold','bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`, selected: '6',     commands: ['select[1,0,0|1][1,0,0|2]', 'bold','bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`, selected: '67',    commands: ['select[1,0,0|1][1,0,0|3]', 'bold','bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`, selected: '678',   commands: ['select[1,0,0|1][1,0,0|4]', 'bold','bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`, selected: '6789',  commands: ['select[1,0,0|1][1,0,0|5]', 'bold','bold'] },
+  // Start at 8
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`,        selected: '',      commands: ['select[1,0,0|2][1,0,0|2]', 'bold','bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`, selected: '7',     commands: ['select[1,0,0|2][1,0,0|3]', 'bold','bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`, selected: '78',    commands: ['select[1,0,0|2][1,0,0|4]', 'bold','bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`, selected: '789',   commands: ['select[1,0,0|2][1,0,0|5]', 'bold','bold'] },
+  // Start at 9
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`,        selected: '',      commands: ['select[1,0,0|3][1,0,0|3]', 'bold','bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`, selected: '8',     commands: ['select[1,0,0|3][1,0,0|4]', 'bold','bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`, selected: '89',    commands: ['select[1,0,0|3][1,0,0|5]', 'bold','bold'] },
+  // Start at 10
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`,        selected: '',      commands: ['select[1,0,0|4][1,0,0|4]', 'bold','bold'] },
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`, selected: '9',     commands: ['select[1,0,0|4][1,0,0|5]', 'bold','bold'] },
+  // Start at 11
+  { before: `<p>01234</p><p>56789</p>`, after: `<p>01234</p><p>56789</p>`,        selected: '',      commands: ['select[1,0,0|5][1,0,0|5]', 'bold','bold'] },
+  ////////////////////////////////////////////////////////////////////////////////////////////////////
+  // Bold across three paragraphs
+  ////////////////////////////////////////////////////////////////////////////////////////////////////
+  { breakpoint: 'bold-three-paragraphs' },
+  { before: `<p>012</p><p>345</p><p>678</p>`, after: `<p>01<b>2</b></p><p><b>345</b></p><p><b>&ZeroWidthSpace;</b>678</p>`, selected: '2\n\n345\n\n', commands: ['select[0,0,0|2][2,0,0|0]', 'bold'] },
+  { before: `<p>012</p><p>345</p><p>678</p>`, after: `<p>012<b>&ZeroWidthSpace;</b></p><p><b>345</b></p><p><b>&ZeroWidthSpace;</b>678</p>`, selected: '&ZeroWidthSpace;\n\n345\n\n', commands: ['select[0,0,0|3][2,0,0|0]', 'bold'] },
+  { before: `<p>012</p><p>345</p><p>678</p>`, after: `<p>01<b>2</b></p><p><b>345</b></p><p><b>6</b>78</p>`, selected: '2\n\n345\n\n6', commands: ['select[0,0,0|2][2,0,0|1]', 'bold'] },
+  ////////////////////////////////////////////////////////////////////////////////////////////////////
+  // Bold unbold across three paragraphs
+  ////////////////////////////////////////////////////////////////////////////////////////////////////
+  { breakpoint: 'bold-unbold-three-paragraphs' },
+  { before: `<p>012</p><p>345</p><p>678</p>`, after: `<p>012</p><p>345</p><p>678</p>`, selected: '2\n\n345\n\n', commands: ['select[0,0,0|2][2,0,0|0]', 'bold', 'bold'] },
 ];
   // prettier-ignore-end
 
@@ -154,12 +334,12 @@
 
     document.addEventListener('mousemove', (e) => {
       if (!isResizing) return;
-      
+
       const deltaY = startY - e.clientY;
       const newHeight = startHeight + deltaY;
       const minHeight = 150;
       const maxHeight = window.innerHeight * 0.8;
-      
+
       if (newHeight >= minHeight && newHeight <= maxHeight) {
         container.style.height = newHeight + 'px';
       }
@@ -186,10 +366,20 @@
     return container.querySelector('#test-results-body');
   }
 
-  function escapeHtml(text) {
+  function renderZeroWidthSpace(html) {
+    const div = document.createElement('div');
+    div.innerHTML = html;
+    return div.innerHTML;
+  }
+
+  function escapeHtml(text, breakLines = false) {
     const div = document.createElement('div');
     div.textContent = text;
-    return div.innerHTML;
+    const html = div.innerHTML;
+
+    if (!breakLines) return html;
+
+    return html.replace(/&lt;\/p&gt;&lt;p&gt;/g, '&lt;/p&gt;<br>&lt;p&gt;');
   }
 
   function addBreakpointRow(tbody, breakpointName) {
@@ -235,13 +425,13 @@
       <code class="bg-blue-100 px-1 rounded text-blue-800 font-mono">"${escapeHtml(selectionText)}"</code>
     </td>
     <td class="px-2 py-1">
-      <code class="bg-gray-100 px-1 rounded text-gray-800 font-mono">${escapeHtml(testcase.before)}</code>
+      <code class="bg-gray-100 px-1 rounded text-gray-800 font-mono">${escapeHtml(testcase.before, true)}</code>
     </td>
     <td class="px-2 py-1">
       <code class="bg-gray-200 px-1 rounded text-gray-500 font-mono whitespace-nowrap">—</code>
     </td>
     <td class="px-2 py-1">
-      <code class="bg-gray-100 px-1 rounded text-gray-800 font-mono whitespace-nowrap">${escapeHtml(testcase.after)}</code>
+      <code class="bg-gray-100 px-1 rounded text-gray-800 font-mono whitespace-nowrap">${escapeHtml(testcase.after, true)}</code>
     </td>
   `;
 
@@ -254,8 +444,9 @@
     index,
     testcase,
     actualHTML,
-    actualSelection,
     passed,
+    htmlPassed,
+    selectionPassed,
   ) {
     row.className = passed
       ? 'bg-green-50 hover:bg-green-100 transition-colors'
@@ -265,17 +456,12 @@
       ? '<span class="inline-flex items-center justify-center w-4 h-4 rounded-full bg-green-500 text-white text-[10px]">✓</span>'
       : '<span class="inline-flex items-center justify-center w-4 h-4 rounded-full bg-red-500 text-white text-[10px]">✗</span>';
 
-    const selectionRange = `[${testcase.start}, ${testcase.end}]`;
-    const selectionText = testcase.selected || '(empty)';
-
-    const htmlMatches = actualHTML === testcase.after;
-
     const commandsList = testcase.commands
       .map(
         (cmd) =>
           `<span class="bg-purple-100 text-purple-800 px-1 py-0.5 rounded text-[10px] font-mono">${escapeHtml(cmd)}</span>`,
       )
-      .join(' ');
+      .join('<br>');
 
     row.innerHTML = `
     <td class="px-2 py-1 font-mono text-gray-600">${index + 1}</td>
@@ -284,17 +470,16 @@
       <div class="flex flex-wrap gap-0.5">${commandsList}</div>
     </td>
     <td class="px-2 py-1">
-      <span class="text-gray-500">${selectionRange}</span>
-      <code class="bg-blue-100 px-1 rounded text-blue-800 font-mono">"${escapeHtml(selectionText)}"</code>
+      <code class="bg-blue-100 px-1 rounded text-blue-800 font-mono">"${renderZeroWidthSpace(escapeHtml(testcase.selected || ''))}"</code>
     </td>
     <td class="px-2 py-1">
-      <code class="bg-gray-100 px-1 rounded text-gray-800 font-mono">${escapeHtml(testcase.before)}</code>
+      <code class="bg-gray-100 px-1 rounded text-gray-800 font-mono">${escapeHtml(testcase.before, true)}</code>
     </td>
     <td class="px-2 py-1">
-      <code class="${htmlMatches ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'} px-1 rounded font-mono whitespace-nowrap">${escapeHtml(actualHTML)}</code>
+      <code class="${htmlPassed ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'} px-1 rounded font-mono whitespace-nowrap">${renderZeroWidthSpace(escapeHtml(actualHTML, true))}</code>
     </td>
     <td class="px-2 py-1">
-      <code class="bg-gray-100 px-1 rounded text-gray-800 font-mono whitespace-nowrap">${escapeHtml(testcase.after)}</code>
+      <code class="bg-gray-100 px-1 rounded text-gray-800 font-mono whitespace-nowrap">${escapeHtml(testcase.after, true)}</code>
     </td>
   `;
   }
@@ -376,6 +561,52 @@
     return clone;
   }
 
+  function searchNodeWithCoordinates(root, strCoordinates) {
+    // Get coordinates
+    let [coordinates, offset] = strCoordinates.split('|');
+    coordinates = coordinates.split(',').map((v) => parseInt(v, 10));
+    // Traverse DOM to find node
+    let node = root;
+    for (const coord of coordinates) {
+      node = node.childNodes[coord];
+
+      if (!node) {
+        throw new Error('Invalid coordinates: ' + strCoordinates);
+      }
+    }
+    // Return node and offset
+    return { node, offset: parseInt(offset, 10) };
+  }
+
+  function processCommands(commands) {
+    for (const cmd of commands) {
+      if (cmd == 'bold') {
+        boldBtnEl.click();
+      } else if (cmd.startsWith('select')) {
+        // Parse select command
+        const match = cmd.match(/select\[([^\]]+)\]\[([^\]]+)\]/);
+        if (!match) {
+          throw new Error(`Invalid select command: ${cmd}`);
+        }
+
+        // Find nodes and offsets
+        const anchorNode = searchNodeWithCoordinates(editor, match[1]);
+        const focusNode = searchNodeWithCoordinates(editor, match[2]);
+        // Update selection
+        const sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.setBaseAndExtent(
+          anchorNode.node,
+          anchorNode.offset,
+          focusNode.node,
+          focusNode.offset,
+        );
+        // Trigger selectionchange event
+        document.dispatchEvent(new Event('selectionchange'));
+      }
+    }
+  }
+
   // Initialize the table and continue button
   const tbody = createTestResultsTable();
   const continueBtn = createContinueButton();
@@ -406,12 +637,11 @@
 
       // Update summary to show current progress
       updateSummary(passedCount, failedCount, index, tests.length);
-      // Set up editor content and selection
-      const editor = document.querySelector(SELECTOR_EDITOR);
 
       // Temporarily set innerHTML to parse it into virtual doc
       editor.innerHTML = testcase.before;
       // Initialize virtual state with new html content
+      delete state.virtualTree;
       state.virtualDocument = virtualizeDOM(editor, {
         trimBlockWhiteSpace: true,
         shrinkConsecutiveSpaces: true,
@@ -421,31 +651,18 @@
       state.virtualSelection = virtualizeSelection(state);
       render(state);
 
-      // Set selection
-      const range = document.createRange();
-      const textNode = editor.querySelector('p').firstChild.firstChild;
-      range.setStart(textNode, testcase.start);
-      range.setEnd(textNode, testcase.end);
-      const sel = window.getSelection();
-      sel.removeAllRanges();
-      sel.addRange(range);
-      // Trigger selectionchange event
-      document.dispatchEvent(new Event('selectionchange'));
-      // Click bold button
-      const boldBtn = document.querySelector(SELECTOR_BOLD_BTN);
-      for (const command of testcase.commands) {
-        if (command === 'bold') {
-          boldBtn.click();
-        }
-      }
+      // Execute commands
+      processCommands(testcase.commands);
+
       // Get selected text
       const selection = window.getSelection().toString();
       // Get resulting HTML
       const afterHTML = cloneAndCleanHtml(editor).innerHTML;
 
       // Check results
-      const htmlPassed = afterHTML === testcase.after;
-      const selectionPassed = selection === testcase.selected;
+      const htmlPassed = afterHTML === renderZeroWidthSpace(testcase.after);
+      const selectionPassed =
+        selection === renderZeroWidthSpace(testcase.selected);
       const testPassed = htmlPassed && selectionPassed;
 
       if (testPassed) {
@@ -455,18 +672,30 @@
       }
 
       // Add result to table
-      updateTestResult(row, index, testcase, afterHTML, selection, testPassed);
+      updateTestResult(
+        row,
+        index,
+        testcase,
+        afterHTML,
+        testPassed,
+        htmlPassed,
+        selectionPassed,
+      );
 
       // Keep console assertions for debugging
       console.assert(
-        afterHTML === testcase.after,
-        `Test case ${index + 1} failed: expected after HTML to be "${testcase.after}", but got "${afterHTML}"`,
+        htmlPassed,
+        `FAIL[${index + 1}] HTML expected "${testcase.after}" got "${afterHTML}"`,
       );
 
       console.assert(
-        selection === testcase.selected,
-        `Test case ${index + 1} failed: expected selected text to be "${testcase.selected}", but got "${selection}"`,
+        selectionPassed,
+        `FAIL[${index + 1}] selection expected "${testcase.selected}" got "${selection}"`,
       );
+
+      if (!testPassed) {
+        break;
+      }
     }
 
     // Update summary after all tests and hide continue button
