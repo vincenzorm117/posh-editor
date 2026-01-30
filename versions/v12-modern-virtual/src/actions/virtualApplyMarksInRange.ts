@@ -5,6 +5,7 @@ import vInlinesHaveSameMarks from '../vInlinesHaveSameMarks';
 import getOrderedSelection from '../utils/getOrderedSelection';
 import virtualBuildIndex from '../virtualBuildIndex';
 import { virtualizeSelection } from '../virtualizeSelection';
+import normalizeMarks from '../utils/normalizeMarks';
 
 const virtualApplyMarksInline = (
   virtualInlines: VirtualInline[],
@@ -64,10 +65,16 @@ const virtualApplyMarksInline = (
     }
   }
 
+  for (const newInline of newInlines) {
+    newInline.marks = normalizeMarks(newInline.marks);
+  }
+
   // Merge adjacent inlines with same marks
   const mergedInlines = [] as VirtualInline[];
   for (let i = 0; i < newInlines.length; i++) {
     const inline = newInlines[i];
+    // TODO: consider adding this back in
+    // if (inline.text == '') continue;
     const topMergedInline = mergedInlines[mergedInlines.length - 1];
     if (topMergedInline && vInlinesHaveSameMarks(topMergedInline, inline)) {
       topMergedInline.text += inline.text;
