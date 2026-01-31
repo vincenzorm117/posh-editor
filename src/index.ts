@@ -1,9 +1,9 @@
 import debugUpdateUI from './debug/debugUpdateUI';
 import init from './init';
-import render from './render/render';
-import virtualBuildIndex from './virtualBuildIndex';
-import virtualizeDOM from './virtualizeDOM';
-import { virtualizeSelection } from './virtualizeSelection';
+import render from './3_render/render';
+import virtualBuildIndex from './2_virtual/virtualBuildIndex';
+import virtualizeDOM from './1_virtualize/virtualizeDOM';
+import { virtualizeSelection } from './1_virtualize/virtualizeSelection';
 
 document.addEventListener('DOMContentLoaded', () => {
   // const editor = document.getElementById('editor') as HTMLDivElement | null;

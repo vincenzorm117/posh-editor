@@ -1,8 +1,8 @@
-import { CHAR_ZERO_WIDTH_SPACE } from './constants';
+import { CHAR_ZERO_WIDTH_SPACE } from '../constants';
 import domGenerateMarks from './domGenerateMarks';
-import vCreateBlock from './vCreateBlock';
-import vCreateInline from './vCreateInline';
-import vInlinesHaveSameMarks from './vInlinesHaveSameMarks';
+import vCreateBlock from '../1_virtualize/vCreateBlock';
+import vCreateInline from '../1_virtualize/vCreateInline';
+import vInlinesHaveSameMarks from '../2_virtual/vInlinesHaveSameMarks';
 
 const virtualizeBlock = (
   blockNode: Node,

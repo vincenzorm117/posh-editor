@@ -1,5 +1,5 @@
-import { CHAR_ZERO_WIDTH_SPACE } from './constants';
-import { clamp } from './helpers/clamp';
+import { CHAR_ZERO_WIDTH_SPACE } from '../constants';
+import { clamp } from '../helpers/clamp';
 
 const virtualPositionToBlockOffset = (
   index: VirtualIndex,

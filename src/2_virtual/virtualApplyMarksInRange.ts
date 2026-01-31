@@ -1,10 +1,10 @@
 import uid from '../helpers/uid';
 import { clamp } from '../helpers/clamp';
-import vCreateInline from '../vCreateInline';
-import vInlinesHaveSameMarks from '../vInlinesHaveSameMarks';
+import vCreateInline from '../1_virtualize/vCreateInline';
+import vInlinesHaveSameMarks from './vInlinesHaveSameMarks';
 import getOrderedSelection from '../utils/getOrderedSelection';
-import virtualBuildIndex from '../virtualBuildIndex';
-import { virtualizeSelection } from '../virtualizeSelection';
+import virtualBuildIndex from './virtualBuildIndex';
+import { virtualizeSelection } from '../1_virtualize/virtualizeSelection';
 import normalizeMarks from '../utils/normalizeMarks';
 
 const virtualApplyMarksInline = (

@@ -1,7 +1,7 @@
-import getVirtualSelectionMarks from './actions/getVirtualSelectionMarks';
-import { CHAR_ZERO_WIDTH_SPACE } from './constants';
-import { domIsSelectionInEditor } from './domIsSelectionInEditor';
-import { clamp } from './helpers/clamp';
+import getVirtualSelectionMarks from '../2_virtual/getVirtualSelectionMarks';
+import { CHAR_ZERO_WIDTH_SPACE } from '../constants';
+import { domIsSelectionInEditor } from '../0_dom/domIsSelectionInEditor';
+import { clamp } from '../helpers/clamp';
 
 function domNextNodeWithinRoot(root: Node, node: Node | null): Node | null {
   if (!node) return null;
@@ -327,7 +327,6 @@ export function virtualizeSelection(state: State): VirtualSelection {
   const anchor = domLeafPointToVirtualOffset(editorElement, anchorLeaf);
   const focus = domLeafPointToVirtualOffset(editorElement, focusLeaf);
 
-
   const vSel = {
     anchor: anchor,
     focus: focus,
@@ -336,12 +335,10 @@ export function virtualizeSelection(state: State): VirtualSelection {
     direction: anchor < focus ? 'forward' : 'backward',
   } as VirtualSelection;
 
-  
   vSel.marks = getVirtualSelectionMarks({
     ...state,
     virtualSelection: vSel as VirtualSelection,
   });
 
-
-  return vSel
+  return vSel;
 }

@@ -2,11 +2,11 @@ import attachListenerBoldBtn from './listeners/attachListenerBoldBtn';
 import attachListenerInput from './listeners/attachListenerInput';
 import attachListenerKeydown from './listeners/attachListenerKeydown';
 import attachListenerSelectionChange from './listeners/attachListenerSelectionChange';
-import { domIsValidDocument } from './domIsValidDocument';
-import render from './render/render';
-import virtualBuildIndex from './virtualBuildIndex';
-import virtualizeDOM from './virtualizeDOM';
-import { virtualizeSelection } from './virtualizeSelection';
+import { domIsValidDocument } from './0_dom/domIsValidDocument';
+import render from './3_render/render';
+import virtualBuildIndex from './2_virtual/virtualBuildIndex';
+import virtualizeDOM from './1_virtualize/virtualizeDOM';
+import { virtualizeSelection } from './1_virtualize/virtualizeSelection';
 
 function init(
   editorSelector: string,

@@ -1,4 +1,4 @@
-import trimVirtualBlockWhiteSpace from './trimVirtualBlockWhiteSpace';
+import trimVirtualBlockWhiteSpace from '../2_virtual/trimVirtualBlockWhiteSpace';
 import virtualizeBlock from './virtualizeBlock';
 
 function virtualizeDOM(

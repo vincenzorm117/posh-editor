@@ -1,4 +1,4 @@
-import closest from './helpers/closest';
+import closest from '../helpers/closest';
 
 const domGenerateMarks = (node: Node): Record<string, any> => {
   const marks: Record<string, any> = {};

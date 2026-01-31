@@ -1,6 +1,6 @@
-import didVirtualNodeChange from '../didVirtualNodeChange';
+import didVirtualNodeChange from './didVirtualNodeChange';
 import domCreateNode from './domCreateNode';
-import domUpdateHtmlProps from './domUpdateHtmlProps';
+import domUpdateHtmlProps from '../0_dom/domUpdateHtmlProps';
 
 function patch(
   parent: HTMLElement,

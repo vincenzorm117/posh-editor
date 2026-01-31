@@ -1,5 +1,5 @@
 import debugUpdateUI from '../debug/debugUpdateUI';
-import { virtualizeSelection } from '../virtualizeSelection';
+import { virtualizeSelection } from '../1_virtualize/virtualizeSelection';
 
 function attachListenerSelectionChange(state: State) {
   // Update button state on selection change

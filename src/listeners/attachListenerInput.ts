@@ -1,8 +1,8 @@
-import render from '../render/render';
+import render from '../3_render/render';
 import { clamp } from '../helpers/clamp';
-import virtualBuildIndex from '../virtualBuildIndex';
-import virtualizeDOM from '../virtualizeDOM';
-import { virtualizeSelection } from '../virtualizeSelection';
+import virtualBuildIndex from '../2_virtual/virtualBuildIndex';
+import virtualizeDOM from '../1_virtualize/virtualizeDOM';
+import { virtualizeSelection } from '../1_virtualize/virtualizeSelection';
 import debugUpdateUI from '../debug/debugUpdateUI';
 
 const attachListenerInput = (state: State) => {

@@ -1,8 +1,8 @@
-import devirtualizeSelection from '../devirtualizeSelection';
+import devirtualizeSelection from './devirtualizeSelection';
 import domCreateNode from './domCreateNode';
 import patch from './patch';
-import vDocToVTree from '../vDocToVTree';
-import virtualBuildIndex from '../virtualBuildIndex';
+import vDocToVTree from './vDocToVTree';
+import virtualBuildIndex from '../2_virtual/virtualBuildIndex';
 
 function render(state: State): void {
   const newTree = vDocToVTree(state.virtualDocument!);

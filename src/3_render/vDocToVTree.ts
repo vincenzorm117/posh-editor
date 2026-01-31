@@ -1,4 +1,4 @@
-import { CHAR_ZERO_WIDTH_SPACE } from './constants';
+import { CHAR_ZERO_WIDTH_SPACE } from '../constants';
 
 function vH(
   tag: string,

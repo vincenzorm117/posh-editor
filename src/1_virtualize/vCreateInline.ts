@@ -1,4 +1,4 @@
-import uid from './helpers/uid';
+import uid from '../helpers/uid';
 
 const vCreateInline = (
   text: string,
