@@ -1,43 +1,32 @@
 {
-  "name": "posh-editor",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "@playwright/test": "^1.57.0",
-    "@testing-library/dom": "^10.4.1",
-    "@testing-library/jest-dom": "^6.9.1",
-    "@testing-library/react": "^16.3.1",
-    "@testing-library/user-event": "^13.5.0",
-    "clsx": "^2.1.1",
-    "lodash": "^4.17.21",
-    "react": "^19.2.3",
-    "react-dom": "^19.2.3",
-    "react-scripts": "5.0.1",
-    "tailwind-merge": "^3.4.0",
-    "web-vitals": "^2.1.4"
-  },
+  "name": "v12-modern-virtual",
+  "version": "1.0.0",
+  "description": "Virtual DOM Rich Text Editor with TypeScript and Webpack",
+  "main": "dist/bundle.js",
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "build": "webpack --mode production",
+    "devserve": "webpack-dev-server --mode development --watch --open",
+    "devold": "webpack --mode development --watch",
+    "dev": "webpack serve --mode development --open",
+    "test": "jest",
+    "generate:graph": "npx depcruise src --include-only \"^src\" --output-type dot | dot -T svg > dependency-graph.svg"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "dependency-cruiser": "^17.3.7",
+    "jest": "^30.2.0",
+    "madge": "^8.0.0",
+    "ts-jest": "^29.4.6",
+    "ts-loader": "^9.5.1",
+    "typescript": "^5.3.3",
+    "webpack": "^5.89.0",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^4.15.1"
   },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@playwright/test": "^1.58.0"
   }
 }
