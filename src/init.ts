@@ -1,56 +1,25 @@
-import attachListenerBoldBtn from './listeners/attachListenerBoldBtn';
-import attachListenerInput from './listeners/attachListenerInput';
-import attachListenerKeydown from './listeners/attachListenerKeydown';
-import attachListenerSelectionChange from './listeners/attachListenerSelectionChange';
-import { domIsValidDocument } from './0_dom/domIsValidDocument';
-import render from './3_render/render';
-import virtualBuildIndex from './2_virtual/virtualBuildIndex';
-import virtualizeDOM from './1_virtualize/virtualizeDOM';
-import { virtualizeSelection } from './1_virtualize/virtualizeSelection';
+import normalizeVirtualDocument from './normalize/normalizeVirtualDocument';
+import virtualizeDomDocument from './virtualizeDom/virtualizeDomDocument';
 
-function init(
-  editorSelector: string,
-  options: Record<string, { selector: string }> = {},
-): State {
-  // Validate editor element
+const init = (editorSelector: string) => {
+  const state = {} as VirtualState;
+
   const editorElement = document.querySelector(editorSelector) as HTMLElement;
   if (!editorElement) {
-    throw new Error(`Editor element not found for selector: ${editorSelector}`);
+    throw new Error(`Element matching selector "${editorSelector}" not found.`);
   }
 
-  // If invalid DOM structure, throw error
-  if (!domIsValidDocument(editorElement)) {
-    throw new Error(
-      'Invalid DOM structure in editor of: ' + editorElement.innerHTML,
-    );
-  }
+  // Get the editor element
+  state.editor.selector = editorSelector;
+  state.editor.element = editorElement!;
 
-  const state = {
-    editor: {
-      selector: editorSelector,
-      element: editorElement,
-    },
-  } as State;
+  // Virtualize the DOM and then Normalize it
+  state.vDoc = virtualizeDomDocument(editorElement);
+  state.vDoc = normalizeVirtualDocument(state.vDoc);
 
-  state.virtualDocument = virtualizeDOM(editorElement, {
-    trimBlockWhiteSpace: true,
-    shrinkConsecutiveSpaces: true,
-    convertNewlinesToSpaces: true,
-  });
-  state.virtualIndex = virtualBuildIndex(state);
-  state.virtualSelection = virtualizeSelection(state);
-
-  attachListenerSelectionChange(state);
-  attachListenerKeydown(state);
-  attachListenerInput(state);
-
-  if (options.bold) {
-    attachListenerBoldBtn(state, options.bold.selector);
-  }
-
-  render(state);
+  // Virtualize the Selection
 
   return state;
-}
+};
 
 export default init;

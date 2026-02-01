@@ -1,97 +1,80 @@
-type DomPoint = {
-  node: Node;
-  offset: number;
+////////////////////////////////////////////////////////////
+// Virtual Nodes
+
+type VirtualState = {
+  editor: {
+    element: HTMLElement;
+    selector: string;
+  };
+  vDoc: VirtualDocument;
+  vIndex: VirtualDocumentIndex;
+};
+
+type VirtualDocument = {
+  type: 'doc';
+  blocks: VirtualBlock[];
+};
+
+type VirtualBlock = {
+  type: 'block';
+  tag: VirtualBlockTag;
+  inlines: VirtualInline[];
+};
+
+type VirtualInline = {
+  type: 'inline';
+  marks: VirtualMarks;
+  text: string;
+};
+
+type VirtualMarks = {
+  [K in VirtualMarkTypes]?: boolean;
+};
+
+type VirtualMarkEntries = Array<[VirtualMarkTypes, boolean]>;
+
+type VirtualNode = VirtualDocument | VirtualBlock | VirtualInline;
+
+type VirtualBlockTag = 'p' | 'div' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
+
+type VirtualMarkTypes = 'bold' | 'underline' | 'italics' | 'strikethrough';
+
+type VirtualInlineTag =
+  | 'span'
+  // Bold
+  | 'b'
+  | 'strong'
+  // Underline
+  | 'u'
+  // Italizicing
+  | 'i'
+  | 'em'
+  // Strikethrough
+  | 's'
+  | 'del';
+
+////////////////////////////////////////////////////////////
+// Index
+
+type VirtualDocumentIndex = {
+  length: number;
+  blocks: VirtualBlockIndex[];
+};
+
+type VirtualBlockIndex = {
+  blockIndex: number;
+  start: number;
+  end: number;
+  length: number;
+  inlines: VirtualInlineIndex[];
 };
 
 type VirtualInlineIndex = {
   blockIndex: number;
   inlineIndex: number;
-  id: string;
-  globalPosition: number;
-  blockPosition: number;
+  start: number;
+  end: number;
+  blockStart: number;
+  blockEnd: number;
   length: number;
 };
-
-type VirtualBlockIndex = {
-  blockIndex: number;
-  id: string;
-  globalPosition: number;
-  length: number;
-  inlines: VirtualInlineIndex[];
-};
-
-type VirtualIndex = {
-  blocks: VirtualBlockIndex[];
-  inlineById: Map<string, VirtualInlineIndex>;
-  globalLength: number;
-};
-
-type VirtualSelection = {
-  anchor: number;
-  focus: number;
-  direction: 'forward' | 'backward' | 'none';
-  isCollapsed: boolean;
-  isInsideEditor: boolean;
-  marks: Record<string, 'true' | 'false' | 'mixed'>;
-};
-
-type VirtualDocument = {
-  type: 'document';
-  blocks: VirtualBlock[];
-};
-
-type VirtualizeOptions = {
-  trimBlockWhiteSpace?: boolean;
-  shrinkConsecutiveSpaces?: boolean;
-  convertNewlinesToSpaces?: boolean;
-};
-
-type VirtualBlock = {
-  type: 'element';
-  id: string;
-  tag: string;
-  children: VirtualInline[];
-};
-
-type VirtualInline = {
-  type: 'inline';
-  id: string;
-  text: string;
-  marks: Record<string, any>;
-};
-
-type EditorState = {
-  selector: string;
-  element: HTMLElement;
-};
-
-type State = {
-  editor: EditorState;
-  virtualDocument: VirtualDocument;
-  virtualSelection: VirtualSelection;
-  virtualIndex?: VirtualIndex;
-  virtualTree?: VirtualTree;
-};
-
-type VirtualTree = {
-  type: 'element';
-  tag: 'div';
-  key: 'root';
-  props: Record<string, any>;
-  children: VirtualTreeNode[];
-};
-
-type VirtualTreeElement = {
-  type: 'element';
-  tag?: string;
-  key?: string;
-  children?: VirtualTreeNode[];
-  props?: Record<string, any>;
-};
-
-type VirtualTreeText = {
-  type: 'text';
-  text: string;
-};
-
-type VirtualTreeNode = VirtualTreeElement | VirtualTreeText;

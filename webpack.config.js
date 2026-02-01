@@ -4,7 +4,7 @@ module.exports = {
   mode: 'development', // Important for readable source maps
   entry: {
     bundle: './src/index.ts',
-    tests: './src/tests/index.js',
+    // tests: './src/tests/index.js',
   },
   output: {
     filename: '[name].js',
@@ -31,6 +31,11 @@ module.exports = {
   },
   resolve: {
     extensions: ['.ts', '.js'],
+    alias: {
+      '@': path.resolve(__dirname, 'src'),
+      '@helpers': path.resolve(__dirname, 'src/helpers'),
+      '@utils': path.resolve(__dirname, 'src/utils'),
+    },
   },
   devServer: {
     static: path.join(__dirname, 'dist'),
