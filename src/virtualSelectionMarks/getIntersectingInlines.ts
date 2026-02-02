@@ -7,18 +7,13 @@ const getIntersectingInlines = (
     .map(([index, block]) => {
       const virtualBlockIndex = vIndex.blocks[index];
 
-      return block.inlines.filter((inline, i) => {
+      return block.inlines.filter((_, i) => {
         const { globalStart, length } = virtualBlockIndex.inlines[i];
 
-        if (globalStart + length < vSel.start) {
-          return false;
-        }
+        const inlineStart = globalStart;
+        const inlineEnd = globalStart + length;
 
-        if (vSel.end < globalStart) {
-          return false;
-        }
-
-        return true;
+        return vSel.start <= inlineEnd && inlineStart <= vSel.end;
       });
     })
     .flat();

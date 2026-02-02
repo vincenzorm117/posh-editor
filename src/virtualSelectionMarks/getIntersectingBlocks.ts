@@ -12,15 +12,10 @@ const getIntersectingBlocks = (
       .filter((_, i) => {
         const { globalStart, length } = vIndex.blocks[i];
 
-        if (globalStart + length < vSel.start) {
-          return false;
-        }
+        const blockStart = globalStart;
+        const blockEnd = globalStart + length;
 
-        if (vSel.end < globalStart) {
-          return false;
-        }
-
-        return true;
+        return vSel.start <= blockEnd && blockStart <= vSel.end;
       })
   );
 };
