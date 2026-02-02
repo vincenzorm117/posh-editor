@@ -1,6 +1,7 @@
 import createVirtualDocument from '@/createVirtualNodes/createVirtualDocument';
 import isValidDomDocument from '@/validatingDom/isValidDomDocument';
 import virtualizeDomBlock from './virtualizeDomBlock';
+import normalizeVirtualDocument from '@/normalize/normalizeVirtualDocument';
 
 const virtualizeDOM = (element: HTMLElement): VirtualDocument => {
   if (!element || element.nodeType != Node.ELEMENT_NODE) {
@@ -17,7 +18,7 @@ const virtualizeDOM = (element: HTMLElement): VirtualDocument => {
     Array.from(element.childNodes).map((x) => virtualizeDomBlock(x, element)),
   );
 
-  return vDoc;
+  return normalizeVirtualDocument(vDoc);
 };
 
 export default virtualizeDOM;

@@ -1,5 +1,4 @@
 import isSelectionInDomDocument from '@/utils/isSelectionInDomDocument';
-import getDomAnchorLeaf from './getDomAnchorLeaf';
 import getDomFocusLeaf from './getDomFocusLeaf';
 import virtualizeDomPoint from './virtualizeDomPoint';
 import getVirtualSelectionMarks from '@/virtualSelectionMarks/getVirtualSelectionMarks';
