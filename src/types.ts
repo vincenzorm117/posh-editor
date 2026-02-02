@@ -7,6 +7,7 @@ type VirtualState = {
     selector: string;
   };
   vDoc: VirtualDocument;
+  vSel: VirtualSelection;
   vIndex: VirtualDocumentIndex;
 };
 
@@ -54,6 +55,36 @@ type VirtualInlineTag =
   | 'del';
 
 ////////////////////////////////////////////////////////////
+// Selection
+
+type VirtualSelectionInEditor = {
+  start: number;
+  end: number;
+  isCollapsed: boolean;
+  isInEditor: true;
+  direction: 'none' | 'forward' | 'backward';
+  marks: VirtualMarks;
+};
+
+type VirtualSelectionOutsideEditor = {
+  isInEditor: false;
+};
+
+type VirtualSelection =
+  | VirtualSelectionInEditor
+  | VirtualSelectionOutsideEditor;
+
+enum VirtualSelectionMarkValue {
+  OFF = 1,
+  ON = 2,
+  MIXED = 3,
+}
+
+type VirtualSelectionMarks = {
+  [K in VirtualMarkTypes]?: VirtualSelectionMarkValue;
+};
+
+////////////////////////////////////////////////////////////
 // Index
 
 type VirtualDocumentIndex = {
@@ -63,8 +94,7 @@ type VirtualDocumentIndex = {
 
 type VirtualBlockIndex = {
   blockIndex: number;
-  start: number;
-  end: number;
+  globalStart: number;
   length: number;
   inlines: VirtualInlineIndex[];
 };
@@ -72,9 +102,7 @@ type VirtualBlockIndex = {
 type VirtualInlineIndex = {
   blockIndex: number;
   inlineIndex: number;
-  start: number;
-  end: number;
+  globalStart: number;
   blockStart: number;
-  blockEnd: number;
   length: number;
 };
