@@ -46,7 +46,9 @@ const virtualizeSelection = (
   const direction = isCollapsed ? 'none' : start < end ? 'forward' : 'backward';
 
   // Determine marks at selection start
-  const marks = getVirtualSelectionMarks({ start, end }, vDoc, vIndex);
+  const vSel =
+    direction == 'backward' ? { start: end, end: start } : { start, end };
+  const marks = getVirtualSelectionMarks(vSel, vDoc, vIndex);
 
   // Detect if it is collapsed
   return {
