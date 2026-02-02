@@ -3,8 +3,8 @@ import normalizeVirtualInline from './normalizeVirtualInline';
 import mergeInlinesWithSameMarks from '@utils/mergeInlinesWithSameMarks';
 
 const normalizeVirtualBlock = (block: VirtualBlock): VirtualBlock => {
-  let inlines = mergeInlinesWithSameMarks(block.inlines);
-
+  let inlines = block.inlines.map(normalizeVirtualInline);
+  inlines = mergeInlinesWithSameMarks(inlines);
   inlines = inlines.filter((inline) => inline.text.length > 0);
 
   if (inlines.length <= 0) {
@@ -13,7 +13,7 @@ const normalizeVirtualBlock = (block: VirtualBlock): VirtualBlock => {
 
   return {
     ...block,
-    inlines: inlines.map(normalizeVirtualInline),
+    inlines,
   } as VirtualBlock;
 };
 
