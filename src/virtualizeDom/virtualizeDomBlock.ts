@@ -9,7 +9,7 @@ const virtualizeBlock = (node: Node, root: HTMLElement): VirtualBlock => {
   }
 
   if (node.nodeType == Node.TEXT_NODE) {
-    return createVirtualBlock('p', [
+    return createVirtualBlock('P', [
       createVirtualInline(node.textContent ?? '', {}),
     ]);
   }
@@ -19,7 +19,7 @@ const virtualizeBlock = (node: Node, root: HTMLElement): VirtualBlock => {
   }
 
   if (node.nodeName == 'BR') {
-    return createVirtualBlock('p', [createVirtualInline('\n', {})]);
+    return createVirtualBlock('P', [createVirtualInline('\n', {})]);
   }
 
   const nodes = createWalkerArray(
@@ -34,7 +34,7 @@ const virtualizeBlock = (node: Node, root: HTMLElement): VirtualBlock => {
   );
 
   return createVirtualBlock(
-    'p',
+    'P',
     nodes.map((x) => virtualizeDomInline(x, root)),
   );
 };

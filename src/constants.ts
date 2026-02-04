@@ -1,47 +1,47 @@
 export const MARK_TYPES = [
   {
     name: 'bold',
-    tags: ['b', 'strong'],
+    tags: ['B', 'STRONG'],
   },
   {
     name: 'italics',
-    tags: ['i', 'em'],
+    tags: ['I', 'EM'],
   },
   {
     name: 'underline',
-    tags: ['u'],
+    tags: ['U'],
   },
   {
     name: 'strikethrough',
-    tags: ['s', 'del'],
+    tags: ['S', 'DEL'],
   },
 ] as { name: VirtualMarkTypes; tags: VirtualInlineTag[] }[];
 
 export const MARK_TYPE_TO_TAG = {
-  bold: 'b',
-  italics: 'i',
-  underline: 'u',
-  strikethrough: 's',
+  bold: 'B',
+  italics: 'I',
+  underline: 'U',
+  strikethrough: 'S',
 } as { [K in VirtualMarkTypes]: VirtualInlineTag };
 
 export const VALID_BLOCK_NODES = [
-  'p',
-  'div',
-  'h1',
-  'h2',
-  'h3',
-  'h4',
-  'h5',
-  'h6',
+  'P',
+  'DIV',
+  'H1',
+  'H2',
+  'H3',
+  'H4',
+  'H5',
+  'H6',
 ] as VirtualBlockTag[];
 
 export const VALID_INLINE_NODES = [
-  'span',
-  'b',
-  'strong',
-  'u',
-  'i',
-  'em',
-  's',
-  'del',
+  'SPAN',
+  'B',
+  'STRONG',
+  'U',
+  'I',
+  'EM',
+  'S',
+  'DEL',
 ] as VirtualInlineTag[];

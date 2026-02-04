@@ -4,7 +4,7 @@ const isValidDomDocument = (node: HTMLElement): boolean => {
   // Must be <div contenteditable=true>
   if (
     node.nodeType !== Node.ELEMENT_NODE ||
-    node.nodeName !== 'div' ||
+    node.nodeName !== 'DIV' ||
     node.getAttribute('contenteditable') !== 'true'
   ) {
     return false;

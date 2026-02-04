@@ -37,23 +37,23 @@ type VirtualMarkEntries = Array<[VirtualMarkTypes, boolean]>;
 
 type VirtualNode = VirtualDocument | VirtualBlock | VirtualInline;
 
-type VirtualBlockTag = 'p' | 'div' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
+type VirtualBlockTag = 'P' | 'DIV' | 'H1' | 'H2' | 'H3' | 'H4' | 'H5' | 'H6';
 
 type VirtualMarkTypes = 'bold' | 'underline' | 'italics' | 'strikethrough';
 
 type VirtualInlineTag =
-  | 'span'
+  | 'SPAN'
   // Bold
-  | 'b'
-  | 'strong'
+  | 'B'
+  | 'STRONG'
   // Underline
-  | 'u'
+  | 'U'
   // Italizicing
-  | 'i'
-  | 'em'
+  | 'I'
+  | 'EM'
   // Strikethrough
-  | 's'
-  | 'del';
+  | 'S'
+  | 'DEL';
 
 ////////////////////////////////////////////////////////////
 // Selection
@@ -113,7 +113,7 @@ type VirtualInlineIndex = {
 
 type VirtualTree = {
   type: 'root';
-  tag: 'div';
+  tag: 'DIV';
   props: Record<string, any>;
   children: VirtualTreeNode[];
 };
