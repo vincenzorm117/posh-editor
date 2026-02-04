@@ -9,6 +9,7 @@ type VirtualState = {
   vDoc: VirtualDocument;
   vSel: VirtualSelection;
   vIndex: VirtualDocumentIndex;
+  vTree: VirtualTree;
 };
 
 type VirtualDocument = {
@@ -106,3 +107,27 @@ type VirtualInlineIndex = {
   blockStart: number;
   length: number;
 };
+
+////////////////////////////////////////////////////////////
+// Virtual Tree
+
+type VirtualTree = {
+  type: 'root';
+  tag: 'div';
+  props: Record<string, any>;
+  children: VirtualTreeNode[];
+};
+
+type VirtualTreeElement = {
+  type: 'element';
+  tag: VirtualBlockTag | VirtualInlineTag;
+  props: Record<string, any>;
+  children: VirtualTreeNode[];
+};
+
+type VirtualTreeText = {
+  type: 'text';
+  text: string;
+};
+
+type VirtualTreeNode = VirtualTreeElement | VirtualTreeText;

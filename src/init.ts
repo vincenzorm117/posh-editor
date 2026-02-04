@@ -1,4 +1,6 @@
+import toggleBold from './action-bold/toggleBold';
 import normalizeVirtualDocument from './normalize/normalizeVirtualDocument';
+import render from './render/render';
 import createVirtualDocumentIndex from './virtualIndex/createVirtualDocumentIndex';
 import virtualizeDomDocument from './virtualizeDom/virtualizeDomDocument';
 import virtualizeSelection from './virtualizeSelection/virtualizeSelection';
@@ -37,19 +39,23 @@ const init = (editorSelector: string) => {
     );
   });
 
+  // Listener: Bold Button Click
+  document.querySelector('#boldBtn')?.addEventListener('click', () => {
+    toggleBold(vState);
+  });
+
   // Listener: Keydown
   document.addEventListener('keydown', (event) => {
     // Placeholder for keydown handling logic
     // Keyboard shortcut (Ctrl/Cmd + B)
     if ((event.ctrlKey || event.metaKey) && event.key === 'b') {
       event.preventDefault();
-      // TODO: Apply Bold to vState
+      toggleBold(vState);
     }
   });
 
   // Listener: Input
   editorElement.addEventListener('input', (event) => {
-    // Placeholder for input handling logic
     vState.vDoc = virtualizeDomDocument(vState.editor.element);
     vState.vIndex = createVirtualDocumentIndex(vState.vDoc);
     vState.vSel = virtualizeSelection(
@@ -57,10 +63,11 @@ const init = (editorSelector: string) => {
       vState.vDoc,
       vState.vIndex,
     );
-    // TODO: Render
+
+    render(vState);
   });
 
-  // TODO: Initial Render
+  render(vState);
 
   return vState;
 };
