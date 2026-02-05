@@ -1,4 +1,6 @@
 import createVirtualInline from '@/createVirtualNodes/createVirtualInline';
+import isBreakElement from '@/helpers/isBreakElement';
+import isElementNode from '@/helpers/isElementNode';
 import isTextNode from '@/helpers/isTextNode';
 import determineMarksFromNode from '@utils/determineMarksFromNode';
 
@@ -14,13 +16,13 @@ const virtualizeInline = (node: Node, root: HTMLElement) => {
     );
   }
 
-  if (node.nodeType != Node.ELEMENT_NODE) {
+  if (!isElementNode(node)) {
     throw new Error(
       'Node must be an element or text node for virtualizeInline',
     );
   }
 
-  if (node.nodeName == 'BR') {
+  if (isBreakElement(node)) {
     return createVirtualInline('\n', {});
   }
 

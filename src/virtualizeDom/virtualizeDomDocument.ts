@@ -2,12 +2,13 @@ import createVirtualDocument from '@/createVirtualNodes/createVirtualDocument';
 import isValidDomDocument from '@/validatingDom/isValidDomDocument';
 import virtualizeDomBlock from './virtualizeDomBlock';
 import normalizeVirtualDocument from '@/normalize/normalizeVirtualDocument';
+import isElementNode from '@/helpers/isElementNode';
 
 const virtualizeDOM = (
   element: HTMLElement,
   options?: EditorOptions['parsingOptions'],
 ): VirtualDocument => {
-  if (!element || element.nodeType != Node.ELEMENT_NODE) {
+  if (!element || !isElementNode(element)) {
     throw new Error('HTML Element is required for virtualization');
   }
 

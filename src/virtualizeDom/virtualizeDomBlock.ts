@@ -3,6 +3,8 @@ import createVirtualInline from '@/createVirtualNodes/createVirtualInline';
 import virtualizeDomInline from './virtualizeDomInline';
 import createTextBrWalkerArray from '@/helpers/createTextBrWalkerArray';
 import isTextNode from '@/helpers/isTextNode';
+import isElementNode from '@/helpers/isElementNode';
+import isBreakElement from '@/helpers/isBreakElement';
 
 const virtualizeBlock = (node: Node, root: HTMLElement): VirtualBlock => {
   if (!node) {
@@ -15,11 +17,11 @@ const virtualizeBlock = (node: Node, root: HTMLElement): VirtualBlock => {
     ]);
   }
 
-  if (node.nodeType != Node.ELEMENT_NODE) {
+  if (!isElementNode(node)) {
     throw new Error('Node must be an element or text node for virtualizeBlock');
   }
 
-  if (node.nodeName == 'BR') {
+  if (isBreakElement(node)) {
     return createVirtualBlock('P', [createVirtualInline('\n', {})]);
   }
 
