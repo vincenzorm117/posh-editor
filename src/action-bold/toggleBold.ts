@@ -1,3 +1,4 @@
+import render from '@/render/render';
 import applyVirtualMarksInRange from '@/utils/applyVirtualMarksInRange';
 import getVirtuallySelectedBlocksAndInlines from '@/utils/getVirtuallySelectedBlocksAndInlines';
 
@@ -14,6 +15,9 @@ const toggleBold = (vState: VirtualState) => {
 
   // Toogle bold mark on selected inlines
   applyVirtualMarksInRange(vState, { bold: !isBolded });
+
+  // Render updated virtual document
+  render(vState);
 };
 
 export default toggleBold;
