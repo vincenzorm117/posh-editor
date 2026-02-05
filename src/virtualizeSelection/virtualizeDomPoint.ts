@@ -1,6 +1,5 @@
 import { clamp } from '@/helpers/clamp';
 import createTextBrWalkerArray from '@/helpers/createTextBrWalkerArray';
-import createWalkerArray from '@/helpers/createWalkerArray';
 import isBreakElement from '@/helpers/isBreakElement';
 import isTextNode from '@/helpers/isTextNode';
 

@@ -1,7 +1,7 @@
 import createVirtualBlock from '@/createVirtualNodes/createVirtualBlock';
 import createVirtualInline from '@/createVirtualNodes/createVirtualInline';
-import createWalkerArray from '@helpers/createWalkerArray';
 import virtualizeDomInline from './virtualizeDomInline';
+import createTextBrWalkerArray from '@/helpers/createTextBrWalkerArray';
 
 const virtualizeBlock = (node: Node, root: HTMLElement): VirtualBlock => {
   if (!node) {
@@ -22,16 +22,8 @@ const virtualizeBlock = (node: Node, root: HTMLElement): VirtualBlock => {
     return createVirtualBlock('P', [createVirtualInline('\n', {})]);
   }
 
-  const nodes = createWalkerArray(
-    node,
-    NodeFilter.SHOW_TEXT | NodeFilter.SHOW_ELEMENT,
-    (node: Node) => {
-      if (node.nodeType == Node.TEXT_NODE) return NodeFilter.FILTER_ACCEPT;
-      if (node.nodeType == Node.ELEMENT_NODE && node.nodeName == 'BR')
-        return NodeFilter.FILTER_ACCEPT;
-      return NodeFilter.FILTER_SKIP;
-    },
-  );
+  // For element nodes, process child nodes
+  const nodes = createTextBrWalkerArray(node);
 
   return createVirtualBlock(
     'P',
