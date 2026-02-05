@@ -1,35 +1,36 @@
+import getBlockLength from '@/utils/getBlockLength';
+
 const createVirtualDocumentIndex = (
   vDoc: VirtualDocument,
 ): VirtualDocumentIndex => {
   let globalStart = 0;
 
   const blocks = vDoc.blocks.map((block, blockIndex) => {
-    let blockStart = 0;
-
+    // Calculate block length
+    const length = getBlockLength(block);
+    // Create block index
     const vBlockIndex = {
       blockIndex,
-      globalStart,
+      start: globalStart,
+      end: globalStart + length - 1,
+      length,
       inlines: [] as VirtualInlineIndex[],
-      length: 0,
     };
-
+    // Create inline indexes
     vBlockIndex.inlines = block.inlines.map((inline, inlineIndex) => {
       const vInlineIndex = {
         blockIndex,
         inlineIndex,
-        globalStart,
-        blockStart,
+        start: globalStart,
+        end: globalStart + inline.text.length - 1,
         length: inline.text.length,
       };
 
-      blockStart += inline.text.length;
       globalStart += inline.text.length;
 
       return vInlineIndex as VirtualInlineIndex;
     });
 
-    // Set lengths
-    vBlockIndex.length = blockStart;
     // For the block separator (e.g., newline)
     globalStart += 1;
 

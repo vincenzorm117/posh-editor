@@ -23,16 +23,14 @@ const getVirtuallySelectedBlocksAndInlines = (
 
   // Get virtually selected blocks and their indeces
   const bbs = blocksAndIndeces.filter(
-    ([_, { globalStart, length }]) =>
-      globalStart <= end && start < globalStart + length,
+    ([_, B]) => B.start <= end && start <= B.end,
   );
 
   // Get inlines from selected blocks and their indeces
   const iis = bbs
     .map(([block, bi]) => {
       return zip(block.inlines, bi.inlines).filter(
-        ([_, { globalStart, length }]) =>
-          globalStart <= end && start < globalStart + length,
+        ([_, I]) => I.start <= end && start <= I.end,
       );
     })
     .flat();

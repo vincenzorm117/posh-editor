@@ -95,7 +95,8 @@ type VirtualDocumentIndex = {
 
 type VirtualBlockIndex = {
   blockIndex: number;
-  globalStart: number;
+  start: number;
+  end: number;
   length: number;
   inlines: VirtualInlineIndex[];
 };
@@ -103,8 +104,8 @@ type VirtualBlockIndex = {
 type VirtualInlineIndex = {
   blockIndex: number;
   inlineIndex: number;
-  globalStart: number;
-  blockStart: number;
+  start: number;
+  end: number;
   length: number;
 };
 

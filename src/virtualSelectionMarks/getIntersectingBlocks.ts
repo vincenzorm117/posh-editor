@@ -10,12 +10,10 @@ const getIntersectingBlocks = (
         return [i, b] as [number, VirtualBlock];
       })
       .filter((_, i) => {
-        const { globalStart, length } = vIndex.blocks[i];
+        const block = vIndex.blocks[i];
 
-        const blockStart = globalStart;
-        const blockEnd = globalStart + length;
-
-        return vSel.start <= blockEnd && blockStart <= vSel.end;
+        // TODO: maybe change < to <= ?
+        return vSel.start <= block.end && block.start <= vSel.end;
       })
   );
 };

@@ -7,23 +7,18 @@ const virtualPointToDomPoint = (
   vIndex: VirtualDocumentIndex,
 ): { node: Node; offset: number } | null => {
   // Get block containing the point
-  const block = vIndex.blocks.find(
-    ({ globalStart, length }) =>
-      globalStart <= point && point < globalStart + length,
-  );
+  const block = vIndex.blocks.find((b) => b.start <= point && point <= b.end);
   // TODO: might want to return something, need to test to see what behavior we want
   // If no block found, return null
   if (!block) return null;
   // Get inline within the block containing the point
-  const inline = (block?.inlines ?? []).find(
-    ({ globalStart, length }) =>
-      globalStart <= point && point < globalStart + length,
-  );
+  const inlines = block?.inlines ?? [];
+  const inline = inlines.find((I) => I.start <= point && point <= I.end);
   // TODO: might want to return something, need to test to see what behavior we want
   // If no inline found, return null
   if (!inline) return null;
   // Calculate offset within the inline
-  const offset = point - inline.globalStart;
+  const offset = point - inline.start;
   // Get node
   const domBlock = root.childNodes[inline.blockIndex];
   const domInline = domBlock.childNodes[inline.inlineIndex];
