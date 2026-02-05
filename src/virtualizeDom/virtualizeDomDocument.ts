@@ -3,7 +3,10 @@ import isValidDomDocument from '@/validatingDom/isValidDomDocument';
 import virtualizeDomBlock from './virtualizeDomBlock';
 import normalizeVirtualDocument from '@/normalize/normalizeVirtualDocument';
 
-const virtualizeDOM = (element: HTMLElement): VirtualDocument => {
+const virtualizeDOM = (
+  element: HTMLElement,
+  options?: EditorOptions['parsingOptions'],
+): VirtualDocument => {
   if (!element || element.nodeType != Node.ELEMENT_NODE) {
     throw new Error('HTML Element is required for virtualization');
   }
@@ -18,7 +21,7 @@ const virtualizeDOM = (element: HTMLElement): VirtualDocument => {
     Array.from(element.childNodes).map((x) => virtualizeDomBlock(x, element)),
   );
 
-  return normalizeVirtualDocument(vDoc);
+  return normalizeVirtualDocument(vDoc, options);
 };
 
 export default virtualizeDOM;

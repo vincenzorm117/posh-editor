@@ -131,3 +131,15 @@ type VirtualTreeText = {
 };
 
 type VirtualTreeNode = VirtualTreeElement | VirtualTreeText;
+
+////////////////////////////////////////////////////////////
+// Init Options
+
+type EditorOptions = {
+  parsingOptions?: {
+    trimDocWhiteSpace?: boolean;
+    shrinkConsecutiveSpaces?: boolean;
+    convertNewlinesToSpaces?: boolean;
+    removeWhiteSpaceOnlyBlocks?: boolean;
+  };
+};
