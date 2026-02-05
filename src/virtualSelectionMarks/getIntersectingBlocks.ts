@@ -1,3 +1,5 @@
+import overlap from '@/helpers/overlap';
+
 const getIntersectingBlocks = (
   vSel: { start: number; end: number },
   vDoc: VirtualDocument,
@@ -10,10 +12,7 @@ const getIntersectingBlocks = (
         return [i, b] as [number, VirtualBlock];
       })
       .filter((_, i) => {
-        const block = vIndex.blocks[i];
-
-        // TODO: maybe change < to <= ?
-        return vSel.start <= block.end && block.start <= vSel.end;
+        return overlap(vSel, vIndex.blocks[i]) > 0;
       })
   );
 };

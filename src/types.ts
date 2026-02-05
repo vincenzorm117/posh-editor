@@ -64,7 +64,7 @@ type VirtualSelectionInEditor = {
   isCollapsed: boolean;
   isInEditor: true;
   direction: 'none' | 'forward' | 'backward';
-  marks: VirtualMarks;
+  marks: VirtualSelectionMarks;
 };
 
 type VirtualSelectionOutsideEditor = {
@@ -76,6 +76,7 @@ type VirtualSelection =
   | VirtualSelectionOutsideEditor;
 
 enum VirtualSelectionMarkValueEnum {
+  NONE = 0,
   OFF = 1,
   ON = 2,
   MIXED = 3,

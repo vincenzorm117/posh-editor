@@ -17,7 +17,7 @@ const getVirtualSelectionMarks = (
       inline.marks,
     ) as VirtualMarkEntries) {
       if (!marks.hasOwnProperty(key)) {
-        marks[key] = VirtualSelectionMarkValue.OFF;
+        marks[key] = VirtualSelectionMarkValue.NONE;
       }
       const markValue = markIsOn
         ? VirtualSelectionMarkValue.ON

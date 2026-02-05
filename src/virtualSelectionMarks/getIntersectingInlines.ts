@@ -1,3 +1,5 @@
+import overlap from '@/helpers/overlap';
+
 const getIntersectingInlines = (
   vSel: { start: number; end: number },
   blocks: Array<[number, VirtualBlock]>,
@@ -8,10 +10,7 @@ const getIntersectingInlines = (
       const virtualBlockIndex = vIndex.blocks[index];
 
       return block.inlines.filter((_, i) => {
-        const inline = virtualBlockIndex.inlines[i];
-
-        // TODO: maybe change < to <= ?
-        return vSel.start <= inline.end && inline.start <= vSel.end;
+        return overlap(vSel, virtualBlockIndex.inlines[i]) > 0;
       });
     })
     .flat();

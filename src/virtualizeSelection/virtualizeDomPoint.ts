@@ -1,55 +1,50 @@
 import { clamp } from '@/helpers/clamp';
+import createTextBrWalkerArray from '@/helpers/createTextBrWalkerArray';
 import createWalkerArray from '@/helpers/createWalkerArray';
 import isBreakElement from '@/helpers/isBreakElement';
+import isTextNode from '@/helpers/isTextNode';
 
 const virtualizeDomPoint = (
   root: HTMLElement,
-  node: Node,
-  offset: number,
+  domNode: Node,
+  domOffset: number,
 ): number => {
-  if (!(root instanceof Node && node instanceof Node && 0 <= offset)) {
+  if (!(root instanceof Node && domNode instanceof Node && 0 <= domOffset)) {
     throw new Error('Invalid DOM point parameters');
   }
 
-  let globalStart = 0;
+  let cursor = 0;
 
   for (const block of Array.from(root.childNodes)) {
     // Get all text nodes and BR elements
-    const nodes = createWalkerArray(
-      block,
-      NodeFilter.SHOW_TEXT | NodeFilter.SHOW_ELEMENT,
-      (n) => {
-        if (n.nodeType == Node.TEXT_NODE || isBreakElement(n))
-          return NodeFilter.FILTER_ACCEPT;
-        return NodeFilter.FILTER_SKIP;
-      },
-    );
+    const nodes = createTextBrWalkerArray(block);
 
     // Search for location
     for (const currNode of nodes) {
-      if (currNode == node) {
-        if (currNode.nodeType == Node.TEXT_NODE) {
+      if (currNode == domNode) {
+        if (isTextNode(currNode)) {
+          // Note: clamp is optional safety here
           return (
-            globalStart +
-            clamp(offset, 0, (currNode as Text).textContent.length)
+            cursor + clamp(domOffset, 0, (currNode as Text).textContent.length)
           );
         }
         // Else, must be break element
-        return globalStart;
+        return cursor;
       }
 
       if (isBreakElement(currNode)) {
-        globalStart += 1;
+        cursor += 1;
       } else {
-        globalStart += (currNode as Text).textContent.length;
+        // TODO: Need to know whether to use textContent or nodeValue
+        cursor += (currNode as Text).textContent.length;
       }
     }
 
     // Add one to account for newlines between blocks
-    globalStart += 1;
+    cursor += 1;
   }
 
-  return globalStart;
+  return cursor;
 };
 
 export default virtualizeDomPoint;
