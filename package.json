@@ -9,7 +9,7 @@
     "devold": "webpack --mode development --watch",
     "dev": "webpack serve --mode development --open",
     "test": "jest",
-    "generate:graph": "npx depcruise src --include-only \"^src\" --output-type dot | dot -T svg > dependency-graph.svg"
+    "generate:graph": "depcruise src --no-config --output-type dot | dot -T svg > dep.svg"
   },
   "devDependencies": {
     "@types/jest": "^30.0.0",
