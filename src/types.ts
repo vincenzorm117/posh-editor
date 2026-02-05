@@ -75,14 +75,14 @@ type VirtualSelection =
   | VirtualSelectionInEditor
   | VirtualSelectionOutsideEditor;
 
-enum VirtualSelectionMarkValue {
+enum VirtualSelectionMarkValueEnum {
   OFF = 1,
   ON = 2,
   MIXED = 3,
 }
 
 type VirtualSelectionMarks = {
-  [K in VirtualMarkTypes]?: VirtualSelectionMarkValue;
+  [K in VirtualMarkTypes]?: VirtualSelectionMarkValueEnum;
 };
 
 ////////////////////////////////////////////////////////////

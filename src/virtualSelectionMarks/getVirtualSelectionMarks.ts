@@ -1,3 +1,4 @@
+import { VirtualSelectionMarkValue } from '@/constants';
 import getIntersectingBlocks from './getIntersectingBlocks';
 import getIntersectingInlines from './getIntersectingInlines';
 

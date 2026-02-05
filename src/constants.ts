@@ -45,3 +45,9 @@ export const VALID_INLINE_NODES = [
   'S',
   'DEL',
 ] as VirtualInlineTag[];
+
+export const VirtualSelectionMarkValue = {
+  OFF: 1,
+  ON: 2,
+  MIXED: 3,
+};
