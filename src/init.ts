@@ -5,7 +5,7 @@ import createVirtualDocumentIndex from './virtualIndex/createVirtualDocumentInde
 import virtualizeDomDocument from './virtualizeDom/virtualizeDomDocument';
 import virtualizeSelection from './virtualizeSelection/virtualizeSelection';
 
-const init = (editorSelector: string) => {
+const init = (editorSelector: string): VirtualState => {
   const editorElement = document.querySelector(editorSelector) as HTMLElement;
   if (!editorElement) {
     throw new Error(`Element matching selector "${editorSelector}" not found.`);

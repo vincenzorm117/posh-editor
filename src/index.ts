@@ -1,5 +1,6 @@
 import init from './init';
 
 document.addEventListener('DOMContentLoaded', () => {
-  init('#editor');
+  // @ts-ignore
+  window.state = init('#editor');
 });
