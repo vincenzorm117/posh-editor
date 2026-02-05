@@ -1,4 +1,4 @@
-import zip from '@/helpers/ zip';
+import zip from '@/helpers/zip';
 import unzip from '@/helpers/unzip';
 
 const getVirtuallySelectedBlocksAndInlines = (
