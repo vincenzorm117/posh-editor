@@ -3,7 +3,7 @@ import createVirtualTreeNode from './createVirtualTreeNode';
 const createVirtualTree = (vDoc: VirtualDocument): VirtualTree => {
   return {
     type: 'root',
-    tag: 'div',
+    tag: 'DIV',
     props: {},
     children: vDoc.blocks.map((block) => {
       return {
