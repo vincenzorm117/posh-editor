@@ -28,7 +28,11 @@ const createVirtualDocumentIndex = (
       return vInlineIndex as VirtualInlineIndex;
     });
 
+    // Set lengths
     vBlockIndex.length = blockStart;
+    // For the block separator (e.g., newline)
+    globalStart += 1;
+
     return vBlockIndex;
   });
 
