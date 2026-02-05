@@ -1,7 +1,8 @@
+import isTextNode from '@/helpers/isTextNode';
 import { VALID_INLINE_NODES } from '../constants';
 
 const isValidDomInline = (node: Node) => {
-  if (node.nodeType == Node.TEXT_NODE) return true;
+  if (isTextNode(node)) return true;
 
   if (node.nodeType != Node.ELEMENT_NODE) return false;
 

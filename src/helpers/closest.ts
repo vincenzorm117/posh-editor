@@ -1,3 +1,5 @@
+import isTextNode from './isTextNode';
+
 /**
  * Finds the closest ancestor element that matches the specified selector.
  * Handles both element nodes and text nodes by traversing up the DOM tree.
@@ -17,7 +19,7 @@
 const closest = (node: Node | null, selector: string): Element | null => {
   if (node == null) return null;
 
-  if (node.nodeType === Node.TEXT_NODE && node.parentElement != null) {
+  if (isTextNode(node) && node.parentElement != null) {
     return node.parentElement.closest(selector);
   }
   return (node as Element).closest(selector);

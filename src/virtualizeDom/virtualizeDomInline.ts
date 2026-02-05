@@ -1,4 +1,5 @@
 import createVirtualInline from '@/createVirtualNodes/createVirtualInline';
+import isTextNode from '@/helpers/isTextNode';
 import determineMarksFromNode from '@utils/determineMarksFromNode';
 
 const virtualizeInline = (node: Node, root: HTMLElement) => {
@@ -6,7 +7,7 @@ const virtualizeInline = (node: Node, root: HTMLElement) => {
     throw new Error('Node is required for virtualizeInline');
   }
 
-  if (node.nodeType == Node.TEXT_NODE) {
+  if (isTextNode(node)) {
     return createVirtualInline(
       node.textContent ?? '',
       determineMarksFromNode(node, root),

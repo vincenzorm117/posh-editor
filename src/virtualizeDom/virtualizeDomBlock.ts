@@ -2,13 +2,14 @@ import createVirtualBlock from '@/createVirtualNodes/createVirtualBlock';
 import createVirtualInline from '@/createVirtualNodes/createVirtualInline';
 import virtualizeDomInline from './virtualizeDomInline';
 import createTextBrWalkerArray from '@/helpers/createTextBrWalkerArray';
+import isTextNode from '@/helpers/isTextNode';
 
 const virtualizeBlock = (node: Node, root: HTMLElement): VirtualBlock => {
   if (!node) {
     throw new Error('Node is required for virtualizeBlock');
   }
 
-  if (node.nodeType == Node.TEXT_NODE) {
+  if (isTextNode(node)) {
     return createVirtualBlock('P', [
       createVirtualInline(node.textContent ?? '', {}),
     ]);

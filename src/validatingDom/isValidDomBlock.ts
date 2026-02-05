@@ -1,8 +1,9 @@
+import isTextNode from '@/helpers/isTextNode';
 import { VALID_BLOCK_NODES } from '../constants';
 import isValidDomInline from './isValidDomInline';
 
 const isValidDomBlock = (node: Node) => {
-  if (node.nodeType == Node.TEXT_NODE) return true;
+  if (isTextNode(node)) return true;
 
   if (node.nodeType != Node.ELEMENT_NODE) return false;
 
