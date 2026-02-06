@@ -13,12 +13,11 @@ const applyVirtualMarksInRange = (
   const selStart = Math.min(vSel.start, vSel.end);
   const selEnd = Math.max(vSel.start, vSel.end);
 
-  const { blocks, blockIndeces } = getVirtuallySelectedBlocksAndInlines(vState);
+  const { blocks, blockIndices } = getVirtuallySelectedBlocksAndInlines(vState);
 
   for (let i = 0; i < blocks.length; i++) {
     const block = blocks[i];
-    const blockIndex = blockIndeces[i];
-
+    const blockIndex = blockIndices[i];
     const newInlines = [] as VirtualInline[];
 
     for (let j = 0; j < block.inlines.length; j++) {
