@@ -11,6 +11,10 @@ type VirtualState = {
   vIndex: VirtualDocumentIndex;
   vTree: VirtualTree;
   actions: Record<string, VirtualAction>;
+  hooks: {
+    preRender?: (state: VirtualState) => void;
+    postRender?: (state: VirtualState) => void;
+  };
 };
 
 type VirtualAction = {
