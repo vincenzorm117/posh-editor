@@ -1,8 +1,8 @@
 const render = (child: VirtualTreeNode): VirtualTreeNode => {
   return {
     type: 'element',
-    tag: 'B',
-    props: {},
+    tag: 'SPAN',
+    props: { class: 'font-bold' },
     children: [child],
   };
 };
