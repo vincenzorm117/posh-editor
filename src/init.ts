@@ -53,11 +53,6 @@ const init = (
     );
   });
 
-  // Listener: Bold Button Click
-  document.querySelector('#boldBtn')?.addEventListener('click', () => {
-    vState.actions.bold.apply(vState);
-  });
-
   // Listener: Keydown
   document.addEventListener('keydown', (event) => {
     // Placeholder for keydown handling logic
