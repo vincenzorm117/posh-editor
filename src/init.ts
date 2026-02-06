@@ -1,4 +1,4 @@
-import toggleBold from './action-bold/toggleBold';
+import actionBold from './action-bold';
 import render from './render/render';
 import createVirtualDocumentIndex from './virtualIndex/createVirtualDocumentIndex';
 import virtualizeDomDocument from './virtualizeDom/virtualizeDomDocument';
@@ -21,9 +21,7 @@ const init = (
 
   // Initailize bold action
   const actions = {
-    bold: {
-      apply: toggleBold,
-    },
+    bold: actionBold,
   } as Record<string, VirtualAction>;
 
   // Virtualize the Selection
