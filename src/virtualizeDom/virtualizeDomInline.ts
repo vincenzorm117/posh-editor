@@ -4,7 +4,11 @@ import isElementNode from '@/helpers/isElementNode';
 import isTextNode from '@/helpers/isTextNode';
 import determineMarksFromNode from '@utils/determineMarksFromNode';
 
-const virtualizeInline = (node: Node, root: HTMLElement) => {
+const virtualizeInline = (
+  node: Node,
+  root: HTMLElement,
+  actions: Record<string, VirtualAction>,
+) => {
   if (!node) {
     throw new Error('Node is required for virtualizeInline');
   }
@@ -12,7 +16,7 @@ const virtualizeInline = (node: Node, root: HTMLElement) => {
   if (isTextNode(node)) {
     return createVirtualInline(
       node.textContent ?? '',
-      determineMarksFromNode(node, root),
+      determineMarksFromNode(node, root, actions),
     );
   }
 
@@ -28,7 +32,7 @@ const virtualizeInline = (node: Node, root: HTMLElement) => {
 
   return createVirtualInline(
     node.textContent ?? '',
-    determineMarksFromNode(node, root),
+    determineMarksFromNode(node, root, actions),
   );
 };
 

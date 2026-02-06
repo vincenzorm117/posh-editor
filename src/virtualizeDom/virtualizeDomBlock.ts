@@ -6,7 +6,11 @@ import isTextNode from '@/helpers/isTextNode';
 import isElementNode from '@/helpers/isElementNode';
 import isBreakElement from '@/helpers/isBreakElement';
 
-const virtualizeBlock = (node: Node, root: HTMLElement): VirtualBlock => {
+const virtualizeBlock = (
+  node: Node,
+  root: HTMLElement,
+  actions: Record<string, VirtualAction>,
+): VirtualBlock => {
   if (!node) {
     throw new Error('Node is required for virtualizeBlock');
   }
@@ -30,7 +34,7 @@ const virtualizeBlock = (node: Node, root: HTMLElement): VirtualBlock => {
 
   return createVirtualBlock(
     'P',
-    nodes.map((x) => virtualizeDomInline(x, root)),
+    nodes.map((x) => virtualizeDomInline(x, root, actions)),
   );
 };
 

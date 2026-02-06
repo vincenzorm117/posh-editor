@@ -13,16 +13,21 @@ const init = (
     throw new Error(`Element matching selector "${editorSelector}" not found.`);
   }
 
-  // Virtualize the DOM and then Normalize it
-  const vDoc = virtualizeDomDocument(editorElement, options?.parsingOptions);
-
-  // Create Virtual Index
-  const vIndex = createVirtualDocumentIndex(vDoc);
-
+  // TODO: setup a registerAction function
   // Initailize bold action
   const actions = {
     bold: actionBold,
   } as Record<string, VirtualAction>;
+
+  // Virtualize the DOM and then Normalize it
+  const vDoc = virtualizeDomDocument(
+    editorElement,
+    actions,
+    options?.parsingOptions,
+  );
+
+  // Create Virtual Index
+  const vIndex = createVirtualDocumentIndex(vDoc);
 
   // Virtualize the Selection
   const vSel = virtualizeSelection(editorElement, vDoc, vIndex, actions);
@@ -65,7 +70,7 @@ const init = (
 
   // Listener: Input
   editorElement.addEventListener('input', (event) => {
-    vState.vDoc = virtualizeDomDocument(vState.editor.element);
+    vState.vDoc = virtualizeDomDocument(vState.editor.element, actions);
     vState.vIndex = createVirtualDocumentIndex(vState.vDoc);
     vState.vSel = virtualizeSelection(
       vState.editor.element,

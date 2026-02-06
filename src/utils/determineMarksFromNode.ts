@@ -4,13 +4,13 @@ import closest from '@helpers/closest';
 const determineMarksFromNode = (
   node: Node,
   root: HTMLElement,
+  actions: Record<string, VirtualAction>,
 ): VirtualMarks => {
   const marks = {} as VirtualMarks;
 
-  for (const { name, tags } of MARK_TYPES) {
-    const parent = closest(node, tags.join(','));
-    if (parent && root.contains(parent)) {
-      marks[name] = true;
+  for (const [name, { scanMarks }] of Object.entries(actions)) {
+    if (scanMarks(node, root)) {
+      marks[name as VirtualMarkTypes] = true;
     }
   }
 

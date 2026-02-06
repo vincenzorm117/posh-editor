@@ -6,6 +6,7 @@ import isElementNode from '@/helpers/isElementNode';
 
 const virtualizeDOM = (
   element: HTMLElement,
+  actions: Record<string, VirtualAction>,
   options?: EditorOptions['parsingOptions'],
 ): VirtualDocument => {
   if (!element || !isElementNode(element)) {
@@ -19,7 +20,9 @@ const virtualizeDOM = (
   }
 
   const vDoc = createVirtualDocument(
-    Array.from(element.childNodes).map((x) => virtualizeDomBlock(x, element)),
+    Array.from(element.childNodes).map((x) =>
+      virtualizeDomBlock(x, element, actions),
+    ),
   );
 
   return normalizeVirtualDocument(vDoc, options);
