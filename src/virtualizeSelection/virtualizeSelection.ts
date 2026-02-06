@@ -7,6 +7,7 @@ const virtualizeSelection = (
   root: HTMLElement,
   vDoc: VirtualDocument,
   vIndex: VirtualDocumentIndex,
+  actions: Record<string, VirtualAction>,
 ): VirtualSelection => {
   const sel = window.getSelection();
 
@@ -48,7 +49,7 @@ const virtualizeSelection = (
   // Determine marks at selection start
   const vSel =
     direction == 'backward' ? { start: end, end: start } : { start, end };
-  const marks = getVirtualSelectionMarks(vSel, vDoc, vIndex);
+  const marks = getVirtualSelectionMarks(vSel, vDoc, vIndex, actions);
 
   // Detect if it is collapsed
   return {

@@ -2,7 +2,7 @@ import { VirtualSelectionMarkValue } from '@/constants';
 import render from '@/render/render';
 import applyVirtualMarksInRange from '@/utils/applyVirtualMarksInRange';
 
-const toggleBold = (vState: VirtualState) => {
+const toggleBold = (vState: VirtualState): any => {
   const { vSel } = vState;
 
   if (!vSel.isInEditor || vSel.isCollapsed) return null;

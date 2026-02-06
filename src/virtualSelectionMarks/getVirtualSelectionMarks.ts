@@ -6,23 +6,27 @@ const getVirtualSelectionMarks = (
   vSel: { start: number; end: number },
   vDoc: VirtualDocument,
   vIndex: VirtualDocumentIndex,
+  actions: Record<string, VirtualAction>,
 ): VirtualSelectionMarks => {
+  // Get intersecting blocks and inlines
   const indexedBlocks = getIntersectingBlocks(vSel, vDoc, vIndex);
   const inlines = getIntersectingInlines(vSel, indexedBlocks, vIndex);
 
-  const marks: VirtualSelectionMarks = {};
+  // Initialize marks with empty object
+  const marks = {} as VirtualSelectionMarks;
 
-  for (const inline of inlines) {
-    for (const [key, markIsOn] of Object.entries(
-      inline.marks,
-    ) as VirtualMarkEntries) {
-      if (!marks.hasOwnProperty(key)) {
-        marks[key] = VirtualSelectionMarkValue.NONE;
-      }
-      const markValue = markIsOn
-        ? VirtualSelectionMarkValue.ON
-        : VirtualSelectionMarkValue.OFF;
-      marks[key] = marks[key]! | markValue;
+  for (const markKey in actions) {
+    // Initialize the mark value to NONE for each mark type
+    marks[markKey] = VirtualSelectionMarkValue.NONE;
+
+    for (const inline of inlines) {
+      // Only if the mark is present in the inline and is set to true, we consider it ON. Otherwise, it is OFF.
+      const markValue =
+        inline.marks[markKey] === true
+          ? VirtualSelectionMarkValue.ON
+          : VirtualSelectionMarkValue.OFF;
+      // Update the mark value using bitwise OR to combine multiple inlines' marks
+      marks[markKey] = marks[markKey]! | markValue;
     }
   }
 

@@ -10,6 +10,11 @@ type VirtualState = {
   vSel: VirtualSelection;
   vIndex: VirtualDocumentIndex;
   vTree: VirtualTree;
+  actions: Record<string, VirtualAction>;
+};
+
+type VirtualAction = {
+  apply(state: VirtualState, ...args: any[]): any;
 };
 
 type VirtualDocument = {
@@ -39,7 +44,8 @@ type VirtualNode = VirtualDocument | VirtualBlock | VirtualInline;
 
 type VirtualBlockTag = 'P' | 'DIV' | 'H1' | 'H2' | 'H3' | 'H4' | 'H5' | 'H6';
 
-type VirtualMarkTypes = 'bold' | 'underline' | 'italics' | 'strikethrough';
+// type VirtualMarkTypes = 'bold' | 'underline' | 'italics' | 'strikethrough';
+type VirtualMarkTypes = string; // Allow dynamic mark types for flexibility
 
 type VirtualInlineTag =
   | 'SPAN'
