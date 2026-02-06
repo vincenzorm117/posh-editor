@@ -1,6 +1,9 @@
 import createVirtualTreeNode from './createVirtualTreeNode';
 
-const createVirtualTree = (vDoc: VirtualDocument): VirtualTree => {
+const createVirtualTree = (
+  vDoc: VirtualDocument,
+  actions: Record<string, VirtualAction>,
+): VirtualTree => {
   return {
     type: 'root',
     tag: 'DIV',
@@ -10,7 +13,7 @@ const createVirtualTree = (vDoc: VirtualDocument): VirtualTree => {
         type: 'element',
         tag: block.tag,
         props: {},
-        children: block.inlines.map(createVirtualTreeNode),
+        children: block.inlines.map((b) => createVirtualTreeNode(b, actions)),
       };
     }),
   };

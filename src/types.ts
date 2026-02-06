@@ -16,6 +16,7 @@ type VirtualState = {
 type VirtualAction = {
   apply(state: VirtualState, ...args: any[]): any;
   scanMarks(node: Node, root: HTMLElement): boolean;
+  render(node: VirtualTreeNode): VirtualTreeNode;
 };
 
 type VirtualDocument = {

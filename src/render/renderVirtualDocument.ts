@@ -4,7 +4,7 @@ import patch from './patch';
 
 const renderVirtualDocument = (vState: VirtualState) => {
   const root = vState.editor.element;
-  const vTree = createVirtualTree(vState.vDoc);
+  const vTree = createVirtualTree(vState.vDoc, vState.actions);
   // If no oldDoc, replace editor with newDoc render
   if (!vState.vTree) {
     const newChildren = vTree.children.map(createDomNode);

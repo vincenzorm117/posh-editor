@@ -3,6 +3,7 @@ import { MARK_TYPE_TO_TAG } from '@/constants';
 
 const createVirtualTreeElement = (
   inline: VirtualInline,
+  actions: Record<string, VirtualAction>,
 ): VirtualTreeElement => {
   return (
     // Build nested elements based on active marks
@@ -13,12 +14,8 @@ const createVirtualTreeElement = (
       .map(([mark]) => mark)
       // Wrap text node with marks from innermost to outermost
       .reduceRight<VirtualTreeNode>((child, mark) => {
-        return {
-          type: 'element',
-          tag: MARK_TYPE_TO_TAG[mark],
-          props: {},
-          children: [child],
-        };
+        const markRenderer = actions[mark]?.render;
+        return markRenderer(child);
       }, createVirtualTreeText(inline)) as VirtualTreeElement
   );
 };
