@@ -1,4 +1,5 @@
 import actionBold from './action-bold';
+import actionUnderline from './action-underline';
 import render from './render/render';
 import createVirtualDocumentIndex from './virtualIndex/createVirtualDocumentIndex';
 import virtualizeDomDocument from './virtualizeDom/virtualizeDomDocument';
@@ -14,9 +15,10 @@ const init = (
   }
 
   // TODO: setup a registerAction function
-  // Initailize bold action
+  // Initialize actions
   const actions = {
     bold: actionBold,
+    underline: actionUnderline,
   } as Record<string, VirtualAction>;
 
   // Virtualize the DOM and then Normalize it
@@ -60,6 +62,12 @@ const init = (
     if ((event.ctrlKey || event.metaKey) && event.key === 'b') {
       event.preventDefault();
       vState.actions.bold.apply(vState);
+    }
+
+    // Keyboard shortcut (Ctrl/Cmd + U)
+    if ((event.ctrlKey || event.metaKey) && event.key === 'u') {
+      event.preventDefault();
+      vState.actions.underline.apply(vState);
     }
   });
 

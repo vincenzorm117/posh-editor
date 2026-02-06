@@ -17,4 +17,9 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelector('#boldBtn')?.addEventListener('click', () => {
     vState.actions.bold.apply(vState);
   });
+
+  // Listener: Underline Button Click
+  document.querySelector('#underlineBtn')?.addEventListener('click', () => {
+    vState.actions.underline.apply(vState);
+  });
 });
