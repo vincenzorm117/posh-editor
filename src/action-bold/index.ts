@@ -1,11 +1,11 @@
 import apply from './apply';
-import render from './render';
+import renderMarks from './renderMarks';
 import scanMarks from './scanMarks';
 
 const actionBold = {
   apply: apply,
   scanMarks: scanMarks,
-  render: render,
+  renderMarks: renderMarks,
 };
 
 export default actionBold;

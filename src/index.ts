@@ -18,6 +18,11 @@ document.addEventListener('DOMContentLoaded', () => {
     vState.actions.bold.apply(vState);
   });
 
+  // Listener: Italics Button Click
+  document.querySelector('#italicsBtn')?.addEventListener('click', () => {
+    vState.actions.italics.apply(vState);
+  });
+
   // Listener: Underline Button Click
   document.querySelector('#underlineBtn')?.addEventListener('click', () => {
     vState.actions.underline.apply(vState);

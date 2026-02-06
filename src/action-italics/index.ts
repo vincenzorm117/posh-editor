@@ -2,10 +2,10 @@ import apply from './apply';
 import renderMarks from './renderMarks';
 import scanMarks from './scanMarks';
 
-const actionUnderline = {
+const actionItalics = {
   apply: apply,
   scanMarks: scanMarks,
   renderMarks: renderMarks,
 };
 
-export default actionUnderline;
+export default actionItalics;

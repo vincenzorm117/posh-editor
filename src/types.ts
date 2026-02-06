@@ -16,7 +16,7 @@ type VirtualState = {
 type VirtualAction = {
   apply(state: VirtualState, ...args: any[]): any;
   scanMarks(node: Node, root: HTMLElement): boolean;
-  render(node: VirtualTreeNode): VirtualTreeNode;
+  renderMarks(marks: VirtualTreeElementProps): VirtualTreeElementProps;
 };
 
 type VirtualDocument = {
@@ -131,9 +131,11 @@ type VirtualTree = {
 type VirtualTreeElement = {
   type: 'element';
   tag: VirtualBlockTag | VirtualInlineTag;
-  props: Record<string, any>;
+  props: VirtualTreeElementProps;
   children: VirtualTreeNode[];
 };
+
+type VirtualTreeElementProps = Record<string, any>;
 
 type VirtualTreeText = {
   type: 'text';

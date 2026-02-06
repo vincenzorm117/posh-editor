@@ -5,19 +5,22 @@ const createVirtualTreeElement = (
   inline: VirtualInline,
   actions: Record<string, VirtualAction>,
 ): VirtualTreeElement => {
-  return (
-    // Build nested elements based on active marks
-    (Object.entries(inline.marks) as VirtualMarkEntries)
-      // Filter only active marks
-      .filter(([, isActive]) => isActive)
-      // Get only mark types
-      .map(([mark]) => mark)
-      // Wrap text node with marks from innermost to outermost
-      .reduceRight<VirtualTreeNode>((child, mark) => {
-        const markRenderer = actions[mark]?.render;
-        return markRenderer(child);
-      }, createVirtualTreeText(inline)) as VirtualTreeElement
-  );
+  const props = (Object.entries(inline.marks) as VirtualMarkEntries)
+    // Filter only active marks
+    .filter(([, isActive]) => isActive)
+    // Get only mark types
+    .map(([mark]) => mark)
+    .reduce((marks, mark) => {
+      const renderMarks = actions[mark].renderMarks!;
+      return renderMarks(marks);
+    }, {} as VirtualTreeElementProps);
+
+  return {
+    type: 'element',
+    tag: 'SPAN',
+    props,
+    children: [createVirtualTreeText(inline)],
+  };
 };
 
 export default createVirtualTreeElement;

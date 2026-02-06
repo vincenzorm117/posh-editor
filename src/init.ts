@@ -1,4 +1,5 @@
 import actionBold from './action-bold';
+import actionItalics from './action-italics';
 import actionUnderline from './action-underline';
 import render from './render/render';
 import createVirtualDocumentIndex from './virtualIndex/createVirtualDocumentIndex';
@@ -18,6 +19,7 @@ const init = (
   // Initialize actions
   const actions = {
     bold: actionBold,
+    italics: actionItalics,
     underline: actionUnderline,
   } as Record<string, VirtualAction>;
 
@@ -62,6 +64,12 @@ const init = (
     if ((event.ctrlKey || event.metaKey) && event.key === 'b') {
       event.preventDefault();
       vState.actions.bold.apply(vState);
+    }
+
+    // Keyboard shortcut (Ctrl/Cmd + I)
+    if ((event.ctrlKey || event.metaKey) && event.key === 'i') {
+      event.preventDefault();
+      vState.actions.italics.apply(vState);
     }
 
     // Keyboard shortcut (Ctrl/Cmd + U)
