@@ -1,7 +1,7 @@
 import overlap from '@/helpers/overlap';
 
 const getIntersectingBlocks = (
-  vSel: { start: number; end: number },
+  vSel: { start: number; end: number; isCollapsed: boolean },
   vDoc: VirtualDocument,
   vIndex: VirtualDocumentIndex,
 ): Array<[number, VirtualBlock]> => {
@@ -12,7 +12,11 @@ const getIntersectingBlocks = (
         return [i, b] as [number, VirtualBlock];
       })
       .filter((_, i) => {
-        return overlap(vSel, vIndex.blocks[i]) > 0;
+        const { start, end } = vIndex.blocks[i];
+
+        return vSel.isCollapsed
+          ? start < vSel.start && vSel.start <= end
+          : overlap(vSel, vIndex.blocks[i]) > 0;
       })
   );
 };

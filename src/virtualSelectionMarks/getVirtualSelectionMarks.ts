@@ -1,16 +1,14 @@
 import { VirtualSelectionMarkValue } from '@/constants';
-import getIntersectingBlocks from './getIntersectingBlocks';
 import getIntersectingInlines from './getIntersectingInlines';
 
 const getVirtualSelectionMarks = (
-  vSel: { start: number; end: number },
+  vSel: { start: number; end: number; isCollapsed: boolean },
   vDoc: VirtualDocument,
   vIndex: VirtualDocumentIndex,
   actions: Record<string, VirtualAction>,
 ): VirtualSelectionMarks => {
   // Get intersecting blocks and inlines
-  const indexedBlocks = getIntersectingBlocks(vSel, vDoc, vIndex);
-  const inlines = getIntersectingInlines(vSel, indexedBlocks, vIndex);
+  const inlines = getIntersectingInlines(vSel, vDoc, vIndex);
 
   // Initialize marks with empty object
   const marks = {} as VirtualSelectionMarks;
