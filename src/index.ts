@@ -1,12 +1,23 @@
+import renderDebugDocument from './debug/renderDebugDocument';
 import init from './init';
 
 document.addEventListener('DOMContentLoaded', () => {
+  const debugUI = document.querySelector('#virtual-document-json')!;
+
+  const updateUI = (state: VirtualState) => {
+    debugUI.innerHTML = renderDebugDocument(state);
+  };
+
   const vState = init('#editor', {
     parsingOptions: {
       trimDocWhiteSpace: true,
       shrinkConsecutiveSpaces: true,
       convertNewlinesToSpaces: true,
       removeWhiteSpaceOnlyBlocks: true,
+    },
+    hooks: {
+      postRender: updateUI,
+      postSelection: updateUI,
     },
   });
 

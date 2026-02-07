@@ -1,6 +1,9 @@
 import actionBold from './action-bold';
 import actionItalics from './action-italics';
 import actionUnderline from './action-underline';
+import isFunction from './helpers/isFunction';
+import noop from './helpers/noop';
+import runFn from './helpers/runFn';
 import render from './render/render';
 import createVirtualDocumentIndex from './virtualIndex/createVirtualDocumentIndex';
 import virtualizeDomDocument from './virtualizeDom/virtualizeDomDocument';
@@ -22,6 +25,21 @@ const init = (
     italics: actionItalics,
     underline: actionUnderline,
   } as Record<string, VirtualAction>;
+
+  // Setup hooks
+  const hooks = {} as any;
+  hooks.preRender = isFunction(options?.hooks?.preRender)
+    ? options.hooks.preRender!
+    : noop;
+  hooks.postRender = isFunction(options?.hooks?.postRender)
+    ? options.hooks.postRender!
+    : noop;
+  hooks.preSelection = isFunction(options?.hooks?.preSelection)
+    ? options.hooks.preSelection!
+    : noop;
+  hooks.postSelection = isFunction(options?.hooks?.postSelection)
+    ? options.hooks.postSelection!
+    : noop;
 
   // Virtualize the DOM and then Normalize it
   const vDoc = virtualizeDomDocument(
@@ -45,16 +63,19 @@ const init = (
     vSel,
     vIndex,
     actions,
+    hooks,
   } as VirtualState;
 
   // Listener: Selection Change
   document.addEventListener('selectionchange', () => {
+    runFn(hooks.preSelection, vState);
     vState.vSel = virtualizeSelection(
       vState.editor.element,
       vState.vDoc,
       vState.vIndex,
       vState.actions,
     );
+    runFn(hooks.postSelection, vState);
   });
 
   // Listener: Keydown

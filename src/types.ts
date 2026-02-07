@@ -11,9 +11,11 @@ type VirtualState = {
   vIndex: VirtualDocumentIndex;
   vTree: VirtualTree;
   actions: Record<string, VirtualAction>;
-  hooks: {
+  hooks?: {
     preRender?: (state: VirtualState) => void;
     postRender?: (state: VirtualState) => void;
+    preSelection?: (state: VirtualState) => void;
+    postSelection?: (state: VirtualState) => void;
   };
 };
 
@@ -157,5 +159,11 @@ type EditorOptions = {
     shrinkConsecutiveSpaces?: boolean;
     convertNewlinesToSpaces?: boolean;
     removeWhiteSpaceOnlyBlocks?: boolean;
+  };
+  hooks?: {
+    preRender?: (state: VirtualState) => void;
+    postRender?: (state: VirtualState) => void;
+    preSelection?: (state: VirtualState) => void;
+    postSelection?: (state: VirtualState) => void;
   };
 };
