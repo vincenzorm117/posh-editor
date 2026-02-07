@@ -10,7 +10,6 @@ document.addEventListener('DOMContentLoaded', () => {
     debugUI.innerHTML = renderDebugDocument(state);
 
     if (state.vSel.isInEditor) {
-      console.log(state.vSel?.marks);
       debugSelectionInfoUI.innerHTML = `
         <div>Inside Editor</div>
         ${state.vSel.isCollapsed ? `<div>${state.vSel.start}</div>` : `<div>${state.vSel.start} - ${state.vSel.end}</div>`}
