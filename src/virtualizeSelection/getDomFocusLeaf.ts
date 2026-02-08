@@ -51,7 +51,7 @@ const getDomFocusLeaf = (
   }
   // Case: offset at beginning of childNodes
   else if (offset <= 0) {
-    const prev = getDomPrevLeaf(root, node);
+    const prev = getDomPrevLeaf(root, node.childNodes[0]);
     if (prev) {
       if (isBreakElement(prev)) return [prev, 0];
       else return [prev, (prev as Text).textContent.length];
