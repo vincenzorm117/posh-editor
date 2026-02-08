@@ -7,11 +7,13 @@ const createVirtualTree = (
   return {
     type: 'root',
     tag: 'DIV',
+    id: vDoc.id,
     props: {},
     children: vDoc.blocks.map((block) => {
       return {
         type: 'element',
         tag: block.tag,
+        id: block.id,
         props: {},
         children: block.inlines.map((b) => createVirtualTreeNode(b, actions)),
       };

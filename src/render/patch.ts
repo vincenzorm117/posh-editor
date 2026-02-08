@@ -41,12 +41,51 @@ const patch = (
     domNode as HTMLElement,
   );
 
-  // TODO: need better algorithm
+  // Grab children
   const oldChildren = oldNode.children;
   const newChildren = newNode.children;
+  // Index-based diffing can cause issues when nodes are reordered, so we first try to match by id
+  const oldChildrenById = new Map<
+    string,
+    { vNode: VirtualTreeNode; index: number }
+  >();
+  oldChildren.forEach((vNode, index) =>
+    oldChildrenById.set(vNode.id, { vNode, index }),
+  );
+  // Keep track of which old children have been matched to avoid duplicates
+  const usedChildren = new Set<number>();
 
   for (let i = 0; i < newChildren.length; i++) {
-    patch(oldChildren[i], newChildren[i], domNode, i);
+    const newChild = newChildren[i];
+    let oldChild = oldChildren[i];
+
+    if (oldChild && newChild.id == oldChild.id) {
+      patch(oldChild, newChild, domNode, i);
+      continue;
+    }
+
+    let match;
+    if (oldChildrenById.has(newChild.id)) {
+      match = oldChildrenById.get(newChild.id);
+    } else if (oldChild) {
+      match = { vNode: oldChild, index: i };
+    }
+
+    if (match && usedChildren.has(match.index)) match = null;
+
+    if (match) {
+      usedChildren.add(match.index);
+
+      const matchNode = domNode.childNodes[match.index];
+      const currNode = domNode.childNodes[i];
+      if (matchNode && matchNode != currNode) {
+        domNode.insertBefore(matchNode, currNode);
+      }
+      patch(match.vNode, newChild, domNode, i);
+    } else {
+      usedChildren.add(i);
+      domNode.insertBefore(createDomNode(newChild), domNode.childNodes[i]);
+    }
   }
 
   while (domNode.childNodes.length > newChildren.length) {

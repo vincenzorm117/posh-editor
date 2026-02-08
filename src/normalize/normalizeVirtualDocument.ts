@@ -1,3 +1,4 @@
+import createVirtualDocument from '@/createVirtualNodes/createVirtualDocument';
 import convertNewlinesToSpaces from './convertNewlinesToSpaces';
 import normalizeVirtualBlock from './normalizeVirtualBlock';
 import removeWhiteSpaceOnlyBlocks from './removeWhiteSpaceOnlyBlocks';
@@ -26,7 +27,7 @@ const normalizeVirtualDocument = (
     blocks = shrinkConsecutiveSpaces(blocks);
   }
 
-  return { type: 'doc', blocks };
+  return createVirtualDocument(blocks);
 };
 
 export default normalizeVirtualDocument;

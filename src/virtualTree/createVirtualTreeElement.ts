@@ -18,6 +18,7 @@ const createVirtualTreeElement = (
   return {
     type: 'element',
     tag: 'SPAN',
+    id: inline.id,
     props,
     children: [createVirtualTreeText(inline)],
   };

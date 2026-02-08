@@ -10,16 +10,8 @@ const renderVirtualDocument = (vState: VirtualState) => {
     const newChildren = vTree.children.map(createDomNode);
     root.replaceChildren(...newChildren);
   } else {
-    const oldChildren = vState.vTree.children;
-    const newChildren = vTree.children;
-
-    for (let i = 0; i < newChildren.length; i++) {
-      patch(oldChildren[i], newChildren[i], root, i);
-    }
-
-    while (root.childNodes.length > newChildren.length) {
-      root.removeChild(root.lastChild!);
-    }
+    const rootIndex = Array.from(root.parentElement!.childNodes).indexOf(root);
+    patch(vState.vTree, vTree, root.parentElement!, rootIndex);
   }
 
   vState.vTree = vTree;

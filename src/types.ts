@@ -26,17 +26,20 @@ type VirtualAction = {
 };
 
 type VirtualDocument = {
+  id: string;
   type: 'doc';
   blocks: VirtualBlock[];
 };
 
 type VirtualBlock = {
+  id: string;
   type: 'block';
   tag: VirtualBlockTag;
   inlines: VirtualInline[];
 };
 
 type VirtualInline = {
+  id: string;
   type: 'inline';
   marks: VirtualMarks;
   text: string;
@@ -128,6 +131,7 @@ type VirtualInlineIndex = {
 // Virtual Tree
 
 type VirtualTree = {
+  id: string;
   type: 'root';
   tag: 'DIV';
   props: Record<string, any>;
@@ -135,6 +139,7 @@ type VirtualTree = {
 };
 
 type VirtualTreeElement = {
+  id: string;
   type: 'element';
   tag: VirtualBlockTag | VirtualInlineTag;
   props: VirtualTreeElementProps;
@@ -144,11 +149,12 @@ type VirtualTreeElement = {
 type VirtualTreeElementProps = Record<string, any>;
 
 type VirtualTreeText = {
+  id: string;
   type: 'text';
   text: string;
 };
 
-type VirtualTreeNode = VirtualTreeElement | VirtualTreeText;
+type VirtualTreeNode = VirtualTree | VirtualTreeElement | VirtualTreeText;
 
 ////////////////////////////////////////////////////////////
 // Init Options
