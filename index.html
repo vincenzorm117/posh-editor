@@ -55,63 +55,62 @@
         >
           B
         </button>
-        <span class="ml-auto text-xs text-warm-400 font-medium"
-          >Ctrl/Cmd+B</span
+        <button
+          id="underlineBtn"
+          class="btn-underline appearance-none border border-warm-300 bg-warm-50 hover:bg-warm-100 active:bg-warm-200 rounded-lg px-3 py-2 cursor-pointer underline text-warm-700 leading-none select-none transition-all duration-150 shadow-sm hover:shadow"
+          type="button"
+          aria-pressed="false"
+          title="Underline (Ctrl/Cmd+U)"
+          data-testid="btn-underline"
         >
+          U
+        </button>
+        <button
+          id="italicsBtn"
+          class="btn-italic appearance-none border border-warm-300 bg-warm-50 hover:bg-warm-100 active:bg-warm-200 rounded-lg px-3 py-2 cursor-pointer italic text-warm-700 leading-none select-none transition-all duration-150 shadow-sm hover:shadow"
+          type="button"
+          aria-pressed="false"
+          title="Italic (Ctrl/Cmd+I)"
+          data-testid="btn-italic"
+        >
+          I
+        </button>
       </div>
       <!-- Editor -->
       <div
         id="editor"
-        class="mt-3 border border-warm-300 rounded-xl p-4 min-h-[200px] bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-warm-600 focus:ring-offset-2 focus:ring-offset-warm-100 transition-shadow [&>*]:whitespace-pre-wrap [&>p]:bg-[red]/20 [&>p]:my-2"
+        class="mt-3 border border-warm-300 rounded-xl p-4 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-warm-600 focus:ring-offset-2 focus:ring-offset-warm-100 transition-shadow [&>*]:whitespace-pre-wrap [&>p]:my-2"
         contenteditable="true"
         spellcheck="false"
         data-testid="posh"
       >
+        test
         <p>
           This is a paragraph with some <strong>bold text</strong> already in
           it. Select any text and click the Bold button to toggle bold
           formatting.
         </p>
+        <p></p>
         <p>This editor maintains the structure of your document including:</p>
-        <p>
-          Select text across multiple elements and apply bold formatting. The
-          structure will be preserved!
-        </p>
-        <p>
-          You can select text within a single paragraph, or across multiple
-          paragraphs and headlines.
-        </p>
-      </div>
-
-      <!-- Selection State Table -->
-      <div class="mt-6">
-        <div class="overflow-x-auto">
-          <table
-            class="min-w-full text-sm border border-warm-300 rounded-xl overflow-hidden"
-          >
-            <thead class="bg-warm-200 text-warm-700">
-              <tr>
-                <th class="px-4 py-2 text-left font-semibold">InEditor</th>
-                <th class="px-4 py-2 text-left font-semibold">IsCollapsed</th>
-                <th class="px-4 py-2 text-left font-semibold">Anchor</th>
-                <th class="px-4 py-2 text-left font-semibold">Focus</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-warm-300">
-              <tr class="bg-white">
-                <td id="cell-in-editor" class="px-4 py-2 text-warm-800">—</td>
-                <td id="cell-is-collapsed" class="px-4 py-2 text-warm-800">
-                  —
-                </td>
-                <td id="cell-anchor" class="px-4 py-2 text-warm-800">—</td>
-                <td id="cell-focus" class="px-4 py-2 text-warm-800">—</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+        <p>1 2 3 4 <b>56</b> 7 8 9 0</p>
       </div>
     </div>
 
-    <script src="dist/bundle.js"></script>
+    <section
+      class="mt-6 rounded-xl overflow-hidden border border-warm-300 bg-white shadow-sm"
+    >
+      <div
+        class="flex bg-warm-100 text-sm border border-warm-300 [&>*]:px-4 [&>*]:py-2 [&>*]:border-r [&>*]:border-warm-300 [&>*]:empty:hidden"
+        id="debug-select-info"
+      ></div>
+      <div
+        id="virtual-document-json"
+        class="bg-warm-800 border border-warm-700 p-4 text-xs text-warm-300 overflow-x-auto shadow-sm font-mono"
+        style="font-size: 8px"
+      ></div>
+    </section>
+
+    <script src="./bundle.js"></script>
+    <!-- <script src="./tests.js"></script> -->
   </body>
 </html>
