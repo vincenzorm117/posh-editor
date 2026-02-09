@@ -2,6 +2,7 @@ import generateId from '@/helpers/generateId';
 import getBlockInlineIndecesAtPosition from '@/utils/getBlockInlineIndecesAtPosition';
 import getVirtualSelectionMarksFromInline from '@/utils/getVirtualSelectionMarksFromInline';
 
+// TODO: delete this file use what is in insertParagraph/index.ts
 const insertParagraphWithoutSelection = (vState: VirtualState) => {
   const { vDoc, vIndex, vSel } = vState;
 
@@ -50,6 +51,8 @@ const insertParagraphWithoutSelection = (vState: VirtualState) => {
     ...inline,
     text: inline.text.slice(0, cursor - inlineIndex.start),
   });
+
+  // Add inlines before split inline to current block
   newBlocks.push({
     ...block,
     inlines: inlinesBeforeSplit,
@@ -66,6 +69,7 @@ const insertParagraphWithoutSelection = (vState: VirtualState) => {
     inlinesAfterSplit.push(block.inlines[i]);
   }
 
+  // Add inlines after split inline to new block
   newBlocks.push({
     ...block,
     id: generateId(),

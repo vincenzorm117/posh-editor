@@ -1,11 +1,11 @@
 import getBlockInlineIndecesAtPosition from '@/utils/getBlockInlineIndecesAtPosition';
 
-const inputTextWithoutSelection = (
-  vDoc: VirtualDocument,
-  vSel: VirtualSelectionInEditor,
-  vIndex: VirtualDocumentIndex,
-  text: string,
-) => {
+// TODO: delete this file use what is in inputText.ts
+const inputTextWithoutSelection = (vState: VirtualState, text: string) => {
+  const { vDoc, vSel, vIndex } = vState;
+  if (!vSel.isInEditor) {
+    return;
+  }
   const { inlineIndex } = getBlockInlineIndecesAtPosition(vIndex, vSel.start);
   const inline =
     vDoc.blocks[inlineIndex.blockIndex].inlines[inlineIndex.inlineIndex];

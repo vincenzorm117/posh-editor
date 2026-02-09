@@ -1,18 +1,24 @@
 import getBlockInlineIndecesAtPosition from '@/utils/getBlockInlineIndecesAtPosition';
 import getVirtualSelectionMarksFromInline from '@/utils/getVirtualSelectionMarksFromInline';
 
-const removeTextWithoutSelection = (
-  vDoc: VirtualDocument,
-  vSel: VirtualSelectionInEditor,
-  vIndex: VirtualDocumentIndex,
-) => {
+// TODO: delete this file use what is in removeText.ts
+const removeTextWithoutSelection = (vState: VirtualState) => {
+  const { vDoc, vSel, vIndex } = vState;
+
+  // Guard: If selection is not in editor or selection is not collapsed, do nothing
+  if (!vSel.isInEditor || !vSel.isCollapsed) {
+    return;
+  }
+  // Get cursor position from virtual selection
   const cursor = vSel.start;
 
+  // Guard: If cursor is at the beginning of the document, do nothing
   if (cursor === 0) {
     // Cursor is at the beginning of the document, nothing to remove
     return;
   }
 
+  // Get block and inline indeces at cursor position
   const { blockIndex, inlineIndex } = getBlockInlineIndecesAtPosition(
     vIndex,
     cursor,
@@ -20,6 +26,7 @@ const removeTextWithoutSelection = (
   const block = vDoc.blocks[blockIndex.blockIndex];
   const inline = block.inlines[inlineIndex.inlineIndex];
 
+  // Get cursor position relative to block and inline
   const blockCursor = Math.max(cursor - blockIndex.start, 0);
   const inlineCursor = Math.max(cursor - inlineIndex.start, 0);
 

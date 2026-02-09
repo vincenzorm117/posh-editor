@@ -2,7 +2,6 @@ import actionBold from './action-bold';
 import actionItalics from './action-italics';
 import actionUnderline from './action-underline';
 import isFunction from './helpers/isFunction';
-import isNonEmptyString from './helpers/isNonEmptyString';
 import noop from './helpers/noop';
 import runFn from './helpers/runFn';
 import inputText from './inputs/inputText';
@@ -113,19 +112,10 @@ const init = (
     }
 
     const { inputType, data } = event as InputEvent;
-    if (inputType == 'insertText' && isNonEmptyString(data)) {
-      inputText(
-        vState.vDoc,
-        vState.vSel as VirtualSelectionInEditor,
-        vState.vIndex,
-        data,
-      );
+    if (inputType == 'insertText') {
+      inputText(vState, data);
     } else if (inputType == 'deleteContentBackward') {
-      removeText(
-        vState.vDoc,
-        vState.vSel as VirtualSelectionInEditor,
-        vState.vIndex,
-      );
+      removeText(vState);
     } else if (inputType == 'deleteContentForward') {
       // TODO implement
     } else if (inputType == 'insertParagraph') {
@@ -133,11 +123,7 @@ const init = (
     } else if (inputType == 'insertFromPaste') {
       // TODO implement
     } else if (inputType == 'deleteByCut') {
-      removeText(
-        vState.vDoc,
-        vState.vSel as VirtualSelectionInEditor,
-        vState.vIndex,
-      );
+      removeText(vState);
     } else {
       console.log((event as InputEvent).inputType);
     }

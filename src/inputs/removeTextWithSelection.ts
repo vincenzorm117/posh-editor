@@ -1,6 +1,7 @@
 import getBlockInlineIndecesAtPosition from '@/utils/getBlockInlineIndecesAtPosition';
 import getVirtualSelectionMarksFromInline from '@/utils/getVirtualSelectionMarksFromInline';
 
+// TODO: delete this file use what is in removeText.ts
 const removeTextWithSelection = (
   vDoc: VirtualDocument,
   vSel: VirtualSelectionInEditor,
