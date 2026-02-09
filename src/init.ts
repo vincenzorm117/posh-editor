@@ -112,20 +112,26 @@ const init = (
     }
 
     const { inputType, data } = event as InputEvent;
-    if (inputType == 'insertText') {
-      inputText(vState, data);
-    } else if (inputType == 'deleteContentBackward') {
-      removeText(vState);
-    } else if (inputType == 'deleteContentForward') {
-      // TODO implement
-    } else if (inputType == 'insertParagraph') {
-      insertParagraph(vState);
-    } else if (inputType == 'insertFromPaste') {
-      // TODO implement
-    } else if (inputType == 'deleteByCut') {
-      removeText(vState);
-    } else {
-      console.log((event as InputEvent).inputType);
+    switch (inputType) {
+      case 'insertText':
+        inputText(vState, data);
+        break;
+      case 'deleteByCut':
+      case 'deleteContentBackward':
+        removeText(vState);
+        break;
+      case 'deleteContentForward':
+        // TODO implement
+        break;
+      case 'insertParagraph':
+        insertParagraph(vState);
+        break;
+      case 'insertFromPaste':
+        // TODO implement
+        break;
+      default:
+        console.log((event as InputEvent).inputType);
+        break;
     }
 
     vState.vDoc = normalizeVirtualDocument(vState.vDoc);
