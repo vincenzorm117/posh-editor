@@ -6,6 +6,7 @@ import isNonEmptyString from './helpers/isNonEmptyString';
 import noop from './helpers/noop';
 import runFn from './helpers/runFn';
 import inputText from './inputs/inputText';
+import insertParagraph from './inputs/insertParagraph';
 import removeText from './inputs/removeText';
 import normalizeVirtualDocument from './normalize/normalizeVirtualDocument';
 import render from './render/render';
@@ -126,10 +127,17 @@ const init = (
         vState.vIndex,
       );
     } else if (inputType == 'deleteContentForward') {
-      // TODO implement these ⭐️
+      // TODO implement
     } else if (inputType == 'insertParagraph') {
+      insertParagraph(vState);
     } else if (inputType == 'insertFromPaste') {
+      // TODO implement
     } else if (inputType == 'deleteByCut') {
+      removeText(
+        vState.vDoc,
+        vState.vSel as VirtualSelectionInEditor,
+        vState.vIndex,
+      );
     } else {
       console.log((event as InputEvent).inputType);
     }
