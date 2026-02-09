@@ -76,6 +76,7 @@ type VirtualInlineTag =
 // Selection
 
 type VirtualSelectionInEditor = {
+  // TODO: Make it so its always start <= end. We'll use direction for direction
   start: number;
   end: number;
   isCollapsed: boolean;
