@@ -2,8 +2,12 @@ import actionBold from './action-bold';
 import actionItalics from './action-italics';
 import actionUnderline from './action-underline';
 import isFunction from './helpers/isFunction';
+import isNonEmptyString from './helpers/isNonEmptyString';
 import noop from './helpers/noop';
 import runFn from './helpers/runFn';
+import inputText from './inputs/inputText';
+import removeText from './inputs/removeText';
+import normalizeVirtualDocument from './normalize/normalizeVirtualDocument';
 import render from './render/render';
 import createVirtualDocumentIndex from './virtualIndex/createVirtualDocumentIndex';
 import virtualizeDomDocument from './virtualizeDom/virtualizeDomDocument';
@@ -101,15 +105,44 @@ const init = (
   });
 
   // Listener: Input
-  editorElement.addEventListener('input', (event) => {
-    vState.vDoc = virtualizeDomDocument(vState.editor.element, actions);
+  editorElement.addEventListener('input', (event: Event) => {
+    event.preventDefault();
+    if (!vState.vSel.isInEditor) {
+      throw new Error('[Unexpected Selection] Selection is not in editor');
+    }
+
+    const { inputType, data } = event as InputEvent;
+    if (inputType == 'insertText' && isNonEmptyString(data)) {
+      inputText(
+        vState.vDoc,
+        vState.vSel as VirtualSelectionInEditor,
+        vState.vIndex,
+        data,
+      );
+    } else if (inputType == 'deleteContentBackward') {
+      removeText(
+        vState.vDoc,
+        vState.vSel as VirtualSelectionInEditor,
+        vState.vIndex,
+      );
+    } else if (inputType == 'deleteContentForward') {
+      // TODO implement these ⭐️
+    } else if (inputType == 'insertParagraph') {
+    } else if (inputType == 'insertFromPaste') {
+    } else if (inputType == 'deleteByCut') {
+    } else {
+      console.log((event as InputEvent).inputType);
+    }
+
+    vState.vDoc = normalizeVirtualDocument(vState.vDoc);
+    // vState.vDoc = virtualizeDomDocument(vState.editor.element, actions);
     vState.vIndex = createVirtualDocumentIndex(vState.vDoc);
-    vState.vSel = virtualizeSelection(
-      vState.editor.element,
-      vState.vDoc,
-      vState.vIndex,
-      vState.actions,
-    );
+    // vState.vSel = virtualizeSelection(
+    //   vState.editor.element,
+    //   vState.vDoc,
+    //   vState.vIndex,
+    //   vState.actions,
+    // );
 
     render(vState);
   });
