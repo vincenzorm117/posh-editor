@@ -1,7 +1,7 @@
 import isSelectionInDomDocument from '@/utils/isSelectionInDomDocument';
+import getVirtualSelectionMarks from '@/virtualSelectionMarks/getVirtualSelectionMarks';
 import getDomFocusLeaf from './getDomFocusLeaf';
 import virtualizeDomPoint from './virtualizeDomPoint';
-import getVirtualSelectionMarks from '@/virtualSelectionMarks/getVirtualSelectionMarks';
 
 const virtualizeSelection = (
   root: HTMLElement,

@@ -1,9 +1,9 @@
 import isBreakElement from '@/helpers/isBreakElement';
+import isElementNode from '@/helpers/isElementNode';
+import isTextNode from '@/helpers/isTextNode';
+import getDomFirstLeaf from './getDomFirstLeaf';
 import getDomLastLeaf from './getDomLastLeaf';
 import getDomPrevLeaf from './getDomPrevLeaf';
-import getDomFirstLeaf from './getDomFirstLeaf';
-import isTextNode from '@/helpers/isTextNode';
-import isElementNode from '@/helpers/isElementNode';
 
 const getDomFocusLeaf = (
   root: HTMLElement,
@@ -51,6 +51,11 @@ const getDomFocusLeaf = (
   }
   // Case: offset at beginning of childNodes
   else if (offset <= 0) {
+    const firstLeaf = getDomFirstLeaf(node);
+    if (firstLeaf) {
+      return [firstLeaf, 0];
+    }
+
     const prev = getDomPrevLeaf(root, node.childNodes[0]);
     if (prev) {
       if (isBreakElement(prev)) return [prev, 0];
