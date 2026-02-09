@@ -15,13 +15,13 @@ const renderDebugDocument = (state: VirtualState) => {
         })
         .join(' ');
 
-      return `<span class="${classes}">${inline.text}</span>`;
+      return `<span class="border ${classes}">${inline.text}</span>`;
     }),
   );
 
   if (!vSel.isInEditor) {
     return textBlocks
-      .map((block) => `<p class="whitespace-pre">${block.join('')}</p>`)
+      .map((block) => `<p class="py-1 whitespace-pre">${block.join('')}</p>`)
       .join('');
   }
 
@@ -44,7 +44,7 @@ const renderDebugDocument = (state: VirtualState) => {
         `<p class="whitespace-pre">${block.join('')}</p><p class="whitespace-pre text-[pink]">${selectionLineByBlocks[i].join('')}</p>`
       );
     }
-    return acc + `<p class="whitespace-pre">${block.join('')}</p>`;
+    return acc + `<p class="py-1 whitespace-pre">${block.join('')}</p>`;
   }, '');
 };
 
