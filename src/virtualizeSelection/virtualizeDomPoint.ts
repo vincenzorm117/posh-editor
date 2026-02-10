@@ -1,6 +1,5 @@
 import { clamp } from '@/helpers/clamp';
 import createTextBrWalkerArray from '@/helpers/createTextBrWalkerArray';
-import isBreakElement from '@/helpers/isBreakElement';
 import isTextNode from '@/helpers/isTextNode';
 
 const virtualizeDomPoint = (
@@ -31,12 +30,12 @@ const virtualizeDomPoint = (
         return cursor;
       }
 
-      if (isBreakElement(currNode)) {
-        cursor += 1;
-      } else {
-        // TODO: Need to know whether to use textContent or nodeValue
-        cursor += (currNode as Text).textContent.length;
-      }
+      // TODO: Had "isBreakElement(currNode) cursor += 1; else the code below", should
+      //        we revert back or keep this? I don't think we need the check anymroe
+      //        since when the cursor moves from right of a to left of b in
+      //        <p>a</p><p><br></p><p>b</p> it only moves 2 cursor positions, not 3.
+      // TODO: Need to know whether to use textContent or nodeValue
+      cursor += (currNode as Text).textContent.length;
     }
 
     // Add one to account for newlines between blocks

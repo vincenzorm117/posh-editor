@@ -70,7 +70,9 @@ type VirtualInlineTag =
   | 'EM'
   // Strikethrough
   | 'S'
-  | 'DEL';
+  | 'DEL'
+  // Break line
+  | 'BR';
 
 ////////////////////////////////////////////////////////////
 // Selection
