@@ -1,6 +1,6 @@
 import hasMarks from '@/utils/hasMarks';
-import createVirtualTreeText from './createVirtualTreeText';
 import createVirtualTreeElement from './createVirtualTreeElement';
+import createVirtualTreeText from './createVirtualTreeText';
 
 const createVirtualTreeNode = (
   inline: VirtualInline,
