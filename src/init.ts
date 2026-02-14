@@ -90,19 +90,19 @@ const init = (
     // Keyboard shortcut (Ctrl/Cmd + B)
     if ((event.ctrlKey || event.metaKey) && event.key === 'b') {
       event.preventDefault();
-      vState.actions.bold.apply(vState);
+      vState.actions.bold.apply!(vState);
     }
 
     // Keyboard shortcut (Ctrl/Cmd + I)
     if ((event.ctrlKey || event.metaKey) && event.key === 'i') {
       event.preventDefault();
-      vState.actions.italics.apply(vState);
+      vState.actions.italics.apply!(vState);
     }
 
     // Keyboard shortcut (Ctrl/Cmd + U)
     if ((event.ctrlKey || event.metaKey) && event.key === 'u') {
       event.preventDefault();
-      vState.actions.underline.apply(vState);
+      vState.actions.underline.apply!(vState);
     }
   });
 
