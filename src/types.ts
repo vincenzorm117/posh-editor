@@ -20,9 +20,9 @@ type VirtualState = {
 };
 
 type VirtualAction = {
-  apply(state: VirtualState, ...args: any[]): any;
-  scanMarks(node: Node, root: HTMLElement): boolean;
-  renderMarks(marks: VirtualTreeElementProps): VirtualTreeElementProps;
+  apply?(state: VirtualState, ...args: any[]): any;
+  scanMarks?(node: Node, root: HTMLElement): boolean;
+  renderMarks?(marks: VirtualTreeElementProps): VirtualTreeElementProps;
 };
 
 type VirtualDocument = {

@@ -11,7 +11,7 @@ const createVirtualTreeElement = (
     // Get only mark types
     .map(([mark]) => mark)
     .reduce((marks, mark) => {
-      return runFn(actions[mark].renderMarks!, marks);
+      return runFn(actions[mark].renderMarks, marks);
     }, {} as VirtualTreeElementProps);
 
   return {

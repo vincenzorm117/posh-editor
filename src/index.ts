@@ -41,12 +41,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Listener: Bold Button Click
   document.querySelector('#boldBtn')?.addEventListener('click', () => {
-    vState.actions.bold.apply(vState);
+    vState.actions.bold.apply!(vState);
   });
 
   // Listener: Italics Button Click
   document.querySelector('#italicsBtn')?.addEventListener('click', () => {
-    vState.actions.italics.apply(vState);
+    vState.actions.italics.apply!(vState);
   });
 
   // Listener: Underline Button Click
