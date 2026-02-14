@@ -1,10 +1,10 @@
 import createVirtualBlock from '@/createVirtualNodes/createVirtualBlock';
 import createVirtualInline from '@/createVirtualNodes/createVirtualInline';
-import virtualizeDomInline from './virtualizeDomInline';
 import createTextBrWalkerArray from '@/helpers/createTextBrWalkerArray';
-import isTextNode from '@/helpers/isTextNode';
-import isElementNode from '@/helpers/isElementNode';
 import isBreakElement from '@/helpers/isBreakElement';
+import isElementNode from '@/helpers/isElementNode';
+import isTextNode from '@/helpers/isTextNode';
+import virtualizeDomInline from './virtualizeDomInline';
 
 const virtualizeBlock = (
   node: Node,
@@ -15,8 +15,10 @@ const virtualizeBlock = (
     throw new Error('Node is required for virtualizeBlock');
   }
 
+  const nodeName = node.nodeName as VirtualBlockTag;
+
   if (isTextNode(node)) {
-    return createVirtualBlock('P', [
+    return createVirtualBlock(nodeName, [
       createVirtualInline(node.textContent ?? '', {}),
     ]);
   }
@@ -26,14 +28,14 @@ const virtualizeBlock = (
   }
 
   if (isBreakElement(node)) {
-    return createVirtualBlock('P', [createVirtualInline('\n', {})]);
+    return createVirtualBlock(nodeName, [createVirtualInline('\n', {})]);
   }
 
   // For element nodes, process child nodes
   const nodes = createTextBrWalkerArray(node);
 
   return createVirtualBlock(
-    'P',
+    nodeName,
     nodes.map((x) => virtualizeDomInline(x, root, actions)),
   );
 };
