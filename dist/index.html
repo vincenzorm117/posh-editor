@@ -75,15 +75,27 @@
         >
           I
         </button>
+
+        <button
+          id="h1Btn"
+          class="btn-h1 appearance-none border border-warm-300 bg-warm-50 hover:bg-warm-100 active:bg-warm-200 rounded-lg px-3 py-2 cursor-pointer text-warm-700 leading-none select-none transition-all duration-150 shadow-sm hover:shadow"
+          type="button"
+          aria-pressed="false"
+          title="Heading 1"
+          data-testid="btn-h1"
+        >
+          H<span class="text-sm">1</span>
+        </button>
       </div>
       <!-- Editor -->
       <div
         id="editor"
-        class="mt-3 border border-warm-300 rounded-xl p-4 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-warm-600 focus:ring-offset-2 focus:ring-offset-warm-100 transition-shadow [&>*]:whitespace-pre-wrap [&>p]:my-2"
+        class="mt-3 border border-warm-300 rounded-xl p-4 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-warm-600 focus:ring-offset-2 focus:ring-offset-warm-100 transition-shadow [&>*]:whitespace-pre-wrap [&>p]:my-2 [&>h1]:text-2xl [&>h2]:text-xl [&>h3]:text-lg [&>h4]:text-base [&>h5]:text-sm [&>h6]:text-xs"
         contenteditable="true"
         spellcheck="false"
         data-testid="posh"
       >
+        <h1>This is a heading 1</h1>
         <p>Select text and toggle <b>bold</b>.</p>
         <p>This <b>editor keeps content + selection in a virtual</b> model.</p>
         <p>Line with break here continues.</p>
@@ -105,10 +117,16 @@
     </section>
 
     <div
-      class="mt-3 border border-warm-300 rounded-xl p-4 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-warm-600 focus:ring-offset-2 focus:ring-offset-warm-100 transition-shadow [&>*]:whitespace-pre-wrap [&>p]:my-2"
+      class="mt-3 border border-warm-300 rounded-xl p-4 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-warm-600 focus:ring-offset-2 focus:ring-offset-warm-100 transition-shadow [&>*]:whitespace-pre-wrap [&>p]:my-2 [&>h1]:text-2xl [&>h2]:text-xl [&>h3]:text-lg [&>h4]:text-base [&>h5]:text-sm [&>h6]:text-xs"
       contenteditable="true"
       spellcheck="false"
     >
+      <h1>This is a heading 1</h1>
+      <h2>This is a heading 2</h2>
+      <h3>This is a heading 3</h3>
+      <h4>This is a heading 4</h4>
+      <h5>This is a heading 5</h5>
+      <h6>This is a heading 6</h6>
       <p>Select text and toggle <b>bold</b>.</p>
       <p>This <b>editor keeps content + selection in a virtual</b> model.</p>
       <p>Line with break here continues.</p>

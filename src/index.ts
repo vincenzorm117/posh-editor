@@ -51,6 +51,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Listener: Underline Button Click
   document.querySelector('#underlineBtn')?.addEventListener('click', () => {
-    vState.actions.underline.apply(vState);
+    vState.actions.underline.apply!(vState);
+  });
+
+  document.querySelector('#h1Btn')?.addEventListener('click', () => {
+    vState.actions.h1.apply!(vState);
   });
 });
