@@ -1,6 +1,7 @@
 import actionBold from './action-bold';
 import actionHeading from './action-heading';
 import actionItalics from './action-italics';
+import actionStrikethrough from './action-strikethrough';
 import actionUnderline from './action-underline';
 import isFunction from './helpers/isFunction';
 import noop from './helpers/noop';
@@ -29,6 +30,7 @@ const init = (
     bold: actionBold,
     italics: actionItalics,
     underline: actionUnderline,
+    strikethrough: actionStrikethrough,
     heading: actionHeading,
   } as Record<string, VirtualAction>;
 
@@ -103,6 +105,16 @@ const init = (
     if ((event.ctrlKey || event.metaKey) && event.key === 'u') {
       event.preventDefault();
       vState.actions.underline.apply!(vState);
+    }
+
+    // Keyboard shortcut (Ctrl/Cmd + Shift + X) for strikethrough
+    if (
+      (event.ctrlKey || event.metaKey) &&
+      event.shiftKey &&
+      event.key === 'X'
+    ) {
+      event.preventDefault();
+      vState.actions.strikethrough.apply!(vState);
     }
   });
 

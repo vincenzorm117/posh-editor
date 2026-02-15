@@ -64,6 +64,11 @@ document.addEventListener('DOMContentLoaded', () => {
     vState.actions.underline.apply!(vState);
   });
 
+  // Listener: Strikethrough Button Click
+  document.querySelector('#strikethroughBtn')?.addEventListener('click', () => {
+    vState.actions.strikethrough.apply!(vState);
+  });
+
   document.querySelector('#h1Btn')?.addEventListener('click', () => {
     vState.actions.heading.apply!(vState, 'H1');
   });
