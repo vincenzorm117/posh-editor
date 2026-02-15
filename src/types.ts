@@ -85,6 +85,7 @@ type VirtualSelectionInEditor = {
   isInEditor: true;
   direction: 'none' | 'forward' | 'backward';
   marks: VirtualSelectionMarks;
+  blockTypes: VirtualSelectionBlockTypes;
 };
 
 type VirtualSelectionOutsideEditor = {
@@ -104,6 +105,10 @@ enum VirtualSelectionMarkValueEnum {
 
 type VirtualSelectionMarks = {
   [K in VirtualMarkTypes]?: VirtualSelectionMarkValueEnum;
+};
+
+type VirtualSelectionBlockTypes = {
+  [K in VirtualBlockTag]?: boolean;
 };
 
 ////////////////////////////////////////////////////////////

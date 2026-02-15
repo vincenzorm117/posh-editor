@@ -1,4 +1,5 @@
 import isSelectionInDomDocument from '@/utils/isSelectionInDomDocument';
+import getVirtualBlockTypes from '@/virtualSelectionMarks/getVirtualBlockTypes';
 import getVirtualSelectionMarks from '@/virtualSelectionMarks/getVirtualSelectionMarks';
 import getDomFocusLeaf from './getDomFocusLeaf';
 import virtualizeDomPoint from './virtualizeDomPoint';
@@ -46,12 +47,17 @@ const virtualizeSelection = (
   // Determine direction
   const direction = isCollapsed ? 'none' : start < end ? 'forward' : 'backward';
 
-  // Determine marks at selection start
+  // Normalize selection to be forward to determine marks and block types
   const vSel =
     direction == 'backward'
-      ? { start: end, end: start, isCollapsed }
-      : { start, end, isCollapsed };
+      ? { start: end, end: start, isCollapsed, isInEditor: true }
+      : { start, end, isCollapsed, isInEditor: true };
+
+  // Determine marks in selection
   const marks = getVirtualSelectionMarks(vSel, vDoc, vIndex, actions);
+
+  // Determine block types in selection
+  const blockTypes = getVirtualBlockTypes(vSel, vDoc, vIndex, actions);
 
   // Detect if it is collapsed
   return {
@@ -61,6 +67,7 @@ const virtualizeSelection = (
     isCollapsed,
     direction,
     marks,
+    blockTypes,
   } as VirtualSelectionInEditor;
 };
 
