@@ -9,12 +9,22 @@ document.addEventListener('DOMContentLoaded', () => {
   const updateUI = (state: VirtualState) => {
     debugUI.innerHTML = renderDebugDocument(state);
 
+    // Update selection info UI
     if (state.vSel.isInEditor) {
+      // Update the marks from selection info UI
       debugSelectionInfoUI.innerHTML = `
         <div>Inside Editor</div>
         ${state.vSel.isCollapsed ? `<div>${state.vSel.start}</div>` : `<div>${state.vSel.start} - ${state.vSel.end}</div>`}
         <div>${Object.entries(state.vSel.marks)
           .filter(([key, value]) => (value as number) > 1)
+          .map(([key]) => key)
+          .join(' ')}</div>
+      `;
+
+      // Update the block types from selection info UI
+      debugSelectionInfoUI.innerHTML += `
+        <div>${Object.entries(state.vSel.blockTypes)
+          .filter(([key, value]) => value)
           .map(([key]) => key)
           .join(' ')}</div>
       `;
@@ -55,6 +65,26 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   document.querySelector('#h1Btn')?.addEventListener('click', () => {
-    vState.actions.h1.apply!(vState);
+    vState.actions.heading.apply!(vState, 'H1');
+  });
+
+  document.querySelector('#h2Btn')?.addEventListener('click', () => {
+    vState.actions.heading.apply!(vState, 'H2');
+  });
+
+  document.querySelector('#h3Btn')?.addEventListener('click', () => {
+    vState.actions.heading.apply!(vState, 'H3');
+  });
+
+  document.querySelector('#h4Btn')?.addEventListener('click', () => {
+    vState.actions.heading.apply!(vState, 'H4');
+  });
+
+  document.querySelector('#h5Btn')?.addEventListener('click', () => {
+    vState.actions.heading.apply!(vState, 'H5');
+  });
+
+  document.querySelector('#h6Btn')?.addEventListener('click', () => {
+    vState.actions.heading.apply!(vState, 'H6');
   });
 });

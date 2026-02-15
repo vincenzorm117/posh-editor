@@ -1,7 +1,10 @@
 import render from '@/render/render';
 import getVirtuallySelectedBlocksAndInlines from '@/utils/getVirtuallySelectedBlocksAndInlines';
 
-const apply = (vState: VirtualState): any => {
+const apply = (
+  vState: VirtualState,
+  tag: 'H1' | 'H2' | 'H3' | 'H4' | 'H5' | 'H6',
+): any => {
   const { vSel } = vState;
 
   if (!vSel.isInEditor) return null;
@@ -9,15 +12,16 @@ const apply = (vState: VirtualState): any => {
   // Get blocks in selection
   const { blocks } = getVirtuallySelectedBlocksAndInlines(vState);
 
-  // Check if in heading 1
-  const isInHeading1 = blocks.every((block) => block.tag === 'H1');
+  // Check if selection is already entirely within the specified heading tag
+  const isHeading =
+    vSel.blockTypes[tag] === true && Object.keys(vSel.blockTypes).length === 1;
 
   // Determine tag
-  const tag = isInHeading1 ? 'P' : 'H1';
+  const newTag = isHeading ? 'P' : tag;
 
   // Apply heading mark to each block
   for (const block of blocks) {
-    block.tag = tag;
+    block.tag = newTag;
   }
 
   // Render updated virtual document

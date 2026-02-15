@@ -1,5 +1,5 @@
 import actionBold from './action-bold';
-import actionHeading1 from './action-heading-1';
+import actionHeading from './action-heading';
 import actionItalics from './action-italics';
 import actionUnderline from './action-underline';
 import isFunction from './helpers/isFunction';
@@ -29,7 +29,7 @@ const init = (
     bold: actionBold,
     italics: actionItalics,
     underline: actionUnderline,
-    h1: actionHeading1,
+    heading: actionHeading,
   } as Record<string, VirtualAction>;
 
   // Setup hooks
