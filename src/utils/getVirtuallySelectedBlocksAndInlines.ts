@@ -1,5 +1,5 @@
-import zip from '@/helpers/zip';
 import unzip from '@/helpers/unzip';
+import zip from '@/helpers/zip';
 
 const getVirtuallySelectedBlocksAndInlines = (
   vState: VirtualState,
